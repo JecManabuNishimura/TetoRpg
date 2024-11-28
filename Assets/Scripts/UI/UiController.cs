@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -232,6 +233,8 @@ public class HaveMinoView:IMenu
     private int currentIndex = 0;
     private Color defaultColor;
     private int columns = 3;
+    private Tweener shakeTweener;
+    private Vector3 shakeInitPosition;
 
     private NowMode nowMode = NowMode.BelongingsSelect;
 
@@ -261,11 +264,16 @@ public class HaveMinoView:IMenu
         else
         {
             int minoNum = gridItems[currentIndex].GetComponent<MinoCreater>().GetMinoId();
+            shakeInitPosition = gridItems[currentIndex].position;
             if (!GameManager.player.belongingsMino.Contains(minoNum))
             {
                 ChangeBelongingMino(MenuManager.Instance.minoData.circleLayoutGroup.GetIndex(), minoNum);
                 nowMode = NowMode.BelongingsSelect;
                 ColorReset();
+            }
+            else
+            {
+                StartShake(gridItems[currentIndex].gameObject,0.5f, 5.5f, 30, 90, false);
             }
         }
     }
@@ -299,6 +307,17 @@ public class HaveMinoView:IMenu
             currentIndex = 0;
             ColorReset();
         }
+    }
+    private void StartShake(GameObject obj, float duration, float strength, int vibrato, float randomness, bool fadeOut)
+    {
+        // 前回の処理が残っていれば停止して初期位置に戻す
+        if (shakeTweener != null)
+        {
+            shakeTweener.Kill();
+            obj.transform.position = shakeInitPosition;
+        }
+        // 揺れ開始
+        shakeTweener = obj.transform.DOShakePosition(duration, strength, vibrato, randomness, fadeOut);
     }
     public void Update()
     {
