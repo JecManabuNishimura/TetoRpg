@@ -5,6 +5,28 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MinoEffectData", menuName = "MinoEffect/MinoEffectData")]
 public class MinoEffectData : ScriptableObject
 {
+    private static MinoEffectData _entity;
+
+    public static MinoEffectData Entity
+    {
+        get
+        {
+            //初アクセス時にロードする
+            if (_entity == null)
+            {
+                string assetPath = "Assets/Data/MinoEffectData.asset";
+                _entity = AssetDatabase.LoadAssetAtPath<MinoEffectData>(assetPath);
+
+                //ロード出来なかった場合はエラーログを表示
+                if (_entity == null)
+                {
+                    Debug.LogError(nameof(MinoEffectData) + " not found");
+                }
+            }
+
+            return _entity;
+        }
+    }
     // 番号のリスト
     public List<MinoEffect> MinoEffects;
 }

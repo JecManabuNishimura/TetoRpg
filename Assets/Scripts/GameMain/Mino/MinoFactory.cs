@@ -113,7 +113,9 @@ public class MinoFactory
         int m = matrix.GetLength(1);
         int axisX = -1, axisY = -1;
         int[,] rotated = new int[n, m]; // 新しい配列を初期化
-        if (pieceType == 0 || pieceType == 3)
+        // ここで真ん中回転を実施
+        // どこかで設定するようにしないといけない
+        if (pieceType == 0 || pieceType == 3 || pieceType == 7)
         {
             int l = matrix.GetLength(0);
             for (int i = 0; i < n; i++)

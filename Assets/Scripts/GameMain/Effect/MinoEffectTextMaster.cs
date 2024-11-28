@@ -29,6 +29,17 @@ public class MinoEffectTextMaster : ScriptableObject
     }
 
     public SerializableDictionary<string, string> effectExplanation = new();
+
+    public string GetExplanationText(string key)
+    {
+        // Dictionaryから値を取得し、キーが存在しない場合はnullを返す
+        if (effectExplanation.TryGetValue(key, out string explanation))
+        {
+            return explanation;  // キーが存在する場合、値を返す
+        }
+
+        return "";
+    }
 }
 [CustomEditor(typeof(MinoEffectTextMaster))]
 public class MinoEffectTextMasterEditor : Editor

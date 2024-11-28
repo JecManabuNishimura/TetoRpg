@@ -83,14 +83,14 @@ public class MenuManager : MonoBehaviour
         uiController.CloseMenu();
         openFlag = false;
     }
-
+/*
     public void GroupChildReset(Transform tran)
     {
         for (int i = tran.childCount - 1; i >= 0; i--)
         {
             Destroy(tran.GetChild(i).gameObject);
         }
-    }
+    }*/
 }
 
 [Serializable]

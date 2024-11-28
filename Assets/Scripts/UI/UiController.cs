@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using MyMethods;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -194,11 +196,12 @@ public class TabSelect : EquipmentDataCreate, IMenu
         UpdateArmorData();
         armorData.ExplantionGroup.gameObject.SetActive(false);
         armorData.ExplantionEffectGroup.gameObject.SetActive(false);
+        MenuManager.Instance.minoData.belongingsEffectGroup.transform.ChildClear();
     }
 
     void UpdateBelongingsMinoImage()
     {
-        MenuManager.Instance.GroupChildReset(minoData.circleLayoutGroup.transform);
+        minoData.circleLayoutGroup.transform.ChildClear();;
         foreach (var mino in GameManager.player.BelongingsMino)
         {
             var data = GameObject.Instantiate(minoData.itemObj, minoData.circleLayoutGroup.transform, true);
@@ -208,7 +211,7 @@ public class TabSelect : EquipmentDataCreate, IMenu
     }
     void OpenEquipmentMino()
     {
-        MenuManager.Instance.GroupChildReset(minoData.gridLayoutGroup.transform);
+        minoData.gridLayoutGroup.transform.ChildClear();;
         foreach (var mino in GameManager.player.HaveMinoList)
         {
             var data = GameObject.Instantiate( minoData.itemObj, minoData.haveContent.transform, true);
@@ -250,12 +253,49 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             gridItems[i] = MenuManager.Instance.minoData.gridLayoutGroup.transform.GetChild(i).GetComponent<RectTransform>();
         }
 
-        //var item = GetGroupChildData(MenuManager.Instance.minoData.circleLayoutGroup.transform);
+        BelongingMinoExplanation();
 
-        //MenuManager.Instance.minoData.belongingsEffectGroup
-        
+
         defaultColor = gridItems[0].GetComponent<Image>().color;
     }
+
+    private void BelongingMinoExplanation()
+    {
+        MenuManager.Instance.minoData.belongingsEffectGroup.transform.ChildClear();
+        var id = GameManager.player.BelongingsMino[MenuManager.Instance.minoData.circleLayoutGroup.GetIndex()];
+        foreach (var val in MinoEffectData.Entity.MinoEffects)
+        {
+            if (val.numbers == id)
+            {
+                foreach (var data in val.selectedGroupOptions)
+                {
+                    var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
+                        MenuManager.Instance.minoData.belongingsEffectGroup.transform);
+                    obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
+                }
+                
+            }
+        }
+    }
+    private void HaveMinoExplanation()
+    {
+        MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
+        var id = GameManager.player.haveMinoList[currentIndex];
+        foreach (var val in MinoEffectData.Entity.MinoEffects)
+        {
+            if (val.numbers == id)
+            {
+                foreach (var data in val.selectedGroupOptions)
+                {
+                    var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
+                        MenuManager.Instance.minoData.haveEffectGroup.transform);
+                    obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
+                }
+                
+            }
+        }
+    }
+
     public void SelectMenu()
     {
         if (nowMode == NowMode.BelongingsSelect)
@@ -263,6 +303,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             nowMode = NowMode.MinoSelect;
             
             currentIndex = 0;
+            HaveMinoExplanation();
             UpdateCursor();
         }
         else
@@ -338,12 +379,15 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             else
             {
                 currentIndex = Mathf.Max(0, currentIndex - 1);
-            }    
+            }
+
+            HaveMinoExplanation();
             UpdateCursor();
         }
         else if(nowMode == NowMode.BelongingsSelect)
         {
             MenuManager.Instance.minoData.circleLayoutGroup.AddAngle(right);
+            BelongingMinoExplanation();
         }
     }
 
@@ -359,6 +403,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             {
                 currentIndex = Mathf.Min(gridItems.Length - 1, currentIndex + columns);
             }
+            HaveMinoExplanation();
             UpdateCursor();
         }
     }
@@ -480,7 +525,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
                 .SetText(data.ToString());
         }
 
-        MenuManager.Instance.GroupChildReset(armorData.ExplantionEffectGroup.transform);
+        armorData.ExplantionEffectGroup.transform.ChildClear();;
 
         // 選択中の効果の表示
         var eName = SelectHaveList(cursorPos);
@@ -591,7 +636,8 @@ public class EquipmentDataCreate
     // 持ち物リストの更新
     protected void CreateHaveArmorData(int cursorPos)
     {
-        MenuManager.Instance.GroupChildReset(MenuManager.Instance.armorData.HaveItemGroup.transform);
+        //MenuManager.Instance.GroupChildReset(MenuManager.Instance.armorData.HaveItemGroup.transform);
+        MenuManager.Instance.armorData.HaveItemGroup.transform.ChildClear();
         List<string> esData = SelectHaveList(cursorPos);
         foreach (var list in esData)
         {
@@ -638,7 +684,7 @@ public class EquipmentDataCreate
     // 効果の表示更新
     protected void OpenEquipmentEffectArmor()
     {
-        MenuManager.Instance.GroupChildReset(armorData.EffectGroup.transform);
+        armorData.EffectGroup.transform.ChildClear();;
         
         // 装備中の効果の表示
         for(int i = 0;i < 4;i++)

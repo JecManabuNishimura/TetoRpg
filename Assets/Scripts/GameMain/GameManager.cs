@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using Object = System.Object;
 
 public class GameManager : MonoBehaviour
 {
@@ -78,4 +79,18 @@ public class GameManager : MonoBehaviour
         BoardManager.Instance.Initialize();
     }
 
+}
+
+namespace MyMethods
+{
+    public static class MyExtensions
+    {
+        public static void ChildClear(this Transform tran)
+        {
+            for (int i = tran.childCount - 1; i >= 0; i--)
+            {
+                UnityEngine.Object.Destroy(tran.GetChild(i).gameObject);
+            }
+        }
+    }
 }
