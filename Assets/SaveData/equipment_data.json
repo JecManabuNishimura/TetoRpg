@@ -1,0 +1,38 @@
+{
+    "weaponData": [
+        {
+            "weaponId": "We01",
+            "sprite": {
+                "instanceID": 42176
+            },
+            "isSelected": false
+        }
+    ],
+    "shieldData": [
+        {
+            "weaponId": "Sh01",
+            "sprite": {
+                "instanceID": 42264
+            },
+            "isSelected": false
+        }
+    ],
+    "helmetData": [
+        {
+            "weaponId": "He01",
+            "sprite": {
+                "instanceID": 42234
+            },
+            "isSelected": false
+        }
+    ],
+    "armorData": [
+        {
+            "weaponId": "Ar01",
+            "sprite": {
+                "instanceID": 42278
+            },
+            "isSelected": false
+        }
+    ]
+}
