@@ -197,6 +197,7 @@ public class TabSelect : EquipmentDataCreate, IMenu
         armorData.ExplantionGroup.gameObject.SetActive(false);
         armorData.ExplantionEffectGroup.gameObject.SetActive(false);
         MenuManager.Instance.minoData.belongingsEffectGroup.transform.ChildClear();
+        MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
     }
 
     void UpdateBelongingsMinoImage()
@@ -263,36 +264,24 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     {
         MenuManager.Instance.minoData.belongingsEffectGroup.transform.ChildClear();
         var id = GameManager.player.BelongingsMino[MenuManager.Instance.minoData.circleLayoutGroup.GetIndex()];
-        foreach (var val in MinoEffectData.Entity.MinoEffects)
+        var val = MinoEffectData.Entity.GetMinoEffect(id);
+        foreach (var data in val)
         {
-            if (val.numbers == id)
-            {
-                foreach (var data in val.selectedGroupOptions)
-                {
-                    var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
-                        MenuManager.Instance.minoData.belongingsEffectGroup.transform);
-                    obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
-                }
-                
-            }
+            var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
+                MenuManager.Instance.minoData.belongingsEffectGroup.transform);
+            obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
         }
     }
     private void HaveMinoExplanation()
     {
         MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
         var id = GameManager.player.haveMinoList[currentIndex];
-        foreach (var val in MinoEffectData.Entity.MinoEffects)
+        var val = MinoEffectData.Entity.GetMinoEffect(id);
+        foreach (var data in val)
         {
-            if (val.numbers == id)
-            {
-                foreach (var data in val.selectedGroupOptions)
-                {
-                    var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
-                        MenuManager.Instance.minoData.haveEffectGroup.transform);
-                    obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
-                }
-                
-            }
+            var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
+                MenuManager.Instance.minoData.haveEffectGroup.transform);
+            obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
         }
     }
 
@@ -343,7 +332,6 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         if (nowMode == NowMode.BelongingsSelect)
         {
             menu.ChangeMenu(SelectView.TabSelect);
-            GameManager.menuFlag = false;
             
         }
         else if (nowMode == NowMode.MinoSelect)

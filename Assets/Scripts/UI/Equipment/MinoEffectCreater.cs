@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 [CreateAssetMenu(fileName = "MinoEffectData", menuName = "MinoEffect/MinoEffectData")]
@@ -29,6 +30,11 @@ public class MinoEffectData : ScriptableObject
     }
     // 番号のリスト
     public List<MinoEffect> MinoEffects;
+
+    public List<string> GetMinoEffect(int index)
+    {
+        return MinoEffects.First(_ => _.numbers == index).selectedGroupOptions;
+    }
 }
 
 [Serializable]

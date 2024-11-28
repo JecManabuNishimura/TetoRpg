@@ -43,9 +43,10 @@ public class Player : CharactorData, ICharactor
         "Ar01",
     };
 
-
     public List<int> HaveMinoList => haveMinoList;
     public List<int> BelongingsMino => belongingsMino;
+
+    private Dictionary<string,int > BelongingsMinoEffect;
 
     void Awake()
     {
@@ -57,6 +58,11 @@ public class Player : CharactorData, ICharactor
     {
         status.hp = status.maxHp;
         hpText.text = status.hp.ToString();
+        foreach (var state in MinoEffectStatusMaster.Entity.MinoEffectStatus)
+        {
+            BelongingsMinoEffect.Add(state,0);    
+        }
+        
         UpdateStatus();
     }
 
@@ -71,6 +77,24 @@ public class Player : CharactorData, ICharactor
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             MenuManager.Instance.CloseMenu();
+        }
+    }
+
+    private void SetBelongingsMinoEffect()
+    {
+        var keys = new List<string>(BelongingsMinoEffect.Keys); // 既存のすべてのキーを取得
+
+        foreach (var key in keys)
+        {
+            BelongingsMinoEffect[key] = 0; // 値をリセット
+        }
+        foreach (var val in belongingsMino)
+        {
+            var data = MinoEffectData.Entity.GetMinoEffect(val);
+            foreach (var d in data)
+            {
+                BelongingsMinoEffect[d]++;
+            }
         }
     }
     
@@ -98,6 +122,8 @@ public class Player : CharactorData, ICharactor
 
     private void UpdateStatus()
     {
+        // ミノ効果追加
+        SetBelongingsMinoEffect();
         totalStatus = status;
 
         // 各装備データを取得し、null チェックを行う
