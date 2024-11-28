@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 23454174}
   - component: {fileID: 23454175}
   m_Layer: 5
-  m_Name: MinoEffectGroup
+  m_Name: BelongingsMinoEffectGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -800,7 +800,7 @@ GameObject:
   - component: {fileID: 206003008}
   - component: {fileID: 206003009}
   m_Layer: 5
-  m_Name: MinoEffectGroup
+  m_Name: HaveMinoEffectGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4085,6 +4085,9 @@ MonoBehaviour:
     haveContent: {fileID: 343445932}
     itemObj: {fileID: 487944821208226689, guid: e77bac72a34e5e947a9ed1abbe5b39df, type: 3}
     gridLayoutGroup: {fileID: 343445934}
+    belongingsEffectGroup: {fileID: 23454175}
+    haveEffectGroup: {fileID: 206003009}
+    minoEffectObj: {fileID: 7429439612340431296, guid: a16ef00928563cc48852b4eb9e1131ee, type: 3}
   armorData:
     effectObj: {fileID: 4764867258473262911, guid: 8e640ced11cf4994a9aeb560aca9524b, type: 3}
     HaveItemObj: {fileID: 992169917389357967, guid: 96e36721af6f5a34586d8de5b2e6309d, type: 3}
@@ -6970,8 +6973,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -579.8937, y: -325.12036}
-  m_SizeDelta: {x: 273.0061, y: 230.1196}
+  m_AnchoredPosition: {x: -561.7844, y: -325.12036}
+  m_SizeDelta: {x: 309.2246, y: 230.1196}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1566074509
 GameObject:

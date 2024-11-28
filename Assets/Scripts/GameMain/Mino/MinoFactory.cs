@@ -56,7 +56,13 @@ public class MinoFactory
             { 1, 1, 0, 0 },
             { 0, 0, 0, 0 },
         },
-        
+        // Z
+        {
+            { 1, 1, 1, 1 },
+            { 0, -1, 1, 0 },
+            { 1, 1, 0, 0 },
+            { 1, 1, 1, 1 },
+        },
     };
     // Treasure 宝
     static private readonly int[,,] treasureMinoes = new int[,,]

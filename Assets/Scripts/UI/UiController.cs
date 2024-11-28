@@ -220,7 +220,7 @@ public class TabSelect : EquipmentDataCreate, IMenu
 //=========================================================================
 // ミノ装備画面
 //=========================================================================
-public class HaveMinoView:IMenu
+public class HaveMinoView:EquipmentDataCreate,IMenu
 {
     private enum NowMode
     {
@@ -250,6 +250,10 @@ public class HaveMinoView:IMenu
             gridItems[i] = MenuManager.Instance.minoData.gridLayoutGroup.transform.GetChild(i).GetComponent<RectTransform>();
         }
 
+        //var item = GetGroupChildData(MenuManager.Instance.minoData.circleLayoutGroup.transform);
+
+        //MenuManager.Instance.minoData.belongingsEffectGroup
+        
         defaultColor = gridItems[0].GetComponent<Image>().color;
     }
     public void SelectMenu()
@@ -452,22 +456,6 @@ public class ArmorView : EquipmentDataCreate, IMenu
         armorData.CursorIcon.transform.position = gridItems[cursorPos].position;
         UpdateArmorData();
         CreateHaveArmorData(cursorPos);
-    }
-
-
-
-    private RectTransform[] GetGroupChildData(Transform groupTransform)
-    {
-        int childCount = groupTransform.childCount;
-        if (childCount == 0) return null;
-        var items = new RectTransform[childCount];
-        for (int i = 0; i < childCount; i++)
-        {
-            items[i] = groupTransform.GetChild(i)
-                .GetComponent<RectTransform>();
-        }
-
-        return items;
     }
 
     public void Update()
@@ -678,5 +666,18 @@ public class EquipmentDataCreate
         armorData.hpText.text = GameManager.player.totalStatus.maxHp.ToString();
         armorData.atkText.text = GameManager.player.totalStatus.atk.ToString();
         armorData.defText.text = GameManager.player.totalStatus.def.ToString();
+    }
+    protected RectTransform[] GetGroupChildData(Transform groupTransform)
+    {
+        int childCount = groupTransform.childCount;
+        if (childCount == 0) return null;
+        var items = new RectTransform[childCount];
+        for (int i = 0; i < childCount; i++)
+        {
+            items[i] = groupTransform.GetChild(i)
+                .GetComponent<RectTransform>();
+        }
+
+        return items;
     }
 }

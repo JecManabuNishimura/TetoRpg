@@ -30,7 +30,8 @@ public class SimpleCircleLayoutGroup : UIBehaviour, ILayoutGroup
     }
     #endregion
 
-    public async void AddAngle(bool right)
+
+    public async void AddAngle(bool right )
     {
         if (isRotating) return; // 回転中は新しい入力を無視
         isRotating = true;

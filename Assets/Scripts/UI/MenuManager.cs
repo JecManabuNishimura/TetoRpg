@@ -109,6 +109,9 @@ public class MinoViewData
     public GameObject haveContent;
     public GameObject itemObj;
     public GridLayoutGroup gridLayoutGroup;
+    public VerticalLayoutGroup belongingsEffectGroup;
+    public VerticalLayoutGroup haveEffectGroup;
+    public GameObject minoEffectObj;
 }
 
 [Serializable]
