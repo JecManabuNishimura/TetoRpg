@@ -261,10 +261,12 @@ public class HaveMinoView:IMenu
         else
         {
             int minoNum = gridItems[currentIndex].GetComponent<MinoCreater>().GetMinoId();
-            if(GameManager.player.belongingsMino.Contains(minoNum))
-            ChangeBelongingMino(MenuManager.Instance.minoData.circleLayoutGroup.GetIndex(), minoNum);
-            nowMode = NowMode.BelongingsSelect;
-            ColorReset();
+            if (!GameManager.player.belongingsMino.Contains(minoNum))
+            {
+                ChangeBelongingMino(MenuManager.Instance.minoData.circleLayoutGroup.GetIndex(), minoNum);
+                nowMode = NowMode.BelongingsSelect;
+                ColorReset();
+            }
         }
     }
     void ChangeBelongingMino(int selectIndex, int minoNumber)
