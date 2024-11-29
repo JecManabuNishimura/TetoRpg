@@ -46,7 +46,7 @@ public class Player : CharactorData, ICharactor
     public List<int> HaveMinoList => haveMinoList;
     public List<int> BelongingsMino => belongingsMino;
 
-    private Dictionary<string,int > BelongingsMinoEffect;
+    public Dictionary<string,int > BelongingsMinoEffect;
 
     void Awake()
     {

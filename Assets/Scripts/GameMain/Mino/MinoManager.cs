@@ -529,14 +529,14 @@ public class MinoManager : MonoBehaviour
                         //-----------------------------------------------------------------
                         // ライフの確率
                         //-----------------------------------------------------------------
-                        if(Random.Range(0,10) == 0)
+                        if(Random.Range(0,GameManager.stageData.HealDropRate - GameManager.player.BelongingsMinoEffect["HealRateUp"]) == 0)
                         {
                             minos[y, x] *= 2;
                         }
                         //-----------------------------------------------------------------
                         // ボムの確率
                         //-----------------------------------------------------------------
-                        else if (Random.Range(0, 10) == 0)
+                        else if (Random.Range(0, GameManager.stageData.BombDropRate) == 0)
                         {
                             minos[y, x] *= 3;
                         }

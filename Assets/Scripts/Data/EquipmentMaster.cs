@@ -139,8 +139,6 @@ public class EquipmentMasterEditor : Editor
             // CSVの読み込み処理を呼び出す
             equipmentMaster.ReadCSV("EquipmentData", "EffectData");
         }
-
-        // 必要に応じて、他のインスペクタUIもここに追加できます
     }
 }
 

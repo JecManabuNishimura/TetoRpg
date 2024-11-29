@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: f5dcf1b5cc99c704dace9f92a02e5698, type: 3}
   m_Name: MinoEffectData
-  m_EditorClassIdentifier: Assembly-CSharp::MinoEffectData
+  m_EditorClassIdentifier: 
   MinoEffects:
   - numbers: 0
     selectedGroupOptions:
@@ -36,4 +36,4 @@ MonoBehaviour:
     - None
   - numbers: 7
     selectedGroupOptions:
-    - None
+    - HealRateUp

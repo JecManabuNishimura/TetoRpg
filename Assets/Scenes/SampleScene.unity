@@ -830,10 +830,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 190c6bf7074dbee468f44c6b94b8ede7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropData:
-    keys: 01000000
-    values:
-    - {fileID: 11400000, guid: 844b873bd4977d2459c59eef1f4b8226, type: 2}
+  status:
+  - stage: 1
+    treasureDropMaster: {fileID: 11400000, guid: 844b873bd4977d2459c59eef1f4b8226, type: 2}
+    parameter:
+      HealDropRate: 20
+      BombDropRate: 20
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

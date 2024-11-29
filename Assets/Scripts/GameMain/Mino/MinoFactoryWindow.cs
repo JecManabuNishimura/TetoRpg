@@ -1,52 +1,57 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
-[CreateAssetMenu(fileName = "MinoEffectData", menuName = "MinoEffect/MinoEffectData")]
 
-[Serializable]
-public class MinoEffect
+public class MinoFactoryWindow : EditorWindow
 {
-    public int numbers;
-    public List<string> selectedGroupOptions;
-}
-public class MinoEffectCreater : EditorWindow
-{
-    private Texture2D image;
-    private float cellSize = 25f;  // セルのサイズ
-    private float padding = 1f;    // セル間の余白
-    private float gridPadding = 10f; // 配列間の余白
-    private MinoEffectStatusMaster minoEffectStatusMaster;
-    private List<List<int>> selectedGroupOptions = new List<List<int>>(); // 各グループに複数選択肢を保持
-    private float maxGroupHeight = 0f; // 全体の高さを管理
-    private MinoEffectData minoEffectData; // 保存する ScriptableObject
-    [MenuItem("Window/MinoEffectCreate")]
-    public static void ShowWindow()
+    private class MinoSetting
     {
-        GetWindow<MinoEffectCreater>("MinoEffectCreate");
-    }
-    private void OnEnable()
-    {
-        // MinoEffectStatusMasterを取得
-        minoEffectStatusMaster = MinoEffectStatusMaster.Entity;
-        LoadData();
-    }
+        public int[,] minoDataList;
+        public bool select;
 
-    private void OnGUI()
-    {
-        // 画像を読み込む (例: Resources フォルダに画像を置く)
-        if (image == null)
+        public MinoSetting()
         {
-            image = Resources.Load<Texture2D>("blockPurepleDimond"); // 画像のパスに変更
+            minoDataList = new int[4, 4];
+            select = false;
         }
+        
+    }
+   // 画像を格納する変数
+   private Texture2D buttonFalseImage;
+   private Texture2D buttonTrueImage;
+   private Texture2D buttonRotImage;
+   private float cellSize = 25f;  // セルのサイズ
+   private float padding = 1f;    // セル間の余白
+   private float gridPadding = 10f; // 配列間の余白
+   private List<MinoSetting> minoSettingList = new();
+   private float maxGroupHeight = 0f; // 全体の高さを管理
+   private MinoEffectStatusMaster minoEffectStatusMaster;
+   private List<List<int>> selectedGroupOptions = new List<List<int>>(); // 各グループに複数選択肢を保持
+   private float buttonSize = 30f;
+   private Rect buttonRect;
+   float totalWidth = Screen.width - 20f;  // 画面幅
+   
+   float startX = 10f;
+   float startY = 50f;
+   [MenuItem("Window/Custom/MinoFactoryWindow")]
+   public static void ShowWindow()
+   {
+      GetWindow<MinoFactoryWindow>("MinoFactoryWindow");
+   }
 
-        if (image == null)
-        {
-            GUILayout.Label("Image not found in Resources.");
-            return;
-        }
+   private void OnEnable()
+   {
+       minoEffectStatusMaster = MinoEffectStatusMaster.Entity;
+      // 画像をエディタのアセットフォルダからロード
+      buttonFalseImage = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Chess Studio/Puzzle Blocks Icon Pack/png/bubble.png");
+      buttonTrueImage = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Chess Studio/Puzzle Blocks Icon Pack/png/blockBlueDimond.png");
+      buttonRotImage = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Chess Studio/Puzzle Blocks Icon Pack/png/blockYellowDimond.png");
+      LoadData();
+   }
 
+   private void OnGUI()
+   {
         // 配列の表示
         float startX = padding; // X座標の開始位置
         float startY = padding; // Y座標の開始位置
@@ -55,6 +60,20 @@ public class MinoEffectCreater : EditorWindow
         float currentY = startY + 20; // Y方向の現在の位置
         // 保存ボタンを一番上に配置
         GUILayout.BeginHorizontal();
+        if (GUILayout.Button("+", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
+        {
+            minoSettingList.Add(new MinoSetting());
+        }
+        if (GUILayout.Button("-", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
+        {
+            for (int i = minoSettingList.Count - 1; i >= 0; i--)
+            {
+                if (minoSettingList[i].select)
+                {
+                    minoSettingList.RemoveAt(i);
+                }
+            }
+        }
         if (GUILayout.Button("Save", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
         {
             SaveData();
@@ -65,11 +84,11 @@ public class MinoEffectCreater : EditorWindow
         }
         GUILayout.EndHorizontal();
         
-        for (int i = 0; i < MinoFactory.TetoMinoLenght; i++)
+        for (int i = 0; i < minoSettingList.Count; i++)
         {
             // 1つのグループとして縦に並べる
             EditorGUILayout.BeginVertical();
-            var array = MinoFactory.GetMinoData(i);
+            var array = minoSettingList[i].minoDataList;
 
             // グループラベルとボタンを横に並べる
             GUILayout.BeginHorizontal(); // 水平配置を開始
@@ -87,6 +106,7 @@ public class MinoEffectCreater : EditorWindow
             // ボタンの位置とサイズを計算
             Rect buttonRect = new Rect(currentX + 50, currentY, 20f, 20f); // ボタンの位置を調整
             Rect minusButtonRect = new Rect(currentX + 70, currentY, 20f, 20f); // マイナスボタンの位置を調整
+            Rect selectButtonRect = new Rect(currentX + 90, currentY, 20f, 20f); // マイナスボタンの位置を調整
             // ボタンを配置
             if (GUI.Button(buttonRect, "+"))
             {
@@ -105,6 +125,8 @@ public class MinoEffectCreater : EditorWindow
                 selectedGroupOptions[i].RemoveAt(selectedGroupOptions[i].Count - 1);
                 maxGroupHeight = 0;
             }
+ 
+            minoSettingList[i].select = GUI.Toggle(selectButtonRect, minoSettingList[i].select, "");
             
             GUILayout.EndHorizontal(); // 水平配置を終了
 
@@ -112,14 +134,18 @@ public class MinoEffectCreater : EditorWindow
             {
                 for (int x = 0; x < array.GetLength(1); x++)
                 {
-                    // ゼロ以外の値に画像を表示
-                    if (array[y, x] != 0)
-                    {
-                        // 各セルの位置とサイズを計算
-                        Rect rect = new Rect(currentX + x * (cellSize + padding), (currentY+30) + y  * (cellSize + padding), cellSize, cellSize);
+                    // 各セルの位置とサイズを計算
+                    Rect rect = new Rect(currentX + x * (cellSize + padding), (currentY+30) + y  * (cellSize + padding), cellSize, cellSize);
 
-                        // 画像を描画
-                        GUI.DrawTexture(rect, image);
+                    // 画像を描画
+                    GUI.DrawTexture(rect, GetButtonImage(array[y, x]));
+                    // 画像がクリックされたか判定
+                    if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown)
+                    {
+                        // クリックされた場合の処理
+                        array[y, x] = (array[y, x] + 1) % 4;
+                        // クリック処理後に描画を更新
+                        Repaint();
                     }
                 }
             }
@@ -168,82 +194,79 @@ public class MinoEffectCreater : EditorWindow
                 currentY += array.GetLength(0) * (cellSize + padding) + gridPadding + 30f + (maxGroupHeight * 25f) ; // Y座標を更新（30f は番号のスペース）
             }
         }
-    }
-    private void LoadData()
+   }
+   
+   private void LoadData()
     {
-        string assetPath = "Assets/Data/MinoEffectData.asset";
-        minoEffectData = AssetDatabase.LoadAssetAtPath<MinoEffectData>(assetPath);
+        string assetPath = "Assets/Data/MinosData.asset";
+        var minoData = AssetDatabase.LoadAssetAtPath<MinoData>(assetPath);
 
-        if (minoEffectData == null)
+        if (minoData == null)
         {
             // データが存在しない場合、新規に作成
-            minoEffectData = ScriptableObject.CreateInstance<MinoEffectData>();
-            AssetDatabase.CreateAsset(minoEffectData, assetPath);
+            minoData = ScriptableObject.CreateInstance<MinoData>();
+            AssetDatabase.CreateAsset(minoData, assetPath);
             AssetDatabase.SaveAssets();
         }
-
-        // selectedGroupOptions をロード
         selectedGroupOptions.Clear();
-        if (minoEffectData.MinoEffects != null)
+        minoSettingList.Clear();
+        foreach (var data in minoData.Parameters)
         {
-            foreach (var effect in minoEffectData.MinoEffects)
+            MinoSetting setting = new MinoSetting();
+            setting.minoDataList = data.minos;
+            minoSettingList.Add(setting);
+            if (data.selectedGroupOptions != null)
             {
-                List<int> groupOptions = new();
-                foreach (var val in effect.selectedGroupOptions)
+                foreach (var effect in data.selectedGroupOptions)
                 {
-                    groupOptions.Add(minoEffectStatusMaster.MinoEffectStatus.IndexOf(val));
-                }
+                    List<int> groupOptions = new();
+                    groupOptions.Add(minoEffectStatusMaster.MinoEffectStatus.IndexOf(effect));
                  
-                selectedGroupOptions.Add(groupOptions);
+                    selectedGroupOptions.Add(groupOptions);
+                }
             }
         }
     }
+    
     private void SaveData()
     {
-        string assetPath = "Assets/Data/MinoEffectData.asset";
-        MinoEffectData database = AssetDatabase.LoadAssetAtPath<MinoEffectData>(assetPath);
+        string assetPath = "Assets/Data/MinosData.asset";
+        MinoData database = AssetDatabase.LoadAssetAtPath<MinoData>(assetPath);
 
         if (database == null)
         {
             // データが存在しない場合、新規に作成
-            database = ScriptableObject.CreateInstance<MinoEffectData>();
+            database = ScriptableObject.CreateInstance<MinoData>();
             AssetDatabase.CreateAsset(database, assetPath);
         }
 
         // MinoEffects を一度クリア
-        if (database.MinoEffects == null)
-        {
-            database.MinoEffects = new List<MinoEffect>();
-        }
-        else
-        {
-            database.MinoEffects.Clear();  // リストの中身をクリア
-        }
+        database.Parameters.Clear();
 
-        // selectedGroupOptions の内容で MinoEffects を更新
-        for (int i = 0; i < selectedGroupOptions.Count; i++)
+        int count = 0;
+        foreach (var mino in minoSettingList)
         {
-            List<int> groupOptions = selectedGroupOptions[i];
+            MinoParameter para = new MinoParameter();
+    
+            // minos のコピー（ディープコピー）
+            para.minos = (int[,])mino.minoDataList.Clone(); // 2次元配列のディープコピー
+    
+            // 各Minoの選択肢リストを初期化
+            List<string> option = new List<string>();
 
-            MinoEffect effect = new MinoEffect
+            // selectedGroupOptions の内容で MinoEffects を更新
+            foreach (var val in selectedGroupOptions[count])
             {
-                numbers = i,  // 番号はインデックス
-                selectedGroupOptions = new List<string>()
-            };
-
-            // 選択肢を selectedGroupOptions から追加
-            foreach (var option in groupOptions)
-            {
-                effect.selectedGroupOptions.Add(minoEffectStatusMaster.MinoEffectStatus[option]);
+                // 選択肢が MinoEffectStatus に基づいて追加される
+                option.Add(minoEffectStatusMaster.MinoEffectStatus[val]);
+             
             }
+            // para.selectedGroupOptions に新しいリストを設定（コピー）
+            para.selectedGroupOptions = new List<string>(option); // 新しいインスタンスを設定
 
-            if (groupOptions.Count == 0)
-            {
-                effect.selectedGroupOptions.Add(minoEffectStatusMaster.MinoEffectStatus[0]);
-            }
-
-            // リストに新しい MinoEffect を追加
-            database.MinoEffects.Add(effect);
+            // データベースに追加
+            database.Parameters.Add(para);
+            count++;
         }
 
         // 保存を反映
@@ -254,4 +277,15 @@ public class MinoEffectCreater : EditorWindow
     {
         SaveData();
     }
+   // 画像取得用のメソッド
+   private Texture2D GetButtonImage(int state)
+   {
+      switch (state)
+      {
+         case 0: return buttonFalseImage;
+         case 1: return buttonTrueImage;
+         case 2: return buttonRotImage;
+         default: return buttonFalseImage;
+      }
+   }
 }

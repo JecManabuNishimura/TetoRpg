@@ -30,8 +30,14 @@ public class GameManager : MonoBehaviour
     public static bool menuFlag;
 
     public static StageLoader stageLoader;
-    public static Stage nowStage = Stage.Stage1;
+    public static Stage nowStage = Stage.None;
+    public static StageData stageData;
 
+    public static void StageStart(Stage stage)
+    {
+        nowStage = stage;
+        stageLoader.SetStageStatus();
+    }
     public static async Task PlayerMove()
     {
         while (true)
@@ -79,6 +85,17 @@ public class GameManager : MonoBehaviour
         BoardManager.Instance.Initialize();
     }
 
+    private void Start()
+    {
+        StageStart(Stage.Stage1);
+    }
+}
+
+[Serializable]
+public class StageData
+{
+    public int HealDropRate;
+    public int BombDropRate;
 }
 
 namespace MyMethods
