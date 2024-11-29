@@ -656,7 +656,7 @@ MonoBehaviour:
     def: 3
   attackArea: {fileID: 2642718665519370728, guid: e3d6a8e77945f7c47b9e395b0fa5e81f, type: 3}
   AttackTime: 3
-  AttackInterval: 5
+  AttackInterval: 25
   dameUi: {fileID: 110048690}
   particle: {fileID: 6510843813997957063, guid: eaedb5f49117d4247be2806408e9d0f8, type: 3}
   duration: 0.5
@@ -804,7 +804,7 @@ MonoBehaviour:
   obstacleMino: {fileID: 3700300457683365237, guid: 5365aed3246edd74d99b6c001ae714d4, type: 3}
   TreasureObj: {fileID: 526652331542382861, guid: c51eeaa9042348945abe59883828a7a4, type: 3}
   MaxFallCount: 25
-  TreasureDropPercent: 3
+  TreasureDropPercent: 30
   fallUi: {fileID: 2002542169}
 --- !u!114 &667771778
 MonoBehaviour:
@@ -836,6 +836,7 @@ MonoBehaviour:
     parameter:
       HealDropRate: 20
       BombDropRate: 20
+      TresureDropRate: 30
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

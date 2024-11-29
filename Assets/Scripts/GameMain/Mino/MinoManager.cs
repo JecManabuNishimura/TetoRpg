@@ -488,7 +488,13 @@ public class MinoManager : MonoBehaviour
     //========================================================================
     private void CreateNewMino()
     {
-        treasureFlag = Random.Range(0, TreasureDropPercent) == 0 ? true : false;
+        //--------------------------------------------------------------------------
+        //  宝箱出現率調節
+        //--------------------------------------------------------------------------
+        if (GameManager.stageData.TresureDropRate != 0)
+        {
+            treasureFlag = Random.Range(0, GameManager.stageData.TresureDropRate) == 0 ? true : false;    
+        }
         
         rotNum = 0;
         if(treasureFlag)
@@ -529,14 +535,19 @@ public class MinoManager : MonoBehaviour
                         //-----------------------------------------------------------------
                         // ライフの確率
                         //-----------------------------------------------------------------
-                        if(Random.Range(0,GameManager.stageData.HealDropRate - GameManager.player.BelongingsMinoEffect["HealRateUp"]) == 0)
+                        if ((GameManager.stageData.HealDropRate != 0) &&
+                            (Random.Range(0, 
+                            GameManager.stageData.HealDropRate -
+                            GameManager.player.BelongingsMinoEffect["HealRateUp"]) == 0))
                         {
                             minos[y, x] *= 2;
                         }
+                        
                         //-----------------------------------------------------------------
                         // ボムの確率
                         //-----------------------------------------------------------------
-                        else if (Random.Range(0, GameManager.stageData.BombDropRate) == 0)
+                        else if ((GameManager.stageData.BombDropRate != 0) &&
+                        (Random.Range(0, GameManager.stageData.BombDropRate) == 0))
                         {
                             minos[y, x] *= 3;
                         }

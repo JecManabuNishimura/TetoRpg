@@ -292,8 +292,9 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             nowMode = NowMode.MinoSelect;
             
             currentIndex = 0;
-            HaveMinoExplanation();
+            
             UpdateCursor();
+            HaveMinoExplanation();
         }
         else
         {
@@ -309,7 +310,10 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             {
                 StartShake(gridItems[currentIndex].gameObject,0.5f, 5.5f, 30, 90, false);
             }
+            MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
         }
+        
+        BelongingMinoExplanation();
     }
     void ChangeBelongingMino(int selectIndex, int minoNumber)
     {

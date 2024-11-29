@@ -97,6 +97,7 @@ public class StageData
 {
     public int HealDropRate;
     public int BombDropRate;
+    public int TresureDropRate;
 }
 
 namespace MyMethods
