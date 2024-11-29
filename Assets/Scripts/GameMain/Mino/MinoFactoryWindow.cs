@@ -86,10 +86,11 @@ public class MinoFactoryWindow : EditorWindow
         
         for (int i = 0; i < minoSettingList.Count; i++)
         {
+            
+            var array = minoSettingList[i].minoDataList;
+            if (array == null) return;
             // 1つのグループとして縦に並べる
             EditorGUILayout.BeginVertical();
-            var array = minoSettingList[i].minoDataList;
-
             // グループラベルとボタンを横に並べる
             GUILayout.BeginHorizontal(); // 水平配置を開始
             // 数字（i）を表示
@@ -129,7 +130,7 @@ public class MinoFactoryWindow : EditorWindow
             minoSettingList[i].select = GUI.Toggle(selectButtonRect, minoSettingList[i].select, "");
             
             GUILayout.EndHorizontal(); // 水平配置を終了
-
+            
             for (int y = 0; y < array.GetLength(0); y++)
             {
                 for (int x = 0; x < array.GetLength(1); x++)
@@ -213,15 +214,26 @@ public class MinoFactoryWindow : EditorWindow
         foreach (var data in minoData.Parameters)
         {
             MinoSetting setting = new MinoSetting();
-            setting.minoDataList = data.minos;
+
+            // minos を復元
+            setting.minoDataList = ConvertToNestedList(data.minos, data.rows, data.cols);
+
             minoSettingList.Add(setting);
+
+            // selectedGroupOptions の変換
             if (data.selectedGroupOptions != null)
             {
                 foreach (var effect in data.selectedGroupOptions)
                 {
                     List<int> groupOptions = new();
-                    groupOptions.Add(minoEffectStatusMaster.MinoEffectStatus.IndexOf(effect));
-                 
+                    int effectIndex = minoEffectStatusMaster.MinoEffectStatus.IndexOf(effect);
+
+                    // 見つからない場合はエラーチェック
+                    if (effectIndex >= 0)
+                    {
+                        groupOptions.Add(effectIndex);
+                    }
+
                     selectedGroupOptions.Add(groupOptions);
                 }
             }
@@ -247,10 +259,13 @@ public class MinoFactoryWindow : EditorWindow
         foreach (var mino in minoSettingList)
         {
             MinoParameter para = new MinoParameter();
-    
-            // minos のコピー（ディープコピー）
-            para.minos = (int[,])mino.minoDataList.Clone(); // 2次元配列のディープコピー
-    
+
+            // minos の変換
+            para.minos = Flatten2DList(mino.minoDataList);
+            para.rows = mino.minoDataList.GetLength(0);
+            para.cols = mino.minoDataList.GetLength(1);
+            
+            
             // 各Minoの選択肢リストを初期化
             List<string> option = new List<string>();
 
@@ -261,17 +276,56 @@ public class MinoFactoryWindow : EditorWindow
                 option.Add(minoEffectStatusMaster.MinoEffectStatus[val]);
              
             }
-            // para.selectedGroupOptions に新しいリストを設定（コピー）
-            para.selectedGroupOptions = new List<string>(option); // 新しいインスタンスを設定
+            para.selectedGroupOptions = new List<string>(option);
 
-            // データベースに追加
             database.Parameters.Add(para);
-            count++;
         }
 
         // 保存を反映
         EditorUtility.SetDirty(database);
         AssetDatabase.SaveAssets();
+    }
+    List<int> Flatten2DList(int[,] nestedList)
+    {
+        List<int> flatList = new List<int>();
+
+        for (int i = 0; i < nestedList.GetLength(0); i++)
+        {
+            for (int j = 0; j < nestedList.GetLength(1); j++)
+            {
+                if (nestedList[i, j] == 2)
+                {
+                    flatList.Add(-1);
+                }
+                else
+                {
+                    flatList.Add(nestedList[i, j]);
+                }
+                
+            }
+        }
+
+        return flatList;
+    }
+
+    int[,] ConvertToNestedList(List<int> flatList, int rows, int cols)
+    {
+        int[,] nestedList = new int[rows,cols];
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                if (flatList[i * cols + j] == -1)
+                {
+                    nestedList[i, j]  = 2;
+                }
+                else
+                {
+                    nestedList[i, j] = flatList[i * cols + j];
+                }
+            }
+        }
+        return nestedList;
     }
     private void OnDestroy()
     {
