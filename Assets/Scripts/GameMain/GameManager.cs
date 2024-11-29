@@ -87,6 +87,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        player.Initialize();
         StageStart(Stage.Stage1);
     }
 }

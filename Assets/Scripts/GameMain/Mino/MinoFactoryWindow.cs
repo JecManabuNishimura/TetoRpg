@@ -144,7 +144,7 @@ public class MinoFactoryWindow : EditorWindow
                     if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown)
                     {
                         // クリックされた場合の処理
-                        array[y, x] = (array[y, x] + 1) % 4;
+                        array[y, x] = (array[y, x] + 1) % 3;
                         // クリック処理後に描画を更新
                         Repaint();
                     }
@@ -265,20 +265,23 @@ public class MinoFactoryWindow : EditorWindow
             para.rows = mino.minoDataList.GetLength(0);
             para.cols = mino.minoDataList.GetLength(1);
             
-            
             // 各Minoの選択肢リストを初期化
             List<string> option = new List<string>();
-
-            // selectedGroupOptions の内容で MinoEffects を更新
-            foreach (var val in selectedGroupOptions[count])
+            
+            // eslectedGroupOptions の内容で MinoEffects を更新
+            if (selectedGroupOptions[count].Count != 0)
             {
                 // 選択肢が MinoEffectStatus に基づいて追加される
-                option.Add(minoEffectStatusMaster.MinoEffectStatus[val]);
-             
+                foreach (var val in selectedGroupOptions[count])
+                {
+                    option.Add(minoEffectStatusMaster.MinoEffectStatus[val]);
+                }
             }
+
             para.selectedGroupOptions = new List<string>(option);
 
             database.Parameters.Add(para);
+            count++;
         }
 
         // 保存を反映

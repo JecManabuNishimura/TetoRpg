@@ -46,7 +46,7 @@ public class Player : CharactorData, ICharactor
     public List<int> HaveMinoList => haveMinoList;
     public List<int> BelongingsMino => belongingsMino;
 
-    public Dictionary<string,int > BelongingsMinoEffect;
+    public Dictionary<string,int > BelongingsMinoEffect = new ();
 
     void Awake()
     {
@@ -54,7 +54,8 @@ public class Player : CharactorData, ICharactor
         damageText.enabled = false;
     }
 
-    private void Start()
+
+    public void Initialize()
     {
         status.hp = status.maxHp;
         hpText.text = status.hp.ToString();
@@ -90,7 +91,7 @@ public class Player : CharactorData, ICharactor
         }
         foreach (var val in belongingsMino)
         {
-            var data = MinoEffectData.Entity.GetMinoEffect(val);
+            var data = MinoData.Entity.GetMinoEffect(val);
             foreach (var d in data)
             {
                 BelongingsMinoEffect[d]++;

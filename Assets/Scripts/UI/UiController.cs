@@ -264,7 +264,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     {
         MenuManager.Instance.minoData.belongingsEffectGroup.transform.ChildClear();
         var id = GameManager.player.BelongingsMino[MenuManager.Instance.minoData.circleLayoutGroup.GetIndex()];
-        var val = MinoEffectData.Entity.GetMinoEffect(id);
+        var val = MinoData.Entity.GetMinoEffect(id);
         foreach (var data in val)
         {
             var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
@@ -276,7 +276,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     {
         MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
         var id = GameManager.player.haveMinoList[currentIndex];
-        var val = MinoEffectData.Entity.GetMinoEffect(id);
+        var val = MinoData.Entity.GetMinoEffect(id);
         foreach (var data in val)
         {
             var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,

@@ -14,7 +14,7 @@ public class MinoData : ScriptableObject
             //初アクセス時にロードする
             if (_entity == null)
             {
-                string assetPath = "Assets/Data/MinoData.asset";
+                string assetPath = "Assets/Data/MinosData.asset";
                 _entity = AssetDatabase.LoadAssetAtPath<MinoData>(assetPath);
                 
                 if (_entity == null)
@@ -27,10 +27,17 @@ public class MinoData : ScriptableObject
         }
     }
     public List<MinoParameter> Parameters = new();
+    
+    public int TetoMinoLength => Parameters.Count;
 
     public int[,] GetMinoData(int index)
     {
         return ConvertToNestedList(Parameters[index].minos,Parameters[index].rows,Parameters[index].cols);
+    }
+
+    public List<string> GetMinoEffect(int index)
+    {
+        return Parameters[index].selectedGroupOptions;
     }
     int[,] ConvertToNestedList(List<int> flatList, int rows, int cols)
     {
