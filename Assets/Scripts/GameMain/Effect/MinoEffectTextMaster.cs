@@ -41,6 +41,7 @@ public class MinoEffectTextMaster : ScriptableObject
         return "";
     }
 }
+#if UNITY_EDITOR
 [CustomEditor(typeof(MinoEffectTextMaster))]
 public class MinoEffectTextMasterEditor : Editor
 {
@@ -111,7 +112,7 @@ public class MinoEffectTextMasterEditor : Editor
         serializedObject.ApplyModifiedProperties(); // 最後に変更を保存
     }
 }
-
+#endif
 [Serializable]
 public class MinoEffectExplanation
 {

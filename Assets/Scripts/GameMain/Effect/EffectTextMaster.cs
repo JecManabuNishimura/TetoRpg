@@ -31,6 +31,7 @@ public class EffectTextMaster : ScriptableObject
 
     public SerializableDictionary<EffectStatus, string> effectExplanation = new();
 }
+#if UNITY_EDITOR
 [CustomEditor(typeof(EffectTextMaster))]
 public class ExampleEditor : Editor
 {
@@ -82,7 +83,7 @@ public class ExampleEditor : Editor
         EditorUtility.SetDirty(target); // ScriptableObjectの変更を保存
     }
 }
-
+#endif
 [Serializable]
 public class EffectExplanation
 {

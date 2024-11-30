@@ -101,7 +101,7 @@ public class MinoManager : MonoBehaviour
         fallTimer += Time.deltaTime;
         if (fallTimer >= fallTime)
         {
-            MoveDown();
+            //MoveDown();
             fallTimer = 0;
         }
         if (Input.GetKeyDown(KeyCode.S))
@@ -299,7 +299,7 @@ public class MinoManager : MonoBehaviour
 
     private void RotMino()
     {
-        if (SelectMino == null) return;
+        if (SelectMino == null || treasureFlag) return;
         var nowPos = SelectMino.transform.position;
         rotNum = (rotNum +1) % 4;
         int[,] minoRot = MinoFactory.RotatePiece(nowMinos, rotNum,index);

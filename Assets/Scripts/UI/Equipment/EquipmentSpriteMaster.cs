@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-
+#if UNITY_EDITOR
 public class EquipmentSpriteMaster : EditorWindow
 {
     public static EquipmentSpriteMaster Instance { get; private set; }
@@ -233,6 +233,7 @@ public class EquipmentSpriteMaster : EditorWindow
         public List<EquipmentSpriteData> armorData;
     }
 }
+#endif
 [Serializable]
 public class EquipmentSpriteData
 {

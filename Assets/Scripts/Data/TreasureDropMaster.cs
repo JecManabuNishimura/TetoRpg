@@ -31,6 +31,7 @@ public class TreasureDropMaster : ScriptableObject
         return null;
     }
 }
+#if UNITY_EDITOR
 [CustomEditor(typeof(TreasureDropMaster))]
 public class TreasureDropMasterEditor : Editor
 {
@@ -99,6 +100,7 @@ public class TreasureDropMasterEditor : Editor
         }
     }
 }
+#endif
 [Serializable]
 public class ItemDropData
 {

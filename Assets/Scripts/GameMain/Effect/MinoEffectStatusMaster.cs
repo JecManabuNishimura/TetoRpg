@@ -30,6 +30,7 @@ public class MinoEffectStatusMaster : ScriptableObject
 
     public List<string> MinoEffectStatus = new();
 }
+#if UNITY_EDITOR
 [CustomEditor(typeof(MinoEffectStatusMaster))]
 public class MinoEffectStatusMasterEditor : Editor
 {
@@ -63,3 +64,4 @@ public class MinoEffectStatusMasterEditor : Editor
         serializedObject.ApplyModifiedProperties(); // 最後に変更を保存
     }
 }
+#endif 

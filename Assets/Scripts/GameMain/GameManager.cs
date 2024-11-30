@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Object = System.Object;
 
+
 public class GameManager : MonoBehaviour
 {
     public static Player player;
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
     }
     public static async Task PlayerMove()
     {
+        
         while (true)
         {
             if(playerPut)

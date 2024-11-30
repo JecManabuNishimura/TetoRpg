@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public class MinoFactoryWindow : EditorWindow
 {
     private class MinoSetting
@@ -47,7 +48,6 @@ public class MinoFactoryWindow : EditorWindow
       buttonFalseImage = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Chess Studio/Puzzle Blocks Icon Pack/png/bubble.png");
       buttonTrueImage = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Chess Studio/Puzzle Blocks Icon Pack/png/blockBlueDimond.png");
       buttonRotImage = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Chess Studio/Puzzle Blocks Icon Pack/png/blockYellowDimond.png");
-      LoadData();
    }
 
    private void OnGUI()
@@ -332,7 +332,7 @@ public class MinoFactoryWindow : EditorWindow
     }
     private void OnDestroy()
     {
-        SaveData();
+        //SaveData();
     }
    // 画像取得用のメソッド
    private Texture2D GetButtonImage(int state)
@@ -346,3 +346,4 @@ public class MinoFactoryWindow : EditorWindow
       }
    }
 }
+#endif

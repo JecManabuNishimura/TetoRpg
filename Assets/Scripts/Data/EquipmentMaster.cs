@@ -111,6 +111,7 @@ public class EquipmentMaster : ScriptableObject
         }
     }
 }
+#if UNITY_EDITOR
 [CustomEditor(typeof(EquipmentMaster))]
 public class EquipmentMasterEditor : Editor
 {
@@ -141,7 +142,7 @@ public class EquipmentMasterEditor : Editor
         }
     }
 }
-
+#endif
 [Serializable]
 public class EquipmentData
 {
