@@ -17,20 +17,41 @@ public class testBlock : MonoBehaviour
     void Start()
     {
         GameManager.CreateLineBlock += CreateLineBlock;
-        
+        GameManager.CreateBlock += CreateBlock;
         checkParent = new GameObject(){name = "check"};
+        //BoardManager.Instance.SetTestBlock += SetTestBlock;
+    }
+
+    private void CreateObj(Vector3 pos)
+    {
+        GameObject obj =  Instantiate(block,parent.transform);
+        obj.transform.localPosition = pos;
+
+        obj.name = $"{pos.x}:{pos.y}";
+        blockList.Add(obj);
+    }
+    private async Task CreateBlock()
+    {
+        /*
         for (int y = 0; y < GameManager.boardHeight -1; y++)
         {
             for (int x = 0; x < GameManager.boardWidth; x++)
             {
-                GameObject obj =  Instantiate(block,parent.transform);
-                obj.transform.localPosition = new Vector3(x, -y, 0);
-                obj.name = $"{x}:{y}";
-                blockList.Add(obj);
+                CreateObj(new Vector3(x, -y, 0));
+                await Task.Yield();
+            }
+        }
+        */
+        for (int y = 0; y < GameManager.boardHeight -1; y++)
+        {
+            for (int x = 0; x < (GameManager.boardWidth / 2) + 1; x++)
+            {
+                CreateObj(new Vector3(x, -y, 0));
+                CreateObj(new Vector3(GameManager.boardWidth - x -1, -y, 0));
+                await Task.Yield();
             }
         }
 
-        //BoardManager.Instance.SetTestBlock += SetTestBlock;
     }
 
     private void Update()

@@ -30,6 +30,8 @@ public class CameraMove : MonoBehaviour
             if (CheckEnemyEncount(encountEnemy.GetEnemyData().transform.position))
             {
                 GameManager.cameraFlag = false;
+                // バトル開始
+                GameManager.Battle();
                 continue;
             }
 

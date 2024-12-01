@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public static event Action DownMino;
     public static event Func<Task> FallingMino;
     public static event Func<Task> CreateLineBlock;
+    public static event Func<Task> CreateBlock;
+    public static event Action StartBattle;
 
     public static int healingPoint = 5;
     public static int DeleteLine;
@@ -95,6 +97,13 @@ public class GameManager : MonoBehaviour
         stageLoader.SetStageStatus();
         cameraFlag = true;
         cameraMove.MoveCamera();
+    }
+
+    public static async void Battle()
+    {
+        await CreateBlock?.Invoke();
+        StartBattle?.Invoke();
+        
     }
 }
 

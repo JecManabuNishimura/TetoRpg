@@ -46,6 +46,13 @@ public class MinoManager : MonoBehaviour
 
     private void Start()
     {
+        GameManager.StartBattle += () =>
+        {
+            CreateNewMino();
+            fallUi.ChangeText((MaxFallCount - fallCount).ToString());
+            downColPos = (int)SelectMino.transform.position.x;
+        };
+        
         clMinoObj = new GameObject
         {
             transform =
@@ -62,22 +69,22 @@ public class MinoManager : MonoBehaviour
         BoardManager.Instance.ResetTable += ResetDataTable;
         BoardManager.Instance.CheckTreasure += CheckTreasure;
         
-        inputHandler = new InputHandler();
-        inputHandler.RotateMino = RotMino;
-        inputHandler.MoveLeft = () => MoveLeftRight(true);
-        inputHandler.MoveRight = () => MoveLeftRight(false);
-        inputHandler.MoveDown = MoveDown;
-        inputHandler.Fall = Fall;
-        inputHandler.ChangeColor = () => StartCoroutine(ChangeColor(5, 10));
-
-        CreateNewMino();
+        inputHandler = new InputHandler
+        {
+            RotateMino = RotMino,
+            MoveLeft = () => MoveLeftRight(true),
+            MoveRight = () => MoveLeftRight(false),
+            MoveDown = MoveDown,
+            Fall = Fall,
+            ChangeColor = () => StartCoroutine(ChangeColor(5, 10))
+        };
+        
         minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         minoListObj = new GameObject
         {
             name = "minoListObj"
         };
-        fallUi.ChangeText((MaxFallCount - fallCount).ToString());
-        downColPos = (int)SelectMino.transform.position.x;
+        
     }
 
     private void ResetDataTable()
