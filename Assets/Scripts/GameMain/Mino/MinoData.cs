@@ -14,8 +14,8 @@ public class MinoData : ScriptableObject
             //初アクセス時にロードする
             if (_entity == null)
             {
-                string assetPath = "Assets/Data/MinosData.asset";
-                _entity = AssetDatabase.LoadAssetAtPath<MinoData>(assetPath);
+                string assetPath = "Master/MinosData";
+                _entity = Resources.Load<MinoData>(assetPath);
                 
                 if (_entity == null)
                 {

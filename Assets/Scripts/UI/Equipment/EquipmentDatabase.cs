@@ -19,8 +19,8 @@ public class EquipmentDatabase : ScriptableObject
             //初アクセス時にロードする
             if (_entity == null)
             {
-                string assetPath = "Assets/Data/EquipmentDatabase.asset";
-                _entity = AssetDatabase.LoadAssetAtPath<EquipmentDatabase>(assetPath);
+                string assetPath = "Master/EquipmentDatabase";
+                _entity = Resources.Load<EquipmentDatabase>(assetPath);
 
                 //ロード出来なかった場合はエラーログを表示
                 if (_entity == null)

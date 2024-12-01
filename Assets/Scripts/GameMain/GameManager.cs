@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = System.Object;
 
 
@@ -84,7 +86,20 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
         BoardManager.Instance.Initialize();
+        string uiName = "EquipmentUI";
+        string mapName = "Map";
+        if(!IsSceneLoaded(uiName))
+        {
+            StartCoroutine(LoadSceneAdditive(uiName));
+        }
+
+        if(!IsSceneLoaded(mapName))
+        {
+            StartCoroutine(LoadSceneAdditive(mapName));
+        }
     }
     private void Start()
     {
@@ -104,6 +119,32 @@ public class GameManager : MonoBehaviour
         await CreateBlock?.Invoke();
         StartBattle?.Invoke();
         
+    }
+    // 非同期でシーンを追加するコルーチン
+    private IEnumerator LoadSceneAdditive(string name)
+    {
+        // シーンの読み込みを非同期で行う
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
+
+        // シーンの読み込みが完了するまで待つ
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+    }
+    // シーンがすでにロードされているかを確認するメソッド
+    private bool IsSceneLoaded(string sceneName)
+    {
+        // すべてのロードされているシーンを確認
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            Scene scene = SceneManager.GetSceneAt(i);
+            if (scene.name == sceneName)
+            {
+                return true; // シーンがロード済み
+            }
+        }
+        return false; // シーンがロードされていない
     }
 }
 

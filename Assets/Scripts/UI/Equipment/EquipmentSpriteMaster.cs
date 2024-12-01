@@ -177,8 +177,8 @@ public class EquipmentSpriteMaster : EditorWindow
     // データを読み込むメソッド
     private void LoadData()
     {
-        string assetPath = "Assets/Data/EquipmentDatabase.asset";
-        EquipmentDatabase database = AssetDatabase.LoadAssetAtPath<EquipmentDatabase>(assetPath);
+        string assetPath = "Master/EquipmentDatabase";
+        EquipmentDatabase database = Resources.Load<EquipmentDatabase>(assetPath);
         if (database != null)
         {
             // ScriptableObjectのデータをEditorWindowにコピー
@@ -196,8 +196,8 @@ public class EquipmentSpriteMaster : EditorWindow
    
     private void SaveToScriptableObject()
     {
-        string assetPath = "Assets/Data/EquipmentDatabase.asset";
-        EquipmentDatabase database = AssetDatabase.LoadAssetAtPath<EquipmentDatabase>(assetPath);
+        string assetPath = "Master/EquipmentDatabase";
+        EquipmentDatabase database = Resources.Load<EquipmentDatabase>(assetPath);
     
         // アセットが存在しない場合は新規作成
         if (database == null)

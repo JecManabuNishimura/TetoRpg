@@ -199,8 +199,8 @@ public class MinoFactoryWindow : EditorWindow
    
    private void LoadData()
     {
-        string assetPath = "Assets/Data/MinosData.asset";
-        var minoData = AssetDatabase.LoadAssetAtPath<MinoData>(assetPath);
+        string assetPath = "Master/MinosData";
+        var minoData = Resources.Load<MinoData>(assetPath);
 
         if (minoData == null)
         {
@@ -242,8 +242,8 @@ public class MinoFactoryWindow : EditorWindow
     
     private void SaveData()
     {
-        string assetPath = "Assets/Data/MinosData.asset";
-        MinoData database = AssetDatabase.LoadAssetAtPath<MinoData>(assetPath);
+        string assetPath = "Master/MinosData";
+        MinoData database = Resources.Load<MinoData>(assetPath);
 
         if (database == null)
         {
