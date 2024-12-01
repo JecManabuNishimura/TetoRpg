@@ -29,19 +29,17 @@ public class GameManager : MonoBehaviour
     public static bool EnemyAttackFlag;
     public static bool LineCreateFlag;
     public static bool menuFlag;
-
+    public static bool cameraFlag;
+    
     public static StageLoader stageLoader;
     public static Stage nowStage = Stage.None;
     public static StageData stageData;
 
-    public static void StageStart(Stage stage)
-    {
-        nowStage = stage;
-        stageLoader.SetStageStatus();
-    }
+    public static CameraMove cameraMove;
+    
+
     public static async Task PlayerMove()
     {
-        
         while (true)
         {
             if(playerPut)
@@ -86,11 +84,17 @@ public class GameManager : MonoBehaviour
     {
         BoardManager.Instance.Initialize();
     }
-
     private void Start()
     {
         player.Initialize();
         StageStart(Stage.Stage1);
+    }
+    public static void StageStart(Stage stage)
+    {
+        nowStage = stage;
+        stageLoader.SetStageStatus();
+        cameraFlag = true;
+        cameraMove.MoveCamera();
     }
 }
 
