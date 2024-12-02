@@ -18,6 +18,7 @@ public class MinoManager : MonoBehaviour
     [SerializeField] private GameObject TreasureObj;
     [SerializeField] private int MaxFallCount = 10;
     [SerializeField] private int TreasureDropPercent;
+    [SerializeField] private GameObject holdObj;
 
     [SerializeField] private FallCounter fallUi;
     private GameObject SelectMino;
@@ -42,6 +43,8 @@ public class MinoManager : MonoBehaviour
 
     private bool treasureFlag = false;
     private int treasureNumber = 0;
+
+    private List<HoldMinoData> holdMino = new();
 
 
     private void Start()
@@ -449,6 +452,38 @@ public class MinoManager : MonoBehaviour
         minoDataTable[y, x] = null;
     }
 
+    
+
+    // トレジャーボックス情報取得
+    Treasure GetTreasureData(int x,int y)
+    {
+        foreach(var data in treasuresTable)
+        {
+            if(data.number == minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber)
+            {
+                return data;
+            }
+        }
+        return null;
+    }
+    void HoldMino()
+    {
+        if(holdMino.Count == 0)
+        {
+            HoldMinoData data = new HoldMinoData()
+            {
+                minoData = nowMinos,
+                minoObj = SelectMino
+            };
+            holdMino.Add(data);
+            CreateNewMino();
+        }
+        else
+        {
+            GameObject obj = SelectMino.;
+            CreatePiece(holdMino[0].minoData);
+        }
+    }
     void DownMino(int x,int y)
     {
         if (minoDataTable[y + 1, x] != null)
@@ -466,20 +501,6 @@ public class MinoManager : MonoBehaviour
             minoDataTable[y + 1, x] = null;
         }
     }
-
-    // トレジャーボックス情報取得
-    Treasure GetTreasureData(int x,int y)
-    {
-        foreach(var data in treasuresTable)
-        {
-            if(data.number == minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber)
-            {
-                return data;
-            }
-        }
-        return null;
-    }
-
     void MoveLeftRight(bool isLeft)
     {
         bool hitflag = false;
@@ -866,5 +887,11 @@ public class MinoManager : MonoBehaviour
         public GameObject spriteObj;
         public int number;
 
+    }
+
+    private class HoldMinoData
+    {
+        public int[,] minoData;
+        public GameObject minoObj;
     }
 }
