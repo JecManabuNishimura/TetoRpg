@@ -3,6 +3,8 @@ using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SubsystemsImplementation;
+using static UnityEngine.EventSystems.EventTrigger;
 using Object = System.Object;
 
 
@@ -18,6 +20,7 @@ public class GameManager : MonoBehaviour
     public static event Func<Task> FallingMino;
     public static event Func<Task> CreateLineBlock;
     public static event Func<Task> CreateBlock;
+    public static event Action ClearBlock;
     public static event Action StartBattle;
 
     public static int healingPoint = 5;
@@ -34,12 +37,14 @@ public class GameManager : MonoBehaviour
     public static bool LineCreateFlag;
     public static bool menuFlag;
     public static bool cameraFlag;
-    
+    public static bool EnemyDown;
+
     public static StageLoader stageLoader;
     public static Stage nowStage = Stage.None;
     public static StageData stageData;
 
     public static CameraMove cameraMove;
+   
     
 
     public static async Task PlayerMove()
@@ -59,18 +64,28 @@ public class GameManager : MonoBehaviour
                     }
                     await Task.Delay(500); 
                 }
-                if(EnemyAttackFlag)
+                if (EnemyDown)
                 {
-                    await EnemyAttack?.Invoke()!;
-                    await Task.Delay(500); 
-                    
-                    DownMino?.Invoke();
-                    await Task.Delay(1000);
+                    BoardManager.Instance.ClearBoard();
+                    ClearBlock?.Invoke();
+                    Destroy(enemy.gameObject);
+                    MapManager.Instance.EndBattle();
                 }
-
-                if (LineCreateFlag)
+                else
                 {
-                    await CreateLineBlock?.Invoke();
+                    if (EnemyAttackFlag)
+                    {
+                        await EnemyAttack?.Invoke()!;
+                        await Task.Delay(500);
+
+                        DownMino?.Invoke();
+                        await Task.Delay(1000);
+                    }
+
+                    if (LineCreateFlag)
+                    {
+                        await CreateLineBlock?.Invoke();
+                    }
                 }
             }
             // 攻撃終了を待つ
@@ -116,10 +131,13 @@ public class GameManager : MonoBehaviour
 
     public static async void Battle()
     {
+        EnemyDown = false;
+        
+        enemy = Instantiate(MapManager.Instance.GetEnemyObj, stageLoader.EnemyPos, Quaternion.identity).GetComponent<Enemy.Charactor>();
         await CreateBlock?.Invoke();
         StartBattle?.Invoke();
-        
     }
+ 
     // 非同期でシーンを追加するコルーチン
     private IEnumerator LoadSceneAdditive(string name)
     {

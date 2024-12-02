@@ -8,7 +8,7 @@ public class CameraMove : MonoBehaviour
 {
     [SerializeField] public CinemachineSplineDolly dollyCart;
     [SerializeField] private SplineContainer spline;
-    [SerializeField] private MapEncountEnemy encountEnemy;
+    
     private bool moveFlag = true;
 
     public void Awake()
@@ -24,10 +24,11 @@ public class CameraMove : MonoBehaviour
             if (!GameManager.cameraFlag)
             {
                 await Task.Yield();
+                
                 continue;
             }
             dollyCart.CameraPosition += 0.1f;
-            if (CheckEnemyEncount(encountEnemy.GetEnemyData().transform.position))
+            if (CheckEnemyEncount(MapManager.Instance.GetEnemyPos))
             {
                 GameManager.cameraFlag = false;
                 // バトル開始

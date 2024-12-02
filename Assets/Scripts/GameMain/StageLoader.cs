@@ -7,6 +7,7 @@ using UnityEngine;
 public class StageLoader : MonoBehaviour
 {
     [SerializeField] private List<StageStatus> status;
+    [SerializeField] private Transform enemyPos;
     public TreasureDropMaster GetDropData()
     {
         var data = status.First(_ => _.stage == GameManager.nowStage);
@@ -22,6 +23,8 @@ public class StageLoader : MonoBehaviour
         var data = status.First(_ => _.stage == GameManager.nowStage);
         GameManager.stageData = data.parameter;
     }
+
+    public Vector3 EnemyPos => enemyPos.position;
 }
 
 [Serializable]

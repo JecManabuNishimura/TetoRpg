@@ -1,3 +1,4 @@
+using MyMethods;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ public class testBlock : MonoBehaviour
     {
         GameManager.CreateLineBlock += CreateLineBlock;
         GameManager.CreateBlock += CreateBlock;
+        GameManager.ClearBlock += ClearBlock;
         checkParent = new GameObject(){name = "check"};
         //BoardManager.Instance.SetTestBlock += SetTestBlock;
     }
@@ -29,6 +31,10 @@ public class testBlock : MonoBehaviour
 
         obj.name = $"{pos.x}:{pos.y}";
         blockList.Add(obj);
+    }
+    private void ClearBlock()
+    {
+        parent.transform.ChildClear();
     }
     private async Task CreateBlock()
     {

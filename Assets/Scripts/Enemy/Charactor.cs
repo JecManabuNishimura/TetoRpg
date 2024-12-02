@@ -76,8 +76,7 @@ namespace Enemy
                     area.Add(aObj);
                     aObj.transform.parent = attackObjPare.transform;
                 }
-                
-                
+
                 //SpecialAttackFlag = true;
                 timerFlag = true;
             }
@@ -217,6 +216,11 @@ namespace Enemy
                 int newDamage = damage / 2 - status.def / 4;
                 status.hp -= newDamage;
                 GetComponent<Animator>().Play("DamageAnim", 0, 0);
+                if(status.hp < 0)
+                {
+                    status.hp = 0;
+                    GameManager.EnemyDown = true;
+                }
             }
         }
     }

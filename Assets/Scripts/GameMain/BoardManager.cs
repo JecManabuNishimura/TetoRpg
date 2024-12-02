@@ -17,6 +17,7 @@ public class BoardManager
     public event Action<int,int> TableNullMino;
     public event Func<int,int,bool> CheckTreasure;
     public event Action ResetTable;
+    public event Action ClearTable;
 
     public event Action SetTestBlock;
     private Stack<int> deleteLineRow = new();
@@ -53,6 +54,18 @@ public class BoardManager
 
         board = newBoard;
         ResetTable?.Invoke();
+    }
+
+    public void ClearBoard()
+    {
+        for (int y = 0; y < board.GetLength(0); y++)
+        {
+            for (int x = 0; x < board.GetLength(1); x++)
+            {
+                board[y, x] = 0;
+            }
+        }
+        ClearTable?.Invoke();
     }
 
     public bool IsValidPosition(Vector3 position)

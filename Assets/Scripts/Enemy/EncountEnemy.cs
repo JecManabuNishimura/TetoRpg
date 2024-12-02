@@ -8,7 +8,8 @@ public class EncountEnemy : MonoBehaviour
     
     void OnValidate()
     {
-        Debug.Log("test");
         spriteRenderer.sprite = enemyObj.GetComponent<SpriteRenderer>().sprite;
     }
+
+    public GameObject GetEnemyObj => enemyObj;
 }

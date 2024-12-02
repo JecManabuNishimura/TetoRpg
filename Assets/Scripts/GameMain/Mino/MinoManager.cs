@@ -68,6 +68,7 @@ public class MinoManager : MonoBehaviour
         BoardManager.Instance.TableNullMino += SetMinoTableNull;
         BoardManager.Instance.ResetTable += ResetDataTable;
         BoardManager.Instance.CheckTreasure += CheckTreasure;
+        BoardManager.Instance.ClearTable += ClearTable;
         
         inputHandler = new InputHandler
         {
@@ -98,6 +99,17 @@ public class MinoManager : MonoBehaviour
             }
         }
         minoDataTable = newTable;
+    }
+
+    private void ClearTable()
+    {
+        for (int y = 0; y < minoDataTable.GetLength(0); y++)
+        {
+            for (int x = 0; x < minoDataTable.GetLength(1); x++)
+            {
+                Destroy(minoDataTable[y, x]);
+            }
+        }
     }
     private void Update()
     {
@@ -650,6 +662,11 @@ public class MinoManager : MonoBehaviour
 
                     GameManager.playerPut = true;
                     await GameManager.PlayerMove();
+                    // 敵死亡時　何もしない
+                    if(GameManager.EnemyDown)
+                    {
+                        return;
+                    }
                     await ChangeFallCount();
                     CreateNewMino();
                     
@@ -692,6 +709,11 @@ public class MinoManager : MonoBehaviour
             
             GameManager.playerPut = true;
             await GameManager.PlayerMove();
+            // 敵死亡時　何もしない
+            if (GameManager.EnemyDown)
+            {
+                return;
+            }
             await ChangeFallCount();
             CreateNewMino();
         }
