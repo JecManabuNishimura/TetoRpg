@@ -62,8 +62,7 @@ namespace Enemy
                 }
                 area.Clear();
                 // 攻撃の種類
-
-
+                
                 int pattern = SelectAttackPattern();
                 if(pattern == -1)
                 {

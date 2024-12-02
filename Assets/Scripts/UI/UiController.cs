@@ -302,9 +302,11 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             shakeInitPosition = gridItems[currentIndex].position;
             if (!GameManager.player.belongingsMino.Contains(minoNum))
             {
+                
                 ChangeBelongingMino(MenuManager.Instance.minoData.circleLayoutGroup.GetIndex(), minoNum);
                 nowMode = NowMode.BelongingsSelect;
                 ColorReset();
+                GameManager.player.SetBelongingsMinoEffect();
             }
             else
             {
@@ -317,6 +319,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     }
     void ChangeBelongingMino(int selectIndex, int minoNumber)
     {
+        // ミノ装備
         GameManager.player.BelongingsMino[selectIndex] = minoNumber;
         // 対象の親オブジェクト（Transform）を取得
         Transform parentTransform = 

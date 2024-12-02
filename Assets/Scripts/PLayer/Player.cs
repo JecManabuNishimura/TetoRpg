@@ -81,7 +81,7 @@ public class Player : CharactorData, ICharactor
         }
     }
 
-    private void SetBelongingsMinoEffect()
+    public void SetBelongingsMinoEffect()
     {
         var keys = new List<string>(BelongingsMinoEffect.Keys); // 既存のすべてのキーを取得
 
@@ -124,7 +124,6 @@ public class Player : CharactorData, ICharactor
     private void UpdateStatus()
     {
         // ミノ効果追加
-        SetBelongingsMinoEffect();
         totalStatus = status;
 
         // 各装備データを取得し、null チェックを行う

@@ -15,5 +15,7 @@ MonoBehaviour:
   effectExplanation:
     keys:
     - HealRateUp
+    - HoldBlock
     values:
     - "\u56DE\u5FA9\u51FA\u73FE\u7387Up"
+    - "Hold\u4F7F\u7528\u53EF\u80FD"

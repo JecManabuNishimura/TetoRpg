@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class EnemyHpView : MonoBehaviour
 {
+    [SerializeField] private GameObject hpTextObj;
     [SerializeField] private TextMeshProUGUI nowHp;
     [SerializeField] private TextMeshProUGUI maxHp;
 
@@ -20,7 +21,13 @@ public class EnemyHpView : MonoBehaviour
     {
         if (GameManager.enemy != null)
         {
+            hpTextObj.SetActive(true);
             nowHp.text = GameManager.enemy.status.hp.ToString();
+            maxHp.text = GameManager.enemy.status.maxHp.ToString();
+        }
+        else
+        {
+            hpTextObj.SetActive(false);
         }
     }
 }

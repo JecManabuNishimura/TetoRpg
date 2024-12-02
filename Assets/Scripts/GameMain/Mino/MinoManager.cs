@@ -44,6 +44,7 @@ public class MinoManager : MonoBehaviour
 
     private bool treasureFlag = false;
     private int treasureNumber = 0;
+    private bool holFlag = false;
 
     private List<HoldMinoData> holdMino = new();
 
@@ -90,7 +91,7 @@ public class MinoManager : MonoBehaviour
         {
             name = "minoListObj"
         };
-        
+        holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
     }
 
     private void ResetDataTable()
@@ -119,7 +120,8 @@ public class MinoManager : MonoBehaviour
     private void Update()
     {
         if (!SelectMino || GameManager.menuFlag ) return;
-        
+        holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+
         inputHandler.HandleInput();
             
         fallTimer += Time.deltaTime;
@@ -155,7 +157,6 @@ public class MinoManager : MonoBehaviour
         {
             return num; // 最大回数を超えたら num を返す
         }
-
         
         for (int y = 0; y < mino.GetLength(0); y++)
         {
@@ -474,8 +475,9 @@ public class MinoManager : MonoBehaviour
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     void HoldMino()
     {
-        if (SelectMino == null) return;
-        
+        if (GameManager.player.BelongingsMinoEffect["HoldBlock"] == 0) return;
+        if (SelectMino == null || treasureFlag || holFlag) return;
+        holFlag = true;
         if(holdMino.Count == 0)
         {
             HoldMinoData data = new HoldMinoData()
@@ -536,8 +538,13 @@ public class MinoManager : MonoBehaviour
         bool hitflag = false;
         foreach (Transform child in SelectMino.transform)
         {
-
             Vector3 newPosition = child.position + (isLeft ? -Vector3.right : Vector3.right);
+            if (newPosition.x >= GameManager.boardWidth || newPosition.x < 0)
+            {
+                hitflag = true;
+                break;
+            }
+            
             child.name = ((int)newPosition.x) + " " + ((int)newPosition.y);
             if (!BoardManager.Instance.IsValidPosition(newPosition))
             {
@@ -641,6 +648,7 @@ public class MinoManager : MonoBehaviour
         }
 
         parent.transform.position = holdObj.transform.position;
+        parent.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         return parent;
     }
 
@@ -936,6 +944,7 @@ public class MinoManager : MonoBehaviour
         GameManager.DeleteLine = 0;     //　いったん初期化
         BoardManager.Instance.CheckLine(0);
         GameManager.enemy.Damage(GameManager.playerDamage);
+        holFlag = false;
     }
 
     void UpMino(int x,int y)
