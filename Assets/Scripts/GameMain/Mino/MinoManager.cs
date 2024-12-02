@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MyMethods;
 using UI;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -80,7 +81,8 @@ public class MinoManager : MonoBehaviour
             MoveRight = () => MoveLeftRight(false),
             MoveDown = MoveDown,
             Fall = Fall,
-            ChangeColor = () => StartCoroutine(ChangeColor(5, 10))
+            ChangeColor = () => StartCoroutine(ChangeColor(5, 10)),
+            HoldMino = HoldMino,
         };
         
         minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
@@ -466,22 +468,50 @@ public class MinoManager : MonoBehaviour
         }
         return null;
     }
+    
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //   ホールド対応
+    //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     void HoldMino()
     {
+        if (SelectMino == null) return;
+        
         if(holdMino.Count == 0)
         {
             HoldMinoData data = new HoldMinoData()
             {
                 minoData = nowMinos,
-                minoObj = SelectMino
+                minoObj = CreateHoldMino(nowMinos),
+                index = index
             };
             holdMino.Add(data);
+            Destroy(SelectMino.gameObject);
+            clMinoObj.transform.ChildClear();
             CreateNewMino();
+            
         }
         else
         {
-            GameObject obj = SelectMino.;
+            HoldMinoData data = new HoldMinoData()
+            {
+                minoData = nowMinos,
+                minoObj = CreateHoldMino(nowMinos),
+                index = index
+            };
+            holdMino.Add(data);
+            index = holdMino[0].index;
+            Destroy(SelectMino.gameObject);
+            SelectMino = null;
+            rotNum = 0;
+            clMinoObj.transform.ChildClear();
+            nowMinos = holdMino[0].minoData;
+            clMinoObj.transform.position = Vector3.zero;
             CreatePiece(holdMino[0].minoData);
+            
+            SelectMino.transform.position = CreatePoint.transform.position;
+            CheckUnder();
+            Destroy(holdMino[0].minoObj);
+            holdMino.RemoveAt(0);
         }
     }
     void DownMino(int x,int y)
@@ -552,6 +582,66 @@ public class MinoManager : MonoBehaviour
         CreatePiece(nowMinos,true);
         SelectMino.transform.position = CreatePoint.transform.position;
         CheckUnder();
+    }
+
+    GameObject CreateHoldMino(int[,] minos)
+    {
+        GameObject parent = new GameObject();
+        parent.name = index + "mino";
+        float centerX = 0;
+        float centerY = 0;
+        // 0以外の位置をリストアップ
+        List<Tuple<int, int>> positions = new List<Tuple<int, int>>();
+
+        for (int i = 0; i < minos.GetLength(0); i++)
+        {
+            for (int j = 0; j < minos.GetLength(1); j++)
+            {
+                if (minos[i, j] != 0)
+                {
+                    positions.Add(Tuple.Create(i, j));  // (x, y)の位置を格納
+                }
+            }
+        }
+        if (positions.Count > 0)
+        {
+            // x座標、y座標の平均を計算
+            foreach (var position in positions)
+            {
+                centerX += position.Item2;
+                centerY += position.Item1;
+            }
+
+            centerX /= positions.Count;
+            centerY /= positions.Count;
+        }
+        else
+        {
+            Debug.LogError("0以外の値は存在しません");
+        }
+        for (int y = 0; y < minos.GetLength(0); y++)
+        {
+            for (int x = 0; x < minos.GetLength(1); x++)
+            {
+                if (minos[y, x] != 0)
+                {
+                    MinoType type;
+                    GameObject obj = Instantiate(minoObj, parent.transform, true);
+                    // 回転軸用のマイナスもあるので、ABSをつける
+                    type = Mathf.Abs(minos[y, x]) switch
+                    {
+                        1 => MinoType.Normal,
+                        2 => MinoType.Life,
+                        3 => MinoType.Bomb,
+                    };
+                    obj.GetComponent<MinoBlock>().SetMinoData(type, index);
+                    obj.transform.localPosition = new Vector3((x) - (centerX), (y) -(centerY ), 0);
+                }
+            }
+        }
+
+        parent.transform.position = holdObj.transform.position;
+        return parent;
     }
 
     // ミノの作成
@@ -893,5 +983,6 @@ public class MinoManager : MonoBehaviour
     {
         public int[,] minoData;
         public GameObject minoObj;
+        public int index;
     }
 }

@@ -12,6 +12,7 @@ public class InputHandler
     public Action Fall;
     public Action ChangeColor;
     public Action ResetMinoDataTable;
+    public Action HoldMino;
 
     public void HandleInput()
     {
@@ -28,6 +29,11 @@ public class InputHandler
         if (Input.GetKeyDown(KeyCode.W))
         {
             Fall?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            HoldMino?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.T))

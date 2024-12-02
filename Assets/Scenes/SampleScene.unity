@@ -783,6 +783,7 @@ MonoBehaviour:
   TreasureObj: {fileID: 526652331542382861, guid: c51eeaa9042348945abe59883828a7a4, type: 3}
   MaxFallCount: 25
   TreasureDropPercent: 30
+  holdObj: {fileID: 88767308}
   fallUi: {fileID: 2002542169}
 --- !u!114 &667771778
 MonoBehaviour:
