@@ -121,7 +121,7 @@ public class MinoManager : MonoBehaviour
     {
         if (!SelectMino || GameManager.menuFlag ) return;
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
-
+        clMinoObj.SetActive(GameManager.player.BelongingsMinoEffect["PredictionBlock"] != 0);
         inputHandler.HandleInput();
             
         fallTimer += Time.deltaTime;
