@@ -23,7 +23,7 @@ public class MinoFactoryWindow : EditorWindow
    private Texture2D buttonFalseImage;
    private Texture2D buttonTrueImage;
    private Texture2D buttonRotImage;
-   private float cellSize = 5f;  // セルのサイズ
+   private float cellSize = 30f;  // セルのサイズ
    private float padding = 3f;    // セル間の余白
    private float gridPadding = 10f; // 配列間の余白
    private List<MinoSetting> minoSettingList = new();
@@ -64,40 +64,45 @@ public class MinoFactoryWindow : EditorWindow
         float currentY = startY + 20; // Y方向の現在の位置
         
         // 保存ボタンを一番上に配置
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("+", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
+        using (new EditorGUILayout.HorizontalScope())
         {
-            minoSettingList.Add(new MinoSetting());
-        }
-        if (GUILayout.Button("-", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
-        {
-            for (int i = minoSettingList.Count - 1; i >= 0; i--)
+            if (GUILayout.Button("+", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
             {
-                if (minoSettingList[i].select)
+                minoSettingList.Add(new MinoSetting());
+            }
+
+            if (GUILayout.Button("-", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
+            {
+                for (int i = minoSettingList.Count - 1; i >= 0; i--)
                 {
-                    minoSettingList.RemoveAt(i);
+                    if (minoSettingList[i].select)
+                    {
+                        minoSettingList.RemoveAt(i);
+                    }
                 }
             }
+
+            if (GUILayout.Button("Save", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
+            {
+                SaveData();
+            }
+
+            if (GUILayout.Button("Load", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
+            {
+                LoadData();
+            }
         }
-        if (GUILayout.Button("Save", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
-        {
-            SaveData();
-        }
-        if (GUILayout.Button("Load", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
-        {
-            LoadData();
-        }
-        GUILayout.EndHorizontal();
 
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.Width(position.width), GUILayout.Height(position.height));
         GUILayout.BeginHorizontal();
         for (int i = 0; i < minoSettingList.Count; i++)
         {
-            
             var array = minoSettingList[i].minoDataList;
             if (array == null) return;
-            GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(50));
-                GUILayout.BeginHorizontal();
+            using (new EditorGUILayout.VerticalScope(GUI.skin.box, GUILayout.Width(50)))
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
                     GUILayout.Label(i.ToString(), GUILayout.Width(40), GUILayout.Height(20));
                     minoSettingList[i].select = GUILayout.Toggle(minoSettingList[i].select, "");
                     if (GUILayout.Button("+", GUILayout.Width(20), GUILayout.Height(20)))
@@ -107,37 +112,42 @@ public class MinoFactoryWindow : EditorWindow
                         {
                             selectedGroupOptions.Add(new List<int>());
                         }
+
                         selectedGroupOptions[i].Add(0); // 新しい選択肢（0）を追加
                     }
+
                     if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20)))
                     {
                         // 選択肢を削除
                         selectedGroupOptions[i].RemoveAt(selectedGroupOptions[i].Count - 1);
                         maxGroupHeight = 0;
                     }
-                GUILayout.EndHorizontal();
+                }
 
                 // ここで画像を表示
 
                 for (int y = 0; y < array.GetLength(0); y++)
                 {
-                    GUILayout.BeginHorizontal();
-                    for (int x = 0; x < array.GetLength(1); x++)
+                    using (new EditorGUILayout.HorizontalScope())
                     {
-                        // 画像を表示するためにGUILayout.Labelを使う
-                        GUILayout.Label(GetButtonImage(array[y, x]), GUILayout.Width(cellSize), GUILayout.Height(cellSize));
-
-                        // 画像のクリック判定（GUI.Buttonを使う）
-                        Rect rect = GUILayoutUtility.GetLastRect(); // 最後に描画されたGUIコンポーネントの位置を取得
-                        if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown)
+                        for (int x = 0; x < array.GetLength(1); x++)
                         {
-                            // 画像がクリックされた場合の処理
-                            array[y, x] = (array[y, x] + 1) % 3;
-                            Repaint();
+                            // 画像を表示するためにGUILayout.Labelを使う
+                            GUILayout.Label(GetButtonImage(array[y, x]), GUILayout.Width(cellSize),
+                                GUILayout.Height(cellSize));
+
+                            // 画像のクリック判定（GUI.Buttonを使う）
+                            Rect rect = GUILayoutUtility.GetLastRect(); // 最後に描画されたGUIコンポーネントの位置を取得
+                            if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown)
+                            {
+                                // 画像がクリックされた場合の処理
+                                array[y, x] = (array[y, x] + 1) % 3;
+                                Repaint();
+                            }
                         }
                     }
-                    GUILayout.EndHorizontal();  
                 }
+
                 GUILayout.Space(10);
 
                 // グループ内のプルダウンメニューを表示（グループごとに1つ）
@@ -148,6 +158,7 @@ public class MinoFactoryWindow : EditorWindow
                     {
                         selectedGroupOptions.Add(new List<int>()); // デフォルトで最初の選択肢を選択
                     }
+
                     // プルダウンメニューのリスト
                     List<int> groupOptions = selectedGroupOptions[i];
 
@@ -155,7 +166,9 @@ public class MinoFactoryWindow : EditorWindow
                     for (int j = 0; j < groupOptions.Count; j++)
                     {
                         // Popupを表示
-                        int selectedOption = EditorGUILayout.Popup(groupOptions[j], minoEffectStatusMaster.MinoEffectStatus.ToArray(), GUILayout.Width(60), GUILayout.Height(20));
+                        int selectedOption = EditorGUILayout.Popup(groupOptions[j],
+                            minoEffectStatusMaster.MinoEffectStatus.ToArray(), GUILayout.Width(60),
+                            GUILayout.Height(20));
 
                         // 選択肢が変わった場合、選択肢リストを更新
                         if (groupOptions[j] != selectedOption)
@@ -164,14 +177,18 @@ public class MinoFactoryWindow : EditorWindow
                         }
 
                     }
+
                     // 最も多くプルダウンメニューを追加したグループの数を記録
                     if (groupOptions.Count > maxGroupHeight)
                     {
                         maxGroupHeight = groupOptions.Count;
                     }
                 }
+
                 GUILayout.Space(30);
-            GUILayout.EndVertical();
+
+            }
+
             // 次のグループは横に並べる
             currentX += array.GetLength(1) * (cellSize);
 

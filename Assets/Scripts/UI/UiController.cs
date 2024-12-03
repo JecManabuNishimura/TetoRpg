@@ -302,7 +302,6 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             shakeInitPosition = gridItems[currentIndex].position;
             if (!GameManager.player.belongingsMino.Contains(minoNum))
             {
-                
                 ChangeBelongingMino(MenuManager.Instance.minoData.circleLayoutGroup.GetIndex(), minoNum);
                 nowMode = NowMode.BelongingsSelect;
                 ColorReset();

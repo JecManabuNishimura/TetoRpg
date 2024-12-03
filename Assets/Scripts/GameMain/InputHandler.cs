@@ -14,16 +14,28 @@ public class InputHandler
     public Action ResetMinoDataTable;
     public Action HoldMino;
 
+    private float timer;
+    private float maxTimer = 0.05f;
+
     public void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        timer += Time.deltaTime;
+        if (Input.GetKey(KeyCode.A))
         {
-            MoveLeft?.Invoke();
+            if(timer > maxTimer)
+            {
+                MoveLeft?.Invoke();
+                timer=0;
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKey(KeyCode.D))
         {
-            MoveRight?.Invoke();
+            if (timer > maxTimer)
+            {
+                MoveRight?.Invoke();
+                timer=0;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -51,9 +63,13 @@ public class InputHandler
             RotateMino?.Invoke();
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
-            MoveDown?.Invoke();
+            if (timer > maxTimer)
+            {
+                MoveDown?.Invoke();
+                timer=0;
+            }
         }
     }
 }

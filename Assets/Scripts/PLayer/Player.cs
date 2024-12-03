@@ -65,6 +65,7 @@ public class Player : CharactorData, ICharactor
         }
         
         UpdateStatus();
+        SetBelongingsMinoEffect();
     }
 
     private void Update()
