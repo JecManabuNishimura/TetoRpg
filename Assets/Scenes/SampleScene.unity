@@ -446,8 +446,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -42.50598, y: 0.47803116}
-  m_SizeDelta: {x: 77.7007, y: 67.2339}
+  m_AnchoredPosition: {x: -70.9845, y: -1.5856}
+  m_SizeDelta: {x: 134.6579, y: 63.1066}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &313593890
 MonoBehaviour:
@@ -471,8 +471,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 100
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6722c43119c971e42990b088face598c, type: 2}
+  m_sharedMaterial: {fileID: -6813779318315087882, guid: 6722c43119c971e42990b088face598c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -496,8 +496,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3240,6 +3240,7 @@ MonoBehaviour:
   hpText: {fileID: 313593890}
   healingEffect: {fileID: 2277261721029391378, guid: f8733f1a7afcea74bbefb23928552acd, type: 3}
   damageText: {fileID: 1429471070}
+  slider: {fileID: 462763284}
   totalStatus:
     maxHp: 0
     hp: 0
