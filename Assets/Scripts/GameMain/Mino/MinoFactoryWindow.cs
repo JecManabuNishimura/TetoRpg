@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 public class MinoFactoryWindow : EditorWindow
@@ -22,8 +23,8 @@ public class MinoFactoryWindow : EditorWindow
    private Texture2D buttonFalseImage;
    private Texture2D buttonTrueImage;
    private Texture2D buttonRotImage;
-   private float cellSize = 25f;  // セルのサイズ
-   private float padding = 1f;    // セル間の余白
+   private float cellSize = 5f;  // セルのサイズ
+   private float padding = 3f;    // セル間の余白
    private float gridPadding = 10f; // 配列間の余白
    private List<MinoSetting> minoSettingList = new();
    private float maxGroupHeight = 0f; // 全体の高さを管理
@@ -32,8 +33,11 @@ public class MinoFactoryWindow : EditorWindow
    private float buttonSize = 30f;
    private Rect buttonRect;
    float totalWidth = Screen.width - 20f;  // 画面幅
-   
-   float startX = 10f;
+   // スクロール位置を管理する変数
+   Vector2 scrollPosition = Vector2.zero; // 初期のスクロール位置
+    float maxY = 0f;
+
+    float startX = 10f;
    float startY = 50f;
    [MenuItem("Window/Custom/MinoFactoryWindow")]
    public static void ShowWindow()
@@ -58,6 +62,7 @@ public class MinoFactoryWindow : EditorWindow
         
         float currentX = startX; // X方向の現在の位置
         float currentY = startY + 20; // Y方向の現在の位置
+        
         // 保存ボタンを一番上に配置
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("+", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
@@ -83,119 +88,107 @@ public class MinoFactoryWindow : EditorWindow
             LoadData();
         }
         GUILayout.EndHorizontal();
-        
+
+        scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.Width(position.width), GUILayout.Height(position.height));
+        GUILayout.BeginHorizontal();
         for (int i = 0; i < minoSettingList.Count; i++)
         {
             
             var array = minoSettingList[i].minoDataList;
             if (array == null) return;
-            // 1つのグループとして縦に並べる
-            EditorGUILayout.BeginVertical();
-            // グループラベルとボタンを横に並べる
-            GUILayout.BeginHorizontal(); // 水平配置を開始
-            // 数字（i）を表示
-            GUIStyle labelStyle = new GUIStyle()
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 20,
-                fontStyle = FontStyle.Bold,
-                normal = new GUIStyleState() { textColor = Color.white } // ここでテキストの色を白に設定
-            };
-
-            GUI.Label(new Rect(currentX, currentY, 40, 40), i.ToString(), labelStyle);
-
-            // ボタンの位置とサイズを計算
-            Rect buttonRect = new Rect(currentX + 50, currentY, 20f, 20f); // ボタンの位置を調整
-            Rect minusButtonRect = new Rect(currentX + 70, currentY, 20f, 20f); // マイナスボタンの位置を調整
-            Rect selectButtonRect = new Rect(currentX + 90, currentY, 20f, 20f); // マイナスボタンの位置を調整
-            // ボタンを配置
-            if (GUI.Button(buttonRect, "+"))
-            {
-                // 新しいプルダウンメニューを追加
-                if (selectedGroupOptions.Count <= i)
-                {
-                    selectedGroupOptions.Add(new List<int>());
-                }
-                selectedGroupOptions[i].Add(0); // 新しい選択肢（0）を追加
-            }
-            
-            // マイナスボタンを配置
-            if (GUI.Button(minusButtonRect, "-"))
-            {
-                // 選択肢を削除
-                selectedGroupOptions[i].RemoveAt(selectedGroupOptions[i].Count - 1);
-                maxGroupHeight = 0;
-            }
- 
-            minoSettingList[i].select = GUI.Toggle(selectButtonRect, minoSettingList[i].select, "");
-            
-            GUILayout.EndHorizontal(); // 水平配置を終了
-            
-            for (int y = 0; y < array.GetLength(0); y++)
-            {
-                for (int x = 0; x < array.GetLength(1); x++)
-                {
-                    // 各セルの位置とサイズを計算
-                    Rect rect = new Rect(currentX + x * (cellSize + padding), (currentY+30) + y  * (cellSize + padding), cellSize, cellSize);
-
-                    // 画像を描画
-                    GUI.DrawTexture(rect, GetButtonImage(array[y, x]));
-                    // 画像がクリックされたか判定
-                    if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown)
+            GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(50));
+                GUILayout.BeginHorizontal();
+                    GUILayout.Label(i.ToString(), GUILayout.Width(40), GUILayout.Height(20));
+                    minoSettingList[i].select = GUILayout.Toggle(minoSettingList[i].select, "");
+                    if (GUILayout.Button("+", GUILayout.Width(20), GUILayout.Height(20)))
                     {
-                        // クリックされた場合の処理
-                        array[y, x] = (array[y, x] + 1) % 3;
-                        // クリック処理後に描画を更新
-                        Repaint();
+                        // 新しいプルダウンメニューを追加
+                        if (selectedGroupOptions.Count <= i)
+                        {
+                            selectedGroupOptions.Add(new List<int>());
+                        }
+                        selectedGroupOptions[i].Add(0); // 新しい選択肢（0）を追加
+                    }
+                    if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20)))
+                    {
+                        // 選択肢を削除
+                        selectedGroupOptions[i].RemoveAt(selectedGroupOptions[i].Count - 1);
+                        maxGroupHeight = 0;
+                    }
+                GUILayout.EndHorizontal();
+
+                // ここで画像を表示
+
+                for (int y = 0; y < array.GetLength(0); y++)
+                {
+                    GUILayout.BeginHorizontal();
+                    for (int x = 0; x < array.GetLength(1); x++)
+                    {
+                        // 画像を表示するためにGUILayout.Labelを使う
+                        GUILayout.Label(GetButtonImage(array[y, x]), GUILayout.Width(cellSize), GUILayout.Height(cellSize));
+
+                        // 画像のクリック判定（GUI.Buttonを使う）
+                        Rect rect = GUILayoutUtility.GetLastRect(); // 最後に描画されたGUIコンポーネントの位置を取得
+                        if (rect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown)
+                        {
+                            // 画像がクリックされた場合の処理
+                            array[y, x] = (array[y, x] + 1) % 3;
+                            Repaint();
+                        }
+                    }
+                    GUILayout.EndHorizontal();  
+                }
+                GUILayout.Space(10);
+
+                // グループ内のプルダウンメニューを表示（グループごとに1つ）
+                if (minoEffectStatusMaster != null && minoEffectStatusMaster.MinoEffectStatus.Count > 0)
+                {
+                    // グループごとの選択肢がリストにない場合は初期化
+                    if (selectedGroupOptions.Count <= i)
+                    {
+                        selectedGroupOptions.Add(new List<int>()); // デフォルトで最初の選択肢を選択
+                    }
+                    // プルダウンメニューのリスト
+                    List<int> groupOptions = selectedGroupOptions[i];
+
+                    // 各プルダウンメニューを表示
+                    for (int j = 0; j < groupOptions.Count; j++)
+                    {
+                        // Popupを表示
+                        int selectedOption = EditorGUILayout.Popup(groupOptions[j], minoEffectStatusMaster.MinoEffectStatus.ToArray(), GUILayout.Width(60), GUILayout.Height(20));
+
+                        // 選択肢が変わった場合、選択肢リストを更新
+                        if (groupOptions[j] != selectedOption)
+                        {
+                            groupOptions[j] = selectedOption;
+                        }
+
+                    }
+                    // 最も多くプルダウンメニューを追加したグループの数を記録
+                    if (groupOptions.Count > maxGroupHeight)
+                    {
+                        maxGroupHeight = groupOptions.Count;
                     }
                 }
-            }
-            
-            // グループ内のプルダウンメニューを表示（グループごとに1つ）
-            if (minoEffectStatusMaster != null && minoEffectStatusMaster.MinoEffectStatus.Count > 0)
-            {
-                // グループごとの選択肢がリストにない場合は初期化
-                if (selectedGroupOptions.Count <= i)
-                {
-                    selectedGroupOptions.Add(new List<int>()); // デフォルトで最初の選択肢を選択
-                }
-                // プルダウンメニューのリスト
-                List<int> groupOptions = selectedGroupOptions[i];
-
-                // 各プルダウンメニューを表示
-                for (int j = 0; j < groupOptions.Count; j++)
-                {
-                    // プルダウンメニューの位置とサイズを計算
-                    Rect popupRect = new Rect(currentX, (currentY + 30) + (array.GetLength(0) * (cellSize + padding)) + 10f + (j * 25f), 100f, 20f);
-
-                    // Popupを表示
-                    int selectedOption = EditorGUI.Popup(popupRect, groupOptions[j], minoEffectStatusMaster.MinoEffectStatus.ToArray());
-
-                    // 選択肢が変わった場合、選択肢リストを更新
-                    if (groupOptions[j] != selectedOption)
-                    {
-                        groupOptions[j] = selectedOption;
-                    }
-
-                }
-                // 最も多くプルダウンメニューを追加したグループの数を記録
-                if (groupOptions.Count > maxGroupHeight)
-                {
-                    maxGroupHeight = groupOptions.Count;
-                }
-            }
-            EditorGUILayout.EndVertical();
+                GUILayout.Space(30);
+            GUILayout.EndVertical();
             // 次のグループは横に並べる
-            currentX += array.GetLength(1) * (cellSize + padding) + gridPadding;
+            currentX += array.GetLength(1) * (cellSize);
 
             // 配列の幅が広くなりすぎたら、次の行に折り返す
-            if (currentX > position.width - (array.GetLength(1) * (cellSize + padding)))
+            if (currentX > position.width - (array.GetLength(1)* (cellSize+25)))
             {
+                GUILayout.EndHorizontal(); // 現在の行を終了
+                GUILayout.BeginHorizontal(); // 新しい行を開始
                 currentX = startX; // X座標をリセット
                 currentY += array.GetLength(0) * (cellSize + padding) + gridPadding + 30f + (maxGroupHeight * 25f) ; // Y座標を更新（30f は番号のスペース）
             }
         }
-   }
+        GUILayout.EndHorizontal();
+
+        // スクロールビューを終了
+        GUILayout.EndScrollView();
+    }
    
    private void LoadData()
     {
