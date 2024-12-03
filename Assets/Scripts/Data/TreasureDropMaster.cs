@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,11 +8,12 @@ using UnityEngine;
 public class TreasureDropMaster : ScriptableObject
 {
     public List<ItemDropData> itemDropData = new List<ItemDropData>();
-    
+    public List<ItemDropData> minoDropData = new List<ItemDropData>();
     public string GetItemDataId()
     {
+        var allData = itemDropData.Concat(minoDropData).ToList();
         float totalRate = 0f;
-        foreach (var item in itemDropData)
+        foreach (var item in allData)
         {
             totalRate += item.dropRate;
         }
@@ -19,7 +21,7 @@ public class TreasureDropMaster : ScriptableObject
         float randomValue = UnityEngine.Random.Range(0f, totalRate);
 
         float cumulativeRate = 0f;
-        foreach (var item in itemDropData)
+        foreach (var item in allData)
         {
             cumulativeRate += item.dropRate;
             if (randomValue <= cumulativeRate)
@@ -91,6 +93,28 @@ public class TreasureDropMasterEditor : Editor
         if (GUILayout.Button("Add Item"))
         {
             master.itemDropData.Add(new ItemDropData { id = equipmentIds[0], dropRate = 0f });
+        }
+        
+        EditorGUILayout.LabelField("Mino Drop Data List", EditorStyles.boldLabel);
+        for (int i = 0; i < master.minoDropData.Count; i++)
+        {
+            var item = master.minoDropData[i];
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                item.id = EditorGUILayout.TextField(item.id,  GUILayout.Width(100));
+                item.dropRate = EditorGUILayout.FloatField("", item.dropRate, GUILayout.Width(100));
+                // 削除ボタン
+                if (GUILayout.Button("Remove", GUILayout.Width(80)))
+                {
+                    master.minoDropData.RemoveAt(i);
+                    i--; // インデックス調整
+                }
+            }
+        }
+
+        if (GUILayout.Button("Add Mino"))
+        {
+            master.minoDropData.Add(new ItemDropData { id = "0", dropRate = 0f });
         }
 
         // 変更があれば保存

@@ -61,7 +61,7 @@ public class MinoCreater : MonoBehaviour
                 if (mino[y,x] != 0)
                 {
                     GameObject obj = Instantiate(minoImage, ItemParent.transform, true);
-                    obj.transform.localPosition = new Vector3((x*40) - (centerX * 40), (y*40) -(centerY * 40), 0);
+                    obj.transform.localPosition = new Vector3((x*40) - (centerX * 40), -((y*40) -(centerY * 40)), 0);
                 }
             }
         }

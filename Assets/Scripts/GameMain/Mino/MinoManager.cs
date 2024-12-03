@@ -393,11 +393,26 @@ public class MinoManager : MonoBehaviour
                         if (!AttackFlag)
                         {
                             var id = GameManager.stageLoader.GetDropData().GetItemDataId();
-                            treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite
-                                = EquipmentDatabase.Entity.GetEquipmentSpriteData(id)
-                                    .sprite;
-                            treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                            GameManager.player.AcquisitionItem(id);
+                            if (int.TryParse(id, out int result))
+                            {
+                                // ミノだった場合
+                                var obj = CreateMiniMino(MinoData.Entity.GetMinoData(result));
+                                obj.transform.parent = treasure.spriteObj.transform.GetChild(0).transform.transform;
+                                obj.transform.localPosition = new Vector3(0, 0.5f, 0);
+                                treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+                                treasure.spriteObj.GetComponent<PlayableDirector>().Play();
+                                GameManager.player.AcquisitionMino(result);
+                            }
+                            else
+                            {
+                                // 装備品だった場合
+                                treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite
+                                    = EquipmentDatabase.Entity.GetEquipmentSpriteData(id)
+                                        .sprite;
+                                treasure.spriteObj.GetComponent<PlayableDirector>().Play();
+                                GameManager.player.AcquisitionItem(id);
+                            }
+                            
                         }
                         Destroy(treasure.spriteObj, 2f); // アニメーション終了まで
                         treasuresTable.Remove(treasure);
@@ -483,7 +498,7 @@ public class MinoManager : MonoBehaviour
             HoldMinoData data = new HoldMinoData()
             {
                 minoData = nowMinos,
-                minoObj = CreateHoldMino(nowMinos),
+                minoObj = CreateMiniMino(nowMinos),
                 index = index
             };
             holdMino.Add(data);
@@ -497,7 +512,7 @@ public class MinoManager : MonoBehaviour
             HoldMinoData data = new HoldMinoData()
             {
                 minoData = nowMinos,
-                minoObj = CreateHoldMino(nowMinos),
+                minoObj = CreateMiniMino(nowMinos),
                 index = index
             };
             holdMino.Add(data);
@@ -591,7 +606,7 @@ public class MinoManager : MonoBehaviour
         CheckUnder();
     }
 
-    GameObject CreateHoldMino(int[,] minos)
+    GameObject CreateMiniMino(int[,] minos)
     {
         GameObject parent = new GameObject();
         parent.name = index + "mino";
@@ -642,7 +657,7 @@ public class MinoManager : MonoBehaviour
                         3 => MinoType.Bomb,
                     };
                     obj.GetComponent<MinoBlock>().SetMinoData(type, index);
-                    obj.transform.localPosition = new Vector3((x) - (centerX), (y) -(centerY ), 0);
+                    obj.transform.localPosition = new Vector3((x) - (centerX), -((y) -(centerY )), 0);
                 }
             }
         }

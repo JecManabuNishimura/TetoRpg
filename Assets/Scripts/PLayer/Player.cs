@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Player : CharactorData, ICharactor
@@ -9,6 +10,7 @@ public class Player : CharactorData, ICharactor
     [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private ParticleSystem healingEffect;
     [SerializeField] private TextMeshPro damageText;
+    [SerializeField] private Slider slider;
 
     //[SerializeField] private MinoCreater[] minoCreaters;
     public Status totalStatus;
@@ -57,6 +59,7 @@ public class Player : CharactorData, ICharactor
 
     public void Initialize()
     {
+        slider.value = 1;
         status.hp = status.maxHp;
         hpText.text = status.hp.ToString();
         foreach (var state in MinoEffectStatusMaster.Entity.MinoEffectStatus)
@@ -152,14 +155,16 @@ public class Player : CharactorData, ICharactor
             totalStatus += armorData.GetTotalStatus();
         }
     }
-
-
-
+    
     public void UpdateHp()
     {
         hpText.text = status.hp.ToString();
     }
 
+    public void AcquisitionMino(int id)
+    {
+        haveMinoList.Add(id);
+    }
     public void AcquisitionItem(string itemId)
     {
         var type = itemId.Substring(0, 2);
@@ -213,6 +218,7 @@ public class Player : CharactorData, ICharactor
         var part = Instantiate(healingEffect);
         part.transform.position = transform.position;
         UpdateHp();
+        slider.value = (float)status.hp / (float)status.maxHp;
     }
 
     public void Damage(int damage)
@@ -223,6 +229,7 @@ public class Player : CharactorData, ICharactor
         damageText.transform.GetComponent<Animator>().Play("DamageText",0,0);
         status.hp -= newDamage;
         UpdateHp();
+        slider.value = (float)status.hp / (float)status.maxHp;
     }
 
     public class BelongingsEquipment

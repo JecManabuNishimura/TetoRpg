@@ -70,6 +70,8 @@ public class GameManager : MonoBehaviour
                     ClearBlock?.Invoke();
                     Destroy(enemy.gameObject);
                     MapManager.Instance.EndBattle();
+                    nowStage = GetNextEnumValue(nowStage);
+                    stageLoader.SetStageStatus();
                 }
                 else
                 {
@@ -163,6 +165,15 @@ public class GameManager : MonoBehaviour
             }
         }
         return false; // シーンがロードされていない
+    }
+    static T GetNextEnumValue<T>(T current) where T : Enum
+    {
+        T[] values = (T[])Enum.GetValues(typeof(T));
+        int index = Array.IndexOf(values, current);
+
+        // 次の値を取得（最後の値の場合は最初に戻る）
+        index = (index + 1) % values.Length;
+        return values[index];
     }
 }
 
