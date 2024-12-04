@@ -167,7 +167,6 @@ public class Player : CharactorData, ICharactor
         {
             haveMinoList.Add(id);    
         }
-        
     }
     public void AcquisitionItem(string itemId)
     {

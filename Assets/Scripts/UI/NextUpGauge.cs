@@ -28,19 +28,6 @@ public class NextUpGauge : MonoBehaviour
         maxIndex = count;
     }
 
-    public async void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            Play();
-
-        }
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            
-        }
-    }
-
     public void ResetGauge()
     {
         foreach (var anim in gaugeList)
@@ -48,12 +35,12 @@ public class NextUpGauge : MonoBehaviour
             DOTween.Restart(anim,"open");
         }
 
-        nowIndex = maxIndex;
+        nowIndex = maxIndex - 1;
     }
 
     public void DownCount()
     {
-        DOTween.Play(gaugeList[nowIndex],"close");
+        DOTween.Restart(gaugeList[nowIndex],"close");
         nowIndex--;
     }
 

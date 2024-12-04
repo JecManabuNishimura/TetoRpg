@@ -17,12 +17,9 @@ public class MinoManager : MonoBehaviour
     [SerializeField] private ImageDatabase ImageDatabase;
     [SerializeField] private GameObject obstacleMino;
     [SerializeField] private GameObject TreasureObj;
-    [SerializeField] private int MaxFallCount = 10;
-    [SerializeField] private int TreasureDropPercent;
     [SerializeField] private GameObject holdObj;
     [SerializeField] private NextUpGauge nextUpGauge;
-
-    [SerializeField] private FallCounter fallUi;
+    
     private GameObject SelectMino;
     private GameObject clMinoObj;
     private GameObject[,] minoDataTable;
@@ -52,14 +49,7 @@ public class MinoManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.StartBattle += (gaugeNum) =>
-        {
-            CreateNewMino();
-            fallUi.ChangeText((MaxFallCount - fallCount).ToString());
-            nextUpGauge.CreateGauge(gaugeNum);
-            nextUpGauge.Play();
-            downColPos = (int)SelectMino.transform.position.x;
-        };
+        GameManager.StartBattle += StartBattle;
         
         clMinoObj = new GameObject
         {
@@ -95,6 +85,14 @@ public class MinoManager : MonoBehaviour
             name = "minoListObj"
         };
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+    }
+
+    private async Task StartBattle(int gaugeNum)
+    {
+        nextUpGauge.CreateGauge(gaugeNum);
+        await nextUpGauge.Play();
+        CreateNewMino();
+        downColPos = (int)SelectMino.transform.position.x;
     }
 
     private void ResetDataTable()
@@ -282,7 +280,7 @@ public class MinoManager : MonoBehaviour
         {
             for (int x = 0; x < mino.GetLength(1); x++)
             {
-                if (mino[y, x] == 1 && max < x)
+                if (mino[y, x] != 0 && max < x)
                 {
                     max = x;
                 }
@@ -798,6 +796,7 @@ public class MinoManager : MonoBehaviour
                     }
 
                     GameManager.playerPut = true;
+                    
                     await GameManager.PlayerMove();
                     // 敵死亡時　何もしない
                     if(GameManager.EnemyDown)
@@ -861,7 +860,7 @@ public class MinoManager : MonoBehaviour
     async Task ChangeFallCount()
     {
         nextUpGauge.DownCount();
-        if (nextUpGauge.GetCount <= 0)
+        if (nextUpGauge.GetCount < 0)
         {
             await CreateObstacleBlock();
             nextUpGauge.ResetGauge();
