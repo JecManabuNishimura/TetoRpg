@@ -16,6 +16,10 @@ MonoBehaviour:
     keys:
     - HealRateUp
     - HoldBlock
+    - PredictionBlock
+    - None
     values:
     - "\u56DE\u5FA9\u51FA\u73FE\u7387Up"
     - "Hold\u4F7F\u7528\u53EF\u80FD"
+    - "\u4E88\u6E2C\u30D6\u30ED\u30C3\u30AF\u51FA\u73FE"
+    - 
