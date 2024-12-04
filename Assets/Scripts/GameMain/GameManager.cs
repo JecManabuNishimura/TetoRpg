@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public static event Func<Task> CreateLineBlock;
     public static event Func<Task> CreateBlock;
     public static event Action ClearBlock;
-    public static event Action StartBattle;
+    public static event Action<int> StartBattle;
 
     public static int healingPoint = 5;
     public static int DeleteLine;
@@ -137,7 +137,7 @@ public class GameManager : MonoBehaviour
         
         enemy = Instantiate(MapManager.Instance.GetEnemyObj, stageLoader.EnemyPos, Quaternion.identity).GetComponent<Enemy.Charactor>();
         await CreateBlock?.Invoke();
-        StartBattle?.Invoke();
+        StartBattle?.Invoke(stageLoader.NextCount);
     }
  
     // 非同期でシーンを追加するコルーチン

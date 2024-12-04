@@ -20,6 +20,7 @@ public class MinoManager : MonoBehaviour
     [SerializeField] private int MaxFallCount = 10;
     [SerializeField] private int TreasureDropPercent;
     [SerializeField] private GameObject holdObj;
+    [SerializeField] private NextUpGauge nextUpGauge;
 
     [SerializeField] private FallCounter fallUi;
     private GameObject SelectMino;
@@ -51,10 +52,12 @@ public class MinoManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.StartBattle += () =>
+        GameManager.StartBattle += (gaugeNum) =>
         {
             CreateNewMino();
             fallUi.ChangeText((MaxFallCount - fallCount).ToString());
+            nextUpGauge.CreateGauge(gaugeNum);
+            nextUpGauge.Play();
             downColPos = (int)SelectMino.transform.position.x;
         };
         
@@ -857,13 +860,11 @@ public class MinoManager : MonoBehaviour
 
     async Task ChangeFallCount()
     {
-        fallCount++;    // 落下カウント
-        fallUi.ChangeText((MaxFallCount - fallCount).ToString());
-        if (fallCount >= MaxFallCount)
+        nextUpGauge.DownCount();
+        if (nextUpGauge.GetCount <= 0)
         {
             await CreateObstacleBlock();
-            fallCount = 0;
-            fallUi.ChangeText((MaxFallCount - fallCount).ToString());
+            nextUpGauge.ResetGauge();
         }
     }
 

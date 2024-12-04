@@ -13,10 +13,9 @@ public class NextUpGauge : MonoBehaviour
 
     private List<GameObject> gaugeList = new ();
     private int nowIndex;
-    private void Start()
-    {
-        CreateGauge(20);
-    }
+    private int maxIndex;
+    public int GetCount => nowIndex;
+
     public void CreateGauge(int count)
     {
         for (int i = 0; i < count; i++)
@@ -26,6 +25,7 @@ public class NextUpGauge : MonoBehaviour
             var openAnim = anims.First(id => id.id == "open");
         }
         nowIndex = count - 1 ;
+        maxIndex = count;
     }
 
     public async void Update()
@@ -37,9 +37,24 @@ public class NextUpGauge : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.V))
         {
-            DOTween.Play(gaugeList[nowIndex],"close");
-            nowIndex--;
+            
         }
+    }
+
+    public void ResetGauge()
+    {
+        foreach (var anim in gaugeList)
+        {
+            DOTween.Restart(anim,"open");
+        }
+
+        nowIndex = maxIndex;
+    }
+
+    public void DownCount()
+    {
+        DOTween.Play(gaugeList[nowIndex],"close");
+        nowIndex--;
     }
 
     public async Task Play()

@@ -8,6 +8,8 @@ public class StageLoader : MonoBehaviour
 {
     [SerializeField] private List<StageStatus> status;
     [SerializeField] private Transform enemyPos;
+    
+    public int NextCount => status.First(_ => _.stage == GameManager.nowStage).nextUpGauge;
     public TreasureDropMaster GetDropData()
     {
         var data = status.First(_ => _.stage == GameManager.nowStage);
@@ -33,6 +35,7 @@ public class StageStatus
     public Stage stage;
     public TreasureDropMaster treasureDropMaster;
     public StageData parameter;
+    public int nextUpGauge;
 }
 [Serializable]
 public enum Stage

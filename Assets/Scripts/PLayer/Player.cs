@@ -163,7 +163,11 @@ public class Player : CharactorData, ICharactor
 
     public void AcquisitionMino(int id)
     {
-        haveMinoList.Add(id);
+        if (!haveMinoList.Contains(id))
+        {
+            haveMinoList.Add(id);    
+        }
+        
     }
     public void AcquisitionItem(string itemId)
     {
