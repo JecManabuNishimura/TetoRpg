@@ -25,8 +25,8 @@ public class MinoBlock : MonoBehaviour
         GetComponent<Renderer>().material.mainTexture =
             type switch
             {
-                MinoType.Normal => imgDB.imageList[index].texture,
-                MinoType.Life => imgDB.LifeImageList[index].texture,
+                MinoType.Normal => imgDB.imageList[index % 10].texture,
+                MinoType.Life => imgDB.LifeImageList[index% 10].texture,
                 MinoType.Bomb => imgDB.bombImage.texture,
                 MinoType.Stripes => imgDB.stripesImage.texture,
             };

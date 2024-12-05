@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
         {
             if(playerPut)
             {
+                enemy.CountDown();
                 if (DownFlag)
                 {
                     await Task.Delay(1000);

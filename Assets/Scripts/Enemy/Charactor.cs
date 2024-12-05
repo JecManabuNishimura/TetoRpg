@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,15 +12,16 @@ namespace Enemy
     public class Charactor : CharactorData,ICharactor
     {
         [SerializeField] private GameObject attackArea;
-        [SerializeField] private float AttackTime = 3;
         [SerializeField] private int AttackInterval = 3;
-        [SerializeField] private Damage dameUi;
         [SerializeField] private ParticleSystem particle;
         [SerializeField] private float duration = 1.0f;
         [SerializeField] private float strength = 30.0f;
         [SerializeField] private int vibrato = 30;
         [SerializeField] private bool shakeFlag = false;
         [SerializeField] private AttackSetting[] attackSettings;
+        [SerializeField] private int attackTarnCount;
+        [SerializeField] private GameObject attackTarn;
+        [SerializeField] private Transform attackTarnSpoonPoint;
         
         private List<ParticleSystem> parts = new List<ParticleSystem>();
         private List<GameObject> area = new ();
@@ -30,10 +32,11 @@ namespace Enemy
         private int AttackHeight = 1;
         private Tweener shakeTweener;
         private Vector3 initPosition;
+        private int attackCount;
+        private GameObject countObj;
 
         private bool SpecialAttackFlag = false;
-
-
+        
         private void Awake()
         {
             attackObjPare = new GameObject
@@ -49,6 +52,7 @@ namespace Enemy
         private void Start()
         {
             status.hp = status.maxHp;
+            attackCount = attackTarnCount;
         }
 
         private void ReadyAttack()
@@ -77,7 +81,8 @@ namespace Enemy
                 }
 
                 //SpecialAttackFlag = true;
-                timerFlag = true;
+                GameManager.EnemyAttackFlag = true;
+                //timerFlag = true;
             }
         }
 
@@ -125,23 +130,26 @@ namespace Enemy
             {
                 //ReadyAttack();
             }
-            if (timerFlag)
+            //　一番上まで積まれたら攻撃開始
+            if (GameManager.maxPutposFlag)
             {
-                timer += Time.deltaTime;
-                //　一番上まで積まれたら攻撃開始
-                if (timer >= AttackTime || GameManager.maxPutposFlag)
-                {
-                    GameManager.EnemyAttackFlag = true;
-                    timer = 0;
-                    
-                    timerFlag = false;
-                }
+                GameManager.EnemyAttackFlag = true;
+                attackCount = 0;
             }
-            else
+            if(attackCount <= 0)
             {
                 ReadyAttack();
                 BoardManager.Instance.CheckMaxPutPos();
             }
+        }
+
+        public void CountDown()
+        {
+            if (attackCount == 0) return;
+            var obj = Instantiate(attackTarn);
+            obj.GetComponent<TextMeshPro>().text = attackCount.ToString();
+            obj.transform.position = attackTarnSpoonPoint.position;
+            attackCount--;
         }
         
         async Task Play()
@@ -200,7 +208,8 @@ namespace Enemy
             area.Clear();
             GameManager.EnemyAttackFlag = false;
             AttackHeight = Random.Range(3, 6);
-            attackTime = 0; 
+            attackTime = 0;
+            attackCount = attackTarnCount;
         }
 
         public void UpdateHp()

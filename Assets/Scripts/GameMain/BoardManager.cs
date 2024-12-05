@@ -327,9 +327,7 @@ public class BoardManager
 
     void AllDownLineMino()
     {
-        // 大きい順に並び替え
         deleteLineRow.Sort();
-        //deleteLineRow.Sort((a,b) => b.CompareTo(a));
         for (int i = deleteLineRow.Count - 1; i >= 0; i--)
         {
             DownLine(deleteLineRow[i]);
