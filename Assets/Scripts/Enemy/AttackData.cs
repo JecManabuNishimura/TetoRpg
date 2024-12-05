@@ -9,6 +9,8 @@ public class AttackData : MonoBehaviour
         {
             AttackName.OneRowLineRandom => OneRowLineRandom(),
             AttackName.OneColLineRandom => OneColLineRandom(),
+            AttackName.TwoRowLineRandom => TwoRowLineRandom(),
+            AttackName.TwoRowLineConnect => TwoRowLineConnect(),
         };
     }
 
@@ -48,6 +50,55 @@ public class AttackData : MonoBehaviour
         return pos;
     }
 
+    private static List<Vector2Int> TwoRowLineRandom()
+    {
+        int y = Random.Range(2, 8);
+        int y2 = 0;
+        while (true)
+        {
+            y2 = Random.Range(2, 8);
+            if (y2 != y)
+            {
+                break;
+            }
+        }
+        List<Vector2Int> pos = new();
+        for (int i = 0; i < GameManager.boardWidth; i++)
+        {
+            pos.Add(new Vector2Int(i,y));
+        }
+        for (int i = 0; i < GameManager.boardWidth; i++)
+        {
+            pos.Add(new Vector2Int(i,y2));
+        }
+
+        return pos;
+    }
+    private static List<Vector2Int> TwoRowLineConnect()
+    {
+        int y = Random.Range(2, 8);
+        int y2 = 0;
+        if (y == 2)
+        {
+            y2 = 3;
+        }
+        else
+        {
+            y2 = y - 1;
+        }
+        List<Vector2Int> pos = new();
+        for (int i = 0; i < GameManager.boardWidth; i++)
+        {
+            pos.Add(new Vector2Int(i,y));
+        }
+        for (int i = 0; i < GameManager.boardWidth; i++)
+        {
+            pos.Add(new Vector2Int(i,y2));
+        }
+
+        return pos;
+    }
+
     //============================================================
     // スペシャル攻撃
     //============================================================
@@ -61,6 +112,10 @@ public enum AttackName
 {
     OneColLineRandom,
     OneRowLineRandom,
+    TwoRowLineRandom,
+    TwoRowLineConnect,
+    BombAttack,
+    BombMultiAttack,
     
 }
 

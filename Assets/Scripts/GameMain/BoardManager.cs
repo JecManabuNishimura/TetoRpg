@@ -131,12 +131,15 @@ public class BoardManager
 
     public void CheckDeleteLine(int row)
     {
-        deleteLineRow.Clear();
+        //deleteLineRow.Clear();
         if (CheckBlankLine(row))
         {
-            deleteLineRow.Add(row);
-            DeleteLine(row);
-            CheckMaxPutPos();
+            if (!deleteLineRow.Contains(row))
+            {
+                deleteLineRow.Add(row);
+                DeleteLine(row);
+                CheckMaxPutPos();    
+            }
         }
         CheckTreasureData();
     }
