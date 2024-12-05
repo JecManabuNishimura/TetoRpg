@@ -263,14 +263,18 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     private void BelongingMinoExplanation()
     {
         MenuManager.Instance.minoData.belongingsEffectGroup.transform.ChildClear();
-        var id = GameManager.player.BelongingsMino[MenuManager.Instance.minoData.circleLayoutGroup.GetIndex()];
-        var val = MinoData.Entity.GetMinoEffect(id);
-        foreach (var data in val)
+        foreach (var mino in GameManager.player.BelongingsMino)
         {
-            var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
-                MenuManager.Instance.minoData.belongingsEffectGroup.transform);
-            obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
+            var val = MinoData.Entity.GetMinoEffect(mino);
+            foreach (var data in val)
+            {
+                var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
+                    MenuManager.Instance.minoData.belongingsEffectGroup.transform);
+                obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
+            }
         }
+        
+        
     }
     private void HaveMinoExplanation()
     {

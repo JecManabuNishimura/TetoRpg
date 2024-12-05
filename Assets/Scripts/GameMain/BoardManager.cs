@@ -20,7 +20,7 @@ public class BoardManager
     public event Action ClearTable;
 
     public event Action SetTestBlock;
-    private Stack<int> deleteLineRow = new();
+    private List<int> deleteLineRow = new();
     private List<Vector2Int> bombCol = new();
     public static BoardManager Instance
     {
@@ -90,9 +90,10 @@ public class BoardManager
         deleteLineRow.Clear();
         for (int y = row; y < board.GetLength(0); y++)
         {
+            // 一列全部そろっているか確認
             if (CheckIsRowFilledWithOnes(y))
             {
-                deleteLineRow.Push(y);
+                deleteLineRow.Add(y);
                 GameManager.DeleteLine++;
                 DeleteLine(y);
                 ChangeColor?.Invoke(-1, y);
@@ -133,7 +134,7 @@ public class BoardManager
         deleteLineRow.Clear();
         if (CheckBlankLine(row))
         {
-            deleteLineRow.Push(row);
+            deleteLineRow.Add(row);
             DeleteLine(row);
             CheckMaxPutPos();
         }
@@ -225,6 +226,28 @@ public class BoardManager
         }
     }
 
+    public void DeleteStripes(int posX, int posY)
+    {
+        for (int y = 0; y < GameManager.boardHeight - 1; y++)
+        {
+            board[y, posX] = 0;
+            DeleteMino?.Invoke(posX, y,false);
+
+        }
+        for (int x = 0; x < GameManager.boardWidth; x++)
+        {
+            board[posY, x] = 0;
+            DeleteMino?.Invoke(x, posY,false);
+
+        }
+
+        if (!deleteLineRow.Contains(posY))
+        {
+            deleteLineRow.Add(posY);
+            GameManager.DeleteLine++;    
+        }
+    }
+
     public async Task FallingMino()
     {
         List<Vector2Int> fallMino = new();
@@ -304,10 +327,14 @@ public class BoardManager
 
     void AllDownLineMino()
     {
-        while (deleteLineRow.Count != 0)
+        // 大きい順に並び替え
+        deleteLineRow.Sort();
+        //deleteLineRow.Sort((a,b) => b.CompareTo(a));
+        for (int i = deleteLineRow.Count - 1; i >= 0; i--)
         {
-            DownLine(deleteLineRow.Pop());
+            DownLine(deleteLineRow[i]);
         }
+        deleteLineRow.Clear();
 
         GameManager.DownFlag = false;
     }

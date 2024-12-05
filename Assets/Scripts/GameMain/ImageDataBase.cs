@@ -10,6 +10,5 @@ public class ImageDatabase : ScriptableObject
     public List<Sprite> LifeImageList;  // 複数の画像を保持するリスト
 
     public Sprite bombImage;
-
-
+    public Sprite stripesImage;
 }

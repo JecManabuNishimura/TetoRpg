@@ -25924,40 +25924,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bd5e5ddd242bd64581fb5ed9c0e0507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PolyMesh:
-    name: PolybrushMesh104418
-    vertices:
-    - {x: -0.5, y: -0.5, z: -3.0616168e-17}
-    - {x: 0.5, y: -0.5, z: -3.0616168e-17}
-    - {x: -0.5, y: 0.5, z: 3.0616168e-17}
-    - {x: 0.5, y: 0.5, z: 3.0616168e-17}
-    normals:
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: 0, z: -1}
-    - {x: 0, y: 0, z: -1}
-    colors: []
-    tangents:
-    - {x: 1, y: 0, z: 0, w: -1}
-    - {x: 1, y: 0, z: 0, w: -1}
-    - {x: 1, y: 0, z: 0, w: -1}
-    - {x: 1, y: 0, z: 0, w: -1}
-    uv0:
-    - {x: 0, y: 0, z: 0, w: 0}
-    - {x: 1, y: 0, z: 0, w: 0}
-    - {x: 0, y: 1, z: 0, w: 0}
-    - {x: 1, y: 1, z: 0, w: 0}
-    uv1: []
-    uv2: []
-    uv3: []
-    m_Triangles: 000000000300000001000000030000000000000002000000
-    m_SubMeshes:
-    - m_Indexes: 000000000300000001000000030000000000000002000000
-      m_Topology: 0
-    m_Mesh: {fileID: 93899713}
-  m_SkinMeshRef: {fileID: 0}
-  m_OriginalMeshObject: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  m_Mode: 0
 --- !u!1001 &1753239367
 PrefabInstance:
   m_ObjectHideFlags: 0

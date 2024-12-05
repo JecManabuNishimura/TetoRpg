@@ -446,7 +446,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -70.9845, y: -1.5856}
+  m_AnchoredPosition: {x: -70.9845, y: 7.4144}
   m_SizeDelta: {x: 134.6579, y: 63.1066}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &313593890
@@ -1020,11 +1020,8 @@ MonoBehaviour:
   ImageDatabase: {fileID: 11400000, guid: 63636f2c1b25b434c96a99fd8b0fb66a, type: 2}
   obstacleMino: {fileID: 3700300457683365237, guid: 5365aed3246edd74d99b6c001ae714d4, type: 3}
   TreasureObj: {fileID: 526652331542382861, guid: c51eeaa9042348945abe59883828a7a4, type: 3}
-  MaxFallCount: 25
-  TreasureDropPercent: 30
   holdObj: {fileID: 88767308}
   nextUpGauge: {fileID: 1907824927}
-  fallUi: {fileID: 0}
 --- !u!114 &667771778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1053,8 +1050,9 @@ MonoBehaviour:
   - stage: 1
     treasureDropMaster: {fileID: 11400000, guid: b71c1071a4885b44ebd13ae2516c0dca, type: 2}
     parameter:
-      HealDropRate: 20
-      BombDropRate: 20
+      HealDropRate: 0
+      BombDropRate: 0
+      StripesDropRate: 10
       TresureDropRate: 30
     nextUpGauge: 20
   - stage: 2
@@ -1062,6 +1060,7 @@ MonoBehaviour:
     parameter:
       HealDropRate: 20
       BombDropRate: 20
+      StripesDropRate: 0
       TresureDropRate: 40
     nextUpGauge: 20
   enemyPos: {fileID: 2038817822}
@@ -1780,7 +1779,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0011292, y: -44}
+  m_AnchoredPosition: {x: 0.0011292, y: -35}
   m_SizeDelta: {x: 284.17, y: 64.619}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1193224203
@@ -1817,7 +1816,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 44, y: -8}
+  m_AnchoredPosition: {x: 44, y: 1}
   m_SizeDelta: {x: 79.2053, y: 64.190796}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1193224205
@@ -3068,6 +3067,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2063105671
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2063105672}
+  m_Layer: 0
+  m_Name: EnemyFrom
+  m_TagString: Untagged
+  m_Icon: {fileID: 2800000, guid: 55040e210fa9b426b861a26909ab4de7, type: 3}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2063105672
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2063105671}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -26.97, y: 4.78, z: 0.65}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2110812198
 GameObject:
   m_ObjectHideFlags: 0
@@ -3158,3 +3188,4 @@ SceneRoots:
   - {fileID: 1953573332}
   - {fileID: 2038817822}
   - {fileID: 88767309}
+  - {fileID: 2063105672}

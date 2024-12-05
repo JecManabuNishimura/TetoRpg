@@ -182,6 +182,7 @@ public class StageData
 {
     public int HealDropRate;
     public int BombDropRate;
+    public int StripesDropRate;
     public int TresureDropRate;
 }
 

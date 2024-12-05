@@ -28,6 +28,7 @@ public class MinoBlock : MonoBehaviour
                 MinoType.Normal => imgDB.imageList[index].texture,
                 MinoType.Life => imgDB.LifeImageList[index].texture,
                 MinoType.Bomb => imgDB.bombImage.texture,
+                MinoType.Stripes => imgDB.stripesImage.texture,
             };
     }
 }
@@ -37,5 +38,6 @@ public enum MinoType
     Normal,
     Life,
     Bomb,
+    Stripes,
     Treasure,
 }

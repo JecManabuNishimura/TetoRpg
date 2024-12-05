@@ -17,6 +17,7 @@ public class testBlock : MonoBehaviour
     public int distance = 1;
     void Start()
     {
+        parent.transform.ChildClear();
         GameManager.CreateLineBlock += CreateLineBlock;
         GameManager.CreateBlock += CreateBlock;
         GameManager.ClearBlock += ClearBlock;

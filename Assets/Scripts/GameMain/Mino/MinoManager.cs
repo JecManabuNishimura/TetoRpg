@@ -440,6 +440,11 @@ public class MinoManager : MonoBehaviour
                         BoardManager.Instance.DeleteBomb(x,y);
                         GameManager.BombFlag = true;
                         return;
+                    case MinoType.Stripes:
+                        Destroy(minoDataTable[y, x]);
+                        minoDataTable[y, x] = null;
+                        BoardManager.Instance.DeleteStripes(x,y);
+                        break;
                     case MinoType.Treasure:
                         TreDelete();
                         break;
@@ -651,12 +656,7 @@ public class MinoManager : MonoBehaviour
                     MinoType type;
                     GameObject obj = Instantiate(minoObj, parent.transform, true);
                     // 回転軸用のマイナスもあるので、ABSをつける
-                    type = Mathf.Abs(minos[y, x]) switch
-                    {
-                        1 => MinoType.Normal,
-                        2 => MinoType.Life,
-                        3 => MinoType.Bomb,
-                    };
+                    type = GetType(Mathf.Abs(minos[y, x]));
                     obj.GetComponent<MinoBlock>().SetMinoData(type, index);
                     obj.transform.localPosition = new Vector3((x) - (centerX), -((y) -(centerY )), 0);
                 }
@@ -705,17 +705,20 @@ public class MinoManager : MonoBehaviour
                         {
                             minos[y, x] *= 3;
                         }
+                        //-----------------------------------------------------------------
+                        // 縞々の確率
+                        //-----------------------------------------------------------------
+                        else if ((GameManager.stageData.StripesDropRate != 0) &&
+                                 (Random.Range(0, GameManager.stageData.StripesDropRate) == 0))
+                        {
+                            minos[y, x] *= 4;
+                        }
                     }
                     MinoType type;
                     if (!treasureFlag)
                     {
                         // 回転軸用のマイナスもあるので、ABSをつける
-                         type = Mathf.Abs(minos[y, x]) switch
-                        {
-                            1 => MinoType.Normal,
-                            2 => MinoType.Life,
-                            3 => MinoType.Bomb,
-                        };
+                        type = GetType(Mathf.Abs(minos[y, x]));
                     }
                     else
                     {
@@ -742,6 +745,16 @@ public class MinoManager : MonoBehaviour
         CheckUnder();
     }
 
+    MinoType GetType(int index)
+    {
+        return Mathf.Abs(index) switch
+        {
+            1 => MinoType.Normal,
+            2 => MinoType.Life,
+            3 => MinoType.Bomb,
+            4 => MinoType.Stripes,
+        };
+    }
     void CheckUnder()
     {
         int maxPos = 0;
