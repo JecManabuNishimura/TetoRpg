@@ -244,6 +244,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     private int columns = 3;
     private Tweener shakeTweener;
     private Vector3 shakeInitPosition;
+    private int ypos;
 
     private NowMode nowMode = NowMode.BelongingsSelect;
 
@@ -297,21 +298,22 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         {
             nowMode = NowMode.MinoSelect;
             
-            currentIndex = 0;
+            //currentIndex = 0;
             minoData.CursorObj.SetActive(true);
             UpdateCursor();
             HaveMinoExplanation();
         }
         else
         {
-            minoData.CursorObj.SetActive(false);
+            
             int minoNum = gridItems[currentIndex].GetComponent<MinoCreater>().GetMinoId();
             shakeInitPosition = gridItems[currentIndex].position;
             if (!GameManager.player.belongingsMino.Contains(minoNum))
             {
+                minoData.CursorObj.SetActive(false);
                 ChangeBelongingMino(MenuManager.Instance.minoData.circleLayoutGroup.GetIndex(), minoNum);
                 nowMode = NowMode.BelongingsSelect;
-                ColorReset();
+                //ColorReset();
                 GameManager.player.SetBelongingsMinoEffect();
             }
             else
@@ -367,7 +369,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     }
     public void Update()
     {
-
+        
     }
     public void Horizontal(bool right)
     {
@@ -375,11 +377,19 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         {
             if (right)
             {
-                currentIndex = Mathf.Min(gridItems.Length - 1, currentIndex + 1);
+                if (currentIndex % 3 < columns - 1 && currentIndex < gridItems.Length - 1)
+                {
+                    currentIndex ++;
+                }
+                //currentIndex = Mathf.Min(gridItems.Length - 1, currentIndex + 1);
             }
             else
             {
-                currentIndex = Mathf.Max(0, currentIndex - 1);
+                if (currentIndex% 3 > 0)
+                {
+                    currentIndex--;
+                }
+                //currentIndex = Mathf.Max(0, currentIndex - 1);
             }
 
             HaveMinoExplanation();
@@ -398,48 +408,45 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         {
             if (up)
             {
-                currentIndex = Mathf.Max(0, currentIndex - columns);    
+                if (currentIndex - columns >= 0)
+                {
+                    currentIndex -= columns;
+                    ypos = Mathf.Clamp(ypos - 1, -1, Mathf.Min(3, currentIndex));
+                }
             }
             else
             {
-                currentIndex = Mathf.Min(gridItems.Length - 1, currentIndex + columns);
+                currentIndex = Mathf.Min(currentIndex + columns, GameManager.player.haveMinoList.Count - 1);
+                ypos = Mathf.Clamp(ypos + 1, -1, Mathf.Min(3, currentIndex));
+                
             }
-
-            // 1行の高さを取得
-            float itemHeight = minoData.gridLayoutGroup.cellSize.y + minoData.gridLayoutGroup.spacing.y;
-
-            // コンテンツの現在の位置（Y座標）を計算
             float contentHeight = minoData.scrollRect.content.rect.height;
             float viewportHeight = minoData.scrollRect.viewport.rect.height;
-
-            // 現在選択されているアイテムの位置を計算
-            float targetPosition = (currentIndex / columns) * itemHeight;
-
-            // スクロール量の調整（スクロールがビューポートを越えないようにする）
             float maxScrollPosition = contentHeight - viewportHeight;
-            float scrollPosition = Mathf.Clamp(targetPosition, 0, maxScrollPosition);
+            float itemHeight = minoData.gridLayoutGroup.cellSize.y + minoData.gridLayoutGroup.spacing.y;
+            if (ypos == 3 && !up)
+            {
+                var pos =minoData.scrollRect.content.anchoredPosition;
+                pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y + itemHeight, 0, (int)maxScrollPosition);
 
-            // スクロールの位置を更新
-            minoData.scrollRect.content.anchoredPosition = new Vector2(0, scrollPosition);
+                minoData.scrollRect.content.anchoredPosition = pos;
+                ypos--;
+            }
+            else if (ypos == -1 && up )
+            {
+                var pos =minoData.scrollRect.content.anchoredPosition;
+                pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y - itemHeight, 0, maxScrollPosition);
+
+                minoData.scrollRect.content.anchoredPosition = pos;
+                ypos++;
+            }
+            Debug.Log(ypos);
 
             HaveMinoExplanation();
             UpdateCursor();
         }
     }
-    // カーソルが上端にいるかを判定
-    private bool IsCursorAtTop()
-    {
-        float cursorY = minoData.CursorObj.transform.position.y;
-        return cursorY >= minoData.gridLayoutGroup.cellSize.y / 2;
-    }
-
-// カーソルが下端にいるかを判定
-    private bool IsCursorAtBottom()
-    {
-        float cursorY = minoData.CursorObj.transform.position.y;
-        float bottomEdge = minoData.scrollRect.viewport.rect.height - minoData.gridLayoutGroup.cellSize.y / 2;
-        return cursorY <= bottomEdge;
-    }
+   
 
     public void Exit()
     {
