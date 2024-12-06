@@ -39,7 +39,7 @@ public class MenuContext
             { SelectView.None ,new None()},
             { SelectView.TabSelect ,new TabSelect(menu,MenuManager.Instance)},
             { SelectView.Armor ,new ArmorView(menu,MenuManager.Instance)},
-            { SelectView.HaveMino ,new HaveMinoView(menu)},
+            { SelectView.HaveMino ,new HaveMinoView(menu,MenuManager.Instance)},
         };
         stateTable = table;
         currentState = stateTable[SelectView.None];
@@ -232,7 +232,12 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         MinoSelect,
     }
     private UiController menu;
-    public HaveMinoView(UiController menu) => this.menu = menu;
+    public HaveMinoView(UiController menu,MenuManager menuManager)
+    {
+        this.menu = menu;
+        minoData = menuManager.minoData;
+    }
+
     private RectTransform[] gridItems;    // Gridの子要素
     private int currentIndex = 0;
     private Color defaultColor;
@@ -255,9 +260,8 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         }
 
         BelongingMinoExplanation();
-
-
-        defaultColor = gridItems[0].GetComponent<Image>().color;
+        
+        //defaultColor = new Color(0.69f, 0.65f, 0.5f);
     }
 
     private void BelongingMinoExplanation()
@@ -273,8 +277,6 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
                 obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
             }
         }
-        
-        
     }
     private void HaveMinoExplanation()
     {
@@ -296,12 +298,13 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             nowMode = NowMode.MinoSelect;
             
             currentIndex = 0;
-            
+            minoData.CursorObj.SetActive(true);
             UpdateCursor();
             HaveMinoExplanation();
         }
         else
         {
+            minoData.CursorObj.SetActive(false);
             int minoNum = gridItems[currentIndex].GetComponent<MinoCreater>().GetMinoId();
             shakeInitPosition = gridItems[currentIndex].position;
             if (!GameManager.player.belongingsMino.Contains(minoNum))
@@ -401,9 +404,41 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             {
                 currentIndex = Mathf.Min(gridItems.Length - 1, currentIndex + columns);
             }
+
+            // 1行の高さを取得
+            float itemHeight = minoData.gridLayoutGroup.cellSize.y + minoData.gridLayoutGroup.spacing.y;
+
+            // コンテンツの現在の位置（Y座標）を計算
+            float contentHeight = minoData.scrollRect.content.rect.height;
+            float viewportHeight = minoData.scrollRect.viewport.rect.height;
+
+            // 現在選択されているアイテムの位置を計算
+            float targetPosition = (currentIndex / columns) * itemHeight;
+
+            // スクロール量の調整（スクロールがビューポートを越えないようにする）
+            float maxScrollPosition = contentHeight - viewportHeight;
+            float scrollPosition = Mathf.Clamp(targetPosition, 0, maxScrollPosition);
+
+            // スクロールの位置を更新
+            minoData.scrollRect.content.anchoredPosition = new Vector2(0, scrollPosition);
+
             HaveMinoExplanation();
             UpdateCursor();
         }
+    }
+    // カーソルが上端にいるかを判定
+    private bool IsCursorAtTop()
+    {
+        float cursorY = minoData.CursorObj.transform.position.y;
+        return cursorY >= minoData.gridLayoutGroup.cellSize.y / 2;
+    }
+
+// カーソルが下端にいるかを判定
+    private bool IsCursorAtBottom()
+    {
+        float cursorY = minoData.CursorObj.transform.position.y;
+        float bottomEdge = minoData.scrollRect.viewport.rect.height - minoData.gridLayoutGroup.cellSize.y / 2;
+        return cursorY <= bottomEdge;
     }
 
     public void Exit()
@@ -413,14 +448,10 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
 
     void UpdateCursor()
     {
-        foreach (var val in gridItems)
-        {
-            val.GetComponent<Image>().color = defaultColor;
-        }
         if (currentIndex >= 0 && currentIndex < gridItems.Length)
         {
             // カーソルの位置を選択されたアイテムに一致させる
-            gridItems[currentIndex].GetComponent<Image>().color = Color.red;
+            minoData.CursorObj.transform.position = gridItems[currentIndex].position;
         }
     }
 

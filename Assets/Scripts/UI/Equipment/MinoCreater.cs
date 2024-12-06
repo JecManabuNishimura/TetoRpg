@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MinoCreater : MonoBehaviour
 {
@@ -9,13 +10,22 @@ public class MinoCreater : MonoBehaviour
     private int minoId;
     public float centerX = 0;
     public float centerY = 0;
-
+    private Color normalColor;
     private void Start()
     {
         //CreateMino();
+        normalColor = GetComponent<Image>().color;
     }
 
-    public void UpdateId(int id) => minoId = id;
+    public void UpdateId(int id)
+    {
+        
+        minoId = id;
+        if (GameManager.player.belongingsMino.Contains(id))
+        {
+            //GetComponent<Image>().color = Color.green;
+        }
+    }
 
     public int GetMinoId() => minoId;
     public void CreateMino()

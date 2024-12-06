@@ -105,6 +105,7 @@ public class TabData
 [Serializable]
 public class MinoViewData
 {
+    public ScrollRect scrollRect;
     public SimpleCircleLayoutGroup circleLayoutGroup;
     public GameObject haveContent;
     public GameObject itemObj;
@@ -112,6 +113,7 @@ public class MinoViewData
     public VerticalLayoutGroup belongingsEffectGroup;
     public VerticalLayoutGroup haveEffectGroup;
     public GameObject minoEffectObj;
+    public GameObject CursorObj;
 }
 
 [Serializable]
