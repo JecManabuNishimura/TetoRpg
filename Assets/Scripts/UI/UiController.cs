@@ -513,7 +513,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
         {
             cursorPos += right ? 1 : -1;
             cursorPos = Mathf.Clamp(cursorPos, 0, gridItems.Length - 1);
-            armorData.CursorIcon.transform.position = gridItems[cursorPos].position;
+            UpdateCursor(cursorPos);
             CreateHaveArmorData(cursorPos);
         }
         else
@@ -522,7 +522,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
             /*haveCursorPos = right 
                 ? Mathf.Min(gridItems.Length - 1, haveCursorPos + 1) 
                 : Mathf.Max(0, haveCursorPos - 1);*/
-            armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
+            UpdateCursor(haveCursorPos);
             SetExplantionParameterSetting();
         }
     }
@@ -532,7 +532,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
         if (haveItemSelectViewFlag)
         {
             haveCursorPos = gridCursorMove.MoveVertical(up);
-            armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
+            UpdateCursor(haveCursorPos);
             /*haveCursorPos = up 
                 ? Mathf.Max(0, haveCursorPos - 4) 
                 : Mathf.Min(gridItems.Length - 1, haveCursorPos + 4);   
@@ -551,7 +551,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
         cursorPos = 0;
         armorData.CursorIcon.SetActive(true);
         gridItems = GetGroupChildData(armorData.BelongingsGroup.transform);
-        armorData.CursorIcon.transform.position = gridItems[cursorPos].position;
+        UpdateCursor(cursorPos);
         
         UpdateArmorData();
         CreateHaveArmorData(cursorPos);
@@ -615,7 +615,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
                 armorData.scrollRect,
                 armorData.HaveItemGroup);
             
-            armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
+            UpdateCursor(cursorPos);
             armorData.ExplantionGroup.gameObject.SetActive(true);
             armorData.ExplantionEffectGroup.gameObject.SetActive(true);
 
@@ -640,7 +640,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
             armorData.ExplantionEffectGroup.gameObject.SetActive(false);
             haveItemSelectViewFlag = false;
             gridItems = GetGroupChildData(armorData.BelongingsGroup.transform);
-            armorData.CursorIcon.transform.position = gridItems[cursorPos].position;
+            UpdateCursor(haveCursorPos);
 
         }
     }
@@ -651,7 +651,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
         {
             haveItemSelectViewFlag = false;
             gridItems = GetGroupChildData(armorData.BelongingsGroup.transform);
-            armorData.CursorIcon.transform.position = gridItems[cursorPos].position;
+            UpdateCursor(cursorPos);
             armorData.ExplantionGroup.gameObject.SetActive(false);
             armorData.ExplantionEffectGroup.gameObject.SetActive(false);
         }
@@ -660,7 +660,12 @@ public class ArmorView : EquipmentDataCreate, IMenu
             menu.ChangeMenu(SelectView.TabSelect);    
         }
     }
-
+    void UpdateCursor(int index)
+    {
+        // カーソルの位置を選択されたアイテムに一致させる
+        armorData.CursorIcon.transform.position = gridItems[index].position;
+        armorData.CursorIcon.GetComponent<CursorController>().PlayAnim();
+    }
  
 }
 
