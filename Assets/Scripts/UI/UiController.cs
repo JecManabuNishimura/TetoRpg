@@ -440,7 +440,6 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
                 minoData.scrollRect.content.anchoredPosition = pos;
                 ypos++;
             }
-            Debug.Log(ypos);
 
             HaveMinoExplanation();
             UpdateCursor();
@@ -459,6 +458,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         {
             // カーソルの位置を選択されたアイテムに一致させる
             minoData.CursorObj.transform.position = gridItems[currentIndex].position;
+            minoData.CursorObj.GetComponent<CursorController>().PlayAnim();
         }
     }
 
