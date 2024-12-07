@@ -119,6 +119,7 @@ public class MinoViewData
 [Serializable]
 public class ArmorData
 {
+    public ScrollRect scrollRect;
     public GameObject effectObj;
     public GameObject HaveItemObj;
     public GameObject CursorIcon;

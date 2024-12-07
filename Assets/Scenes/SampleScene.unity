@@ -5240,7 +5240,37 @@ MonoBehaviour:
     def: 0
   belongingsMino: 00000000010000000200000003000000040000000500000006000000
   haveMinoList: 00000000010000000200000003000000040000000500000006000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000
-  haveWeaponList: []
+  haveWeaponList:
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
+  - We01
   haveShieldList: []
   haveHelmetList: []
   haveArmorList: []

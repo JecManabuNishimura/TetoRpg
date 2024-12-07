@@ -260,6 +260,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             gridItems[i] = MenuManager.Instance.minoData.gridLayoutGroup.transform.GetChild(i).GetComponent<RectTransform>();
         }
 
+        gridCursorMove = new GridCursorMove(childCount, minoData.scrollRect, minoData.gridLayoutGroup);
         BelongingMinoExplanation();
         
         //defaultColor = new Color(0.69f, 0.65f, 0.5f);
@@ -375,6 +376,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     {
         if (nowMode == NowMode.MinoSelect)
         {
+            /*
             if (right)
             {
                 if (currentIndex % 3 < columns - 1 && currentIndex < gridItems.Length - 1)
@@ -390,7 +392,8 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
                     currentIndex--;
                 }
                 //currentIndex = Mathf.Max(0, currentIndex - 1);
-            }
+            }*/
+            currentIndex = gridCursorMove.MoveHorizontal(right);
 
             HaveMinoExplanation();
             UpdateCursor();
@@ -402,45 +405,54 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         }
     }
 
+    
+    /*
+    public void MoveCursor(bool up)
+    {
+        float contentHeight = minoData.scrollRect.content.rect.height;
+        float viewportHeight = minoData.scrollRect.viewport.rect.height;
+        float maxScrollPosition = contentHeight - viewportHeight;
+        float itemHeight = minoData.gridLayoutGroup.cellSize.y + minoData.gridLayoutGroup.spacing.y;
+        int rowCount = (int)(viewportHeight / minoData.gridLayoutGroup.cellSize.y);
+        if (up)
+        {
+            if (currentIndex - columns >= 0)
+            {
+                currentIndex -= columns;
+                ypos = Mathf.Clamp(ypos - 1, -1, Mathf.Min(rowCount, currentIndex));
+            }
+        }
+        else
+        {
+            currentIndex = Mathf.Min(currentIndex + columns, GameManager.player.haveMinoList.Count - 1);
+            ypos = Mathf.Clamp(ypos + 1, -1, Mathf.Min(rowCount, currentIndex));
+                
+        }
+
+        if (ypos == rowCount && !up)
+        {
+            var pos =minoData.scrollRect.content.anchoredPosition;
+            pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y + itemHeight, 0, (int)maxScrollPosition);
+
+            minoData.scrollRect.content.anchoredPosition = pos;
+            ypos--;
+        }
+        else if (ypos == -1 && up )
+        {
+            var pos =minoData.scrollRect.content.anchoredPosition;
+            pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y - itemHeight, 0, maxScrollPosition);
+
+            minoData.scrollRect.content.anchoredPosition = pos;
+            ypos++;
+        }
+    }
+    */
     public void Vertical(bool up)
     {
+        
         if(nowMode == NowMode.MinoSelect)
         {
-            if (up)
-            {
-                if (currentIndex - columns >= 0)
-                {
-                    currentIndex -= columns;
-                    ypos = Mathf.Clamp(ypos - 1, -1, Mathf.Min(3, currentIndex));
-                }
-            }
-            else
-            {
-                currentIndex = Mathf.Min(currentIndex + columns, GameManager.player.haveMinoList.Count - 1);
-                ypos = Mathf.Clamp(ypos + 1, -1, Mathf.Min(3, currentIndex));
-                
-            }
-            float contentHeight = minoData.scrollRect.content.rect.height;
-            float viewportHeight = minoData.scrollRect.viewport.rect.height;
-            float maxScrollPosition = contentHeight - viewportHeight;
-            float itemHeight = minoData.gridLayoutGroup.cellSize.y + minoData.gridLayoutGroup.spacing.y;
-            if (ypos == 3 && !up)
-            {
-                var pos =minoData.scrollRect.content.anchoredPosition;
-                pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y + itemHeight, 0, (int)maxScrollPosition);
-
-                minoData.scrollRect.content.anchoredPosition = pos;
-                ypos--;
-            }
-            else if (ypos == -1 && up )
-            {
-                var pos =minoData.scrollRect.content.anchoredPosition;
-                pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y - itemHeight, 0, maxScrollPosition);
-
-                minoData.scrollRect.content.anchoredPosition = pos;
-                ypos++;
-            }
-
+            currentIndex = gridCursorMove.MoveVertical(up);
             HaveMinoExplanation();
             UpdateCursor();
         }
@@ -496,6 +508,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
     }
     public void Horizontal(bool right)
     {
+        
         if (!haveItemSelectViewFlag)
         {
             cursorPos += right ? 1 : -1;
@@ -505,9 +518,10 @@ public class ArmorView : EquipmentDataCreate, IMenu
         }
         else
         {
-            haveCursorPos = right 
+            haveCursorPos = gridCursorMove.MoveHorizontal(right);
+            /*haveCursorPos = right 
                 ? Mathf.Min(gridItems.Length - 1, haveCursorPos + 1) 
-                : Mathf.Max(0, haveCursorPos - 1);
+                : Mathf.Max(0, haveCursorPos - 1);*/
             armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
             SetExplantionParameterSetting();
         }
@@ -517,10 +531,13 @@ public class ArmorView : EquipmentDataCreate, IMenu
     {
         if (haveItemSelectViewFlag)
         {
-            haveCursorPos = up 
+            haveCursorPos = gridCursorMove.MoveVertical(up);
+            armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
+            /*haveCursorPos = up 
                 ? Mathf.Max(0, haveCursorPos - 4) 
                 : Mathf.Min(gridItems.Length - 1, haveCursorPos + 4);   
-            armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position; 
+            armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
+            */ 
         }
         
     }
@@ -535,6 +552,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
         armorData.CursorIcon.SetActive(true);
         gridItems = GetGroupChildData(armorData.BelongingsGroup.transform);
         armorData.CursorIcon.transform.position = gridItems[cursorPos].position;
+        
         UpdateArmorData();
         CreateHaveArmorData(cursorPos);
     }
@@ -591,9 +609,16 @@ public class ArmorView : EquipmentDataCreate, IMenu
             if (item == null) return;
             gridItems = item;
             haveItemSelectViewFlag = true;
+            haveCursorPos = 0;
+            gridCursorMove = new GridCursorMove(
+                MenuManager.Instance.armorData.HaveItemGroup.transform.childCount,
+                armorData.scrollRect,
+                armorData.HaveItemGroup);
+            
             armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
             armorData.ExplantionGroup.gameObject.SetActive(true);
             armorData.ExplantionEffectGroup.gameObject.SetActive(true);
+
             SetExplantionParameterSetting();
         }
         else
@@ -641,6 +666,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
 
 public class EquipmentDataCreate
 {
+    protected GridCursorMove gridCursorMove;
     protected TabData tabData;
     protected GameObject minoObj;
     protected GameObject armorObj;
@@ -674,6 +700,7 @@ public class EquipmentDataCreate
     {
         //MenuManager.Instance.GroupChildReset(MenuManager.Instance.armorData.HaveItemGroup.transform);
         MenuManager.Instance.armorData.HaveItemGroup.transform.ChildClear();
+        // カーソルの位置によって取得内容を変更
         List<string> esData = SelectHaveList(cursorPos);
         foreach (var list in esData)
         {
@@ -761,5 +788,88 @@ public class EquipmentDataCreate
         }
 
         return items;
+    }
+}
+public class GridCursorMove
+{
+    private int ItemCount;
+    private ScrollRect scrollRect;
+    private GridLayoutGroup layoutGroup;
+    private int currentIndex;
+    private int ypos;
+    private int rowCount;
+    private int columns;
+    public GridCursorMove(int itemCount, ScrollRect scrollRect, GridLayoutGroup layoutGroup)
+    {
+        ItemCount = itemCount;
+        this.scrollRect = scrollRect;
+        this.layoutGroup = layoutGroup;
+        scrollRect.content.anchoredPosition = new Vector2(0, 0);
+        rowCount = (int)(scrollRect.viewport.rect.height / layoutGroup.cellSize.y);
+        columns = (int)(scrollRect.viewport.rect.width / layoutGroup.cellSize.x);
+    }
+
+    public int MoveHorizontal(bool right)
+    {
+        if (right)
+        {
+            if (currentIndex % columns < columns - 1 && currentIndex < ItemCount - 1)
+            {
+                currentIndex ++;
+            }
+            //currentIndex = Mathf.Min(gridItems.Length - 1, currentIndex + 1);
+        }
+        else
+        {
+            if (currentIndex% columns > 0)
+            {
+                currentIndex--;
+            }
+            //currentIndex = Mathf.Max(0, currentIndex - 1);
+        }
+
+        return currentIndex;
+    }
+    public int MoveVertical(bool up)
+    {
+        float contentHeight = scrollRect.content.rect.height;
+        float viewportHeight = scrollRect.viewport.rect.height;
+        
+        float maxScrollPosition = contentHeight - viewportHeight;
+        float itemHeight = layoutGroup.cellSize.y + layoutGroup.spacing.y;
+
+
+        if (up)
+        {
+            if (currentIndex - columns >= 0)
+            {
+                currentIndex -= columns;
+                ypos = Mathf.Clamp(ypos - 1, -1, Mathf.Min(rowCount, currentIndex));
+            }
+        }
+        else
+        {
+            currentIndex = Mathf.Min(currentIndex + columns, ItemCount - 1);
+            ypos = Mathf.Clamp(ypos + 1, -1, Mathf.Min(rowCount, currentIndex));
+        }
+
+        if (ypos == rowCount && !up)
+        {
+            var pos =scrollRect.content.anchoredPosition;
+            pos.y = Mathf.Clamp(scrollRect.content.anchoredPosition.y + itemHeight, 0, (int)maxScrollPosition);
+
+            scrollRect.content.anchoredPosition = pos;
+            ypos--;
+        }
+        else if (ypos == -1 && up )
+        {
+            var pos =scrollRect.content.anchoredPosition;
+            pos.y = Mathf.Clamp(scrollRect.content.anchoredPosition.y - itemHeight, 0, maxScrollPosition);
+
+            scrollRect.content.anchoredPosition = pos;
+            ypos++;
+        }
+
+        return currentIndex;
     }
 }

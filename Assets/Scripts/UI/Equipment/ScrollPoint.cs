@@ -8,6 +8,7 @@ public class ScrollPoint : MonoBehaviour
 
    private void Start()
    {
+       scrollRect.verticalScrollbar.value = 1;
        MovePoint();
    }
 
@@ -20,7 +21,8 @@ public class ScrollPoint : MonoBehaviour
    {
        Vector3 pos = transform.localPosition;
        float height = scrollRect.verticalScrollbar.GetComponent<RectTransform>().rect.height;
-       pos.y = (height * scrollRect.verticalScrollbar.value) - height / 2 ;
+       float val = scrollRect.verticalScrollbar.gameObject.activeSelf ? scrollRect.verticalScrollbar.value : 1;
+       pos.y = (height * val) - height / 2 ;
        transform.localPosition = pos;
    }
 }
