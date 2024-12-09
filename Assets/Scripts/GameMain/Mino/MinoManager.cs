@@ -19,6 +19,7 @@ public class MinoManager : MonoBehaviour
     [SerializeField] private GameObject TreasureObj;
     [SerializeField] private GameObject holdObj;
     [SerializeField] private NextUpGauge nextUpGauge;
+    [SerializeField] private GameObject damgeText;
     
     private GameObject SelectMino;
     private GameObject clMinoObj;
@@ -45,6 +46,7 @@ public class MinoManager : MonoBehaviour
     private bool holFlag = false;
 
     private List<HoldMinoData> holdMino = new();
+    private Vector2Int delPos;
 
 
     private void Start()
@@ -139,6 +141,7 @@ public class MinoManager : MonoBehaviour
 
     private void Instance_ChangeColor(int x,int y)
     {
+        delPos = new Vector2Int(x, y);
         StartCoroutine(ChangeColor(x, y));
     }
 
@@ -970,7 +973,15 @@ public class MinoManager : MonoBehaviour
         Destroy(SelectMino);
         // そろっているかチェック
         GameManager.DeleteLine = 0;     //　いったん初期化
+        GameManager.DeleteMino = 0;
         BoardManager.Instance.CheckLine(0);
+        // ダメージテキスト表示
+        if (GameManager.playerDamage != 0)
+        {
+            var obj = Instantiate(damgeText, new Vector3(delPos.x,delPos.y , 0), Quaternion.identity);
+            obj.GetComponent<Damage>().ChangeText((GameManager.playerDamage / 2 - GameManager.enemy.status.def / 4).ToString());    
+        }
+        
         GameManager.enemy.Damage(GameManager.playerDamage);
         holFlag = false;
     }

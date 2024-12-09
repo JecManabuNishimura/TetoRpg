@@ -25,8 +25,9 @@ public class GameManager : MonoBehaviour
 
     public static int healingPoint = 5;
     public static int DeleteLine;
+    public static int DeleteMino;
 
-    public static int playerDamage => DeleteLine * player.status.atk;
+    public static int playerDamage => (DeleteLine +(DeleteMino / 8)) * player.status.atk;
 
     // 操作用フラグ
     public static bool playerPut;

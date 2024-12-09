@@ -221,6 +221,7 @@ public class BoardManager
                     if (y + posY > 0 && y + posY < GameManager.boardHeight)
                     {
                         bombCol.Add(new Vector2Int(x+posX,y+posY));
+                        GameManager.DeleteMino++;
                         board[y+ posY, x+ posX] = 0;
                         DeleteMino?.Invoke(x+ posX, y + posY,false);
                     }

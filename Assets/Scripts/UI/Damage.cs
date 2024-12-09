@@ -4,15 +4,15 @@ using UnityEngine.UI;
 
 public class Damage : MonoBehaviour
 {
-   [SerializeField] private TextMeshProUGUI damageText;
+   [SerializeField] private TextMeshPro damageText;
 
     public void ChangeText(string text)
     {
         damageText.text = text;
     }
 
-    public void PlayAnim()
+    public void DestroyObj()
     {
-
+        Destroy(this.gameObject);
     }
 }

@@ -304,16 +304,17 @@ namespace Enemy
             throw new NotImplementedException();
         }
 
-        public void Damage(int damage)
+        public async void Damage(int damage)
         {
             if(damage != 0)
             {
                 int newDamage = damage / 2 - status.def / 4;
                 status.hp -= newDamage;
-                GetComponent<Animator>().Play("DamageAnim", 0, 0);
-                if(status.hp < 0)
+                GetComponent<Animator>().Play("DamageAnim", 0, 0).;
+                if(status.hp <= 0)
                 {
                     status.hp = 0;
+                    DOTween.Play(gameObject).AsyncWaitForCompletion();
                     GameManager.EnemyDown = true;
                 }
             }
