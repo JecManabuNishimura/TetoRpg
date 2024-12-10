@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MyMethods;
 
 
 public class NextUpGauge : MonoBehaviour
@@ -18,6 +19,8 @@ public class NextUpGauge : MonoBehaviour
 
     public void CreateGauge(int count)
     {
+        gaugeParent.transform.ChildClear ();
+        gaugeList.Clear ();
         for (int i = 0; i < count; i++)
         {
             gaugeList.Add(Instantiate(gaugeObj, gaugeParent.transform, true));
@@ -51,5 +54,11 @@ public class NextUpGauge : MonoBehaviour
             DOTween.Restart(anim,"open");
             await Task.Delay(100);
         }
+    }
+
+    public void Clear()
+    {
+        gaugeParent.transform.ChildClear();
+        gaugeList.Clear();
     }
 }

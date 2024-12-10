@@ -90,6 +90,7 @@ public class None : IMenu
     public void Entry()
     {
         MenuManager.Instance.equipmentObj.SetActive(false);
+
         GameManager.menuFlag = false;
     }
 
@@ -142,6 +143,7 @@ public class TabSelect : EquipmentDataCreate, IMenu
             case 1:
                 minoObj.SetActive(false);
                 armorObj.SetActive(true);
+
                 armorData.CursorIcon.SetActive(false);
                 break;
         }

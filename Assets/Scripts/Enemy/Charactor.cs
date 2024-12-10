@@ -57,6 +57,7 @@ namespace Enemy
         {
             status.hp = status.maxHp;
             attackCount = attackTarnCount;
+            
         }
 
         private void ReadyAttack()
@@ -310,11 +311,15 @@ namespace Enemy
             {
                 int newDamage = damage / 2 - status.def / 4;
                 status.hp -= newDamage;
-                GetComponent<Animator>().Play("DamageAnim", 0, 0).;
+                
+                
                 if(status.hp <= 0)
                 {
+                    await Task.Delay(500);
                     status.hp = 0;
-                    DOTween.Play(gameObject).AsyncWaitForCompletion();
+                    gameObject.GetComponent<Animator>().enabled = false;
+                    SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+                    await sr.DOFade(0, 1).AsyncWaitForCompletion();
                     GameManager.EnemyDown = true;
                 }
             }

@@ -91,6 +91,7 @@ public class MinoManager : MonoBehaviour
 
     private async Task StartBattle(int gaugeNum)
     {
+        
         nextUpGauge.CreateGauge(gaugeNum);
         await nextUpGauge.Play();
         CreateNewMino();
@@ -119,6 +120,7 @@ public class MinoManager : MonoBehaviour
                 Destroy(minoDataTable[y, x]);
             }
         }
+        nextUpGauge.Clear();
     }
     private void Update()
     {
