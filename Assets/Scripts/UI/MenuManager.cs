@@ -130,6 +130,7 @@ public class ArmorData
     public VerticalLayoutGroup ExplantionEffectGroup;
     public List<SpriteSetting> BelongingsSprite;
     public GameObject itemContent;
+    public TextMeshProUGUI WeaponNameText;
     public TextMeshProUGUI hpText;
     public TextMeshProUGUI atkText;
     public TextMeshProUGUI defText;

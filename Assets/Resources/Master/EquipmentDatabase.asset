@@ -17,7 +17,19 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 789e518168d493d4396ec984b1b5bcb3, type: 3}
     isSelected: 0
   - weaponId: We02
+    sprite: {fileID: 21300000, guid: dc038b2ab22c65c4488779487c9dae97, type: 3}
+    isSelected: 0
+  - weaponId: We03
+    sprite: {fileID: 0}
+    isSelected: 0
+  - weaponId: We04
+    sprite: {fileID: 21300000, guid: dc038b2ab22c65c4488779487c9dae97, type: 3}
+    isSelected: 0
+  - weaponId: We05
     sprite: {fileID: 21300000, guid: 54f8589e2ef2f7a4e875a51ae49b1e7b, type: 3}
+    isSelected: 0
+  - weaponId: We06
+    sprite: {fileID: 21300000, guid: 1ff1175d56df9eb4f8cfa0ba429d9254, type: 3}
     isSelected: 0
   shieldData:
   - weaponId: Sh01

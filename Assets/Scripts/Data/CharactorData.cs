@@ -13,20 +13,22 @@ public struct Status
     public int hp;
     public int atk;
     public int def;
+    public int critical;
 
-    public Status(int hp, int atk, int def) : this()
+    public Status(int hp, int atk, int def,int critical) : this()
     {
         this.maxHp = hp;
         this.atk = atk;
         this.def = def;
+        this.critical = critical;
     }
 
     public static Status operator +(Status a, Status b)
-        => new Status(a.maxHp + b.hp, a.atk + b.atk, a.def + b.def);
+        => new Status(a.maxHp + b.hp, a.atk + b.atk, a.def + b.def,a.critical + b.critical);
 
     public static Status Zero()
     {
-        return new Status(0, 0, 0);
+        return new Status(0, 0, 0,0);
     }
 
 }

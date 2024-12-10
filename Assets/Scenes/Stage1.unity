@@ -2861,6 +2861,7 @@ MonoBehaviour:
     hp: 0
     atk: 5
     def: 3
+    critical: 0
   hpText: {fileID: 313593890}
   healingEffect: {fileID: 2277261721029391378, guid: f8733f1a7afcea74bbefb23928552acd, type: 3}
   damageText: {fileID: 1429471070}
@@ -2870,42 +2871,22 @@ MonoBehaviour:
     hp: 0
     atk: 0
     def: 0
+    critical: 0
+  belongingsEquipment:
+    weaponId: We01
+    shieldId: Sh01
+    helmetId: He01
+    armorId: Ar01
   belongingsMino: 00000000010000000200000003000000040000000500000006000000
   haveMinoList: 00000000010000000200000003000000040000000500000006000000070000000700000007000000070000000700000007000000070000000700000007000000070000000700000007000000
   haveWeaponList:
   - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  - We01
-  haveShieldList: []
-  haveHelmetList: []
-  haveArmorList: []
+  haveShieldList:
+  - Sh01
+  haveHelmetList:
+  - He01
+  haveArmorList:
+  - Ar01
 --- !u!1 &2038817821
 GameObject:
   m_ObjectHideFlags: 0

@@ -571,14 +571,26 @@ public class ArmorView : EquipmentDataCreate, IMenu
                         ).status;
         for (int i = 0; i < tran.childCount ; i++)
         {
-            int data = i switch
+            if (i == 0)
             {
-                0 => s.hp,
-                1 => s.atk,
-                2 => s.def,
-            };
-            tran.GetChild(i).GetComponent<ParameterSetting>()
-                .SetText(data.ToString());
+                tran.GetChild(i).GetComponent<ParameterSetting>()
+                    .SetText(EquipmentMaster.Entity.GetEquipmentData(
+                        SelectHaveList(cursorPos)[haveCursorPos]
+                    ).name);
+            }
+            else
+            {
+                int data = i switch
+                {
+                    1 => s.hp,
+                    2 => s.atk,
+                    3 => s.def,
+                };
+                tran.GetChild(i).GetComponent<ParameterSetting>()
+                    .SetText(data.ToString());
+            }
+            
+            
         }
 
         armorData.ExplantionEffectGroup.transform.ChildClear();;
@@ -617,7 +629,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
                 armorData.scrollRect,
                 armorData.HaveItemGroup);
             
-            UpdateCursor(cursorPos);
+            UpdateCursor(haveCursorPos);
             armorData.ExplantionGroup.gameObject.SetActive(true);
             armorData.ExplantionEffectGroup.gameObject.SetActive(true);
 
@@ -664,7 +676,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
     }
     void UpdateCursor(int index)
     {
-        // カーソルの位置を選択されたアイテムに一致させる
+        // カーソルの位置を選択されたアイテムdに一致させる
         armorData.CursorIcon.transform.position = gridItems[index].position;
         armorData.CursorIcon.GetComponent<CursorController>().PlayAnim();
     }
@@ -685,7 +697,7 @@ public class EquipmentDataCreate
         return i switch
         {
             0 => GameManager.player.belongingsEquipment?.weaponId,
-            1 => GameManager.player.belongingsEquipment?.shildId,
+            1 => GameManager.player.belongingsEquipment?.shieldId,
             2 => GameManager.player.belongingsEquipment?.helmetId,
             3 => GameManager.player.belongingsEquipment?.armorId,
         };

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
@@ -112,7 +113,7 @@ public class Player : CharactorData, ICharactor
                 belongingsEquipment.weaponId = belongingsEquipment.weaponId == id ? null : id;
                 break;
             case EqupmentPart.Shield:
-                belongingsEquipment.shildId = belongingsEquipment.shildId == id ? null : id;
+                belongingsEquipment.shieldId = belongingsEquipment.shieldId == id ? null : id;
                 break;
             case EqupmentPart.Helmet:
                 belongingsEquipment.helmetId = belongingsEquipment.helmetId == id ? null : id;;
@@ -137,7 +138,7 @@ public class Player : CharactorData, ICharactor
             totalStatus += weaponData.GetTotalStatus();
         }
 
-        var shieldData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.shildId);
+        var shieldData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.shieldId);
         if (shieldData != null)
         {
             totalStatus += shieldData.GetTotalStatus();
@@ -235,10 +236,11 @@ public class Player : CharactorData, ICharactor
         slider.value = (float)status.hp / (float)status.maxHp;
     }
 
+    [Serializable]
     public class BelongingsEquipment
     {
         public string weaponId;
-        public string shildId;
+        public string shieldId;
         public string helmetId;
         public string armorId;
     }

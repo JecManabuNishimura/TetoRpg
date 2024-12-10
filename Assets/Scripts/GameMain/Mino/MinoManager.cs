@@ -981,7 +981,16 @@ public class MinoManager : MonoBehaviour
         if (GameManager.playerDamage != 0)
         {
             var obj = Instantiate(damgeText, new Vector3(delPos.x,delPos.y , 0), Quaternion.identity);
-            obj.GetComponent<Damage>().ChangeText((GameManager.playerDamage / 2 - GameManager.enemy.status.def / 4).ToString());    
+            // クリティカル判定
+            if (Random.Range(0, 100) < GameManager.player.status.critical)
+            {
+                // クリティカル2倍
+                obj.GetComponent<Damage>().ChangeText((GameManager.playerDamage * 2).ToString());
+            }
+            else
+            {
+                obj.GetComponent<Damage>().ChangeText((GameManager.playerDamage / 2 - GameManager.enemy.status.def / 4).ToString());
+            }
         }
         
         GameManager.enemy.Damage(GameManager.playerDamage);

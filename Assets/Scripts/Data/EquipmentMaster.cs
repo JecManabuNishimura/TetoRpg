@@ -101,7 +101,7 @@ public class EquipmentMaster : ScriptableObject
                 }
                 equipData.Add(new EquipmentData(id,
                                                 name,
-                                                new Status(hp, atk, def),
+                                                new Status(hp, atk, def,0),
                                                 upState.ToArray()));
             }
         }
@@ -204,6 +204,18 @@ public enum EffectStatus
     None,
     HpUp,
     AtkUp,
+    DefUp,
+    CriticalUp,
+    HealDropUp,
+    HealPowerUp,            // 回復量Up
+    AllAttackDropUp,        // 全体攻撃出現率アップ    
+    DamageSuctionHp,        // 与えたダメージをHpとして吸収
+    DamageReduction,        // ダメージ量軽減
+    PenetratingDamage,      // 貫通ダメージ
+    DoubleAttack,           // 2回攻撃
+    HealEveryTurn,          // 毎ターン回復
+    
+    
 }
 
 [Serializable]
