@@ -353,5 +353,9 @@ public class BoardManager
 
         return true;
     }
-    
+
+    Vector2Int GetRandomMinoPos()
+    {
+        List<Vector2Int> postList        
+    }
 }

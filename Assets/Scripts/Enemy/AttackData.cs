@@ -14,14 +14,13 @@ public class AttackData : MonoBehaviour
         };
     }
 
-    public static void GetSpecialAttack(SpecialAttackName name)
+    public static List<Vector2Int> GetSpecialAttack(SpecialAttackName name)
     {
-        switch (name)
+        return name switch
         {
-            case SpecialAttackName.LastAddLine:
-                LastAddLine();
-                break;
-        }
+            SpecialAttackName.LastAddLine => LastAddLine(),
+            SpecialAttackName.Attack4to4 => Attack4To4(),
+        };
     }
 
     //============================================================
@@ -102,9 +101,27 @@ public class AttackData : MonoBehaviour
     //============================================================
     // スペシャル攻撃
     //============================================================
-    private static void LastAddLine()
+    private static List<Vector2Int> LastAddLine()
     {
         GameManager.LineCreateFlag = true;
+        return null;
+    }
+
+    private static List<Vector2Int> Attack4To4()
+    {
+        var posX = Random.Range(1, GameManager.boardWidth - 2);
+        var posY = Random.Range(GameManager.boardHeight / 2, GameManager.boardHeight - 2);
+        List<Vector2Int> pos = new();
+        for (int y = 0; y < 4; y++)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                pos.Add(new Vector2Int(posX - 1 + x,posY - 1 + y));
+            }
+        }
+
+        return pos;
+
     }
 }
 
@@ -116,10 +133,10 @@ public enum AttackName
     TwoRowLineConnect,
     BombAttack,
     BombMultiAttack,
-    
 }
 
 public enum SpecialAttackName
 {
     LastAddLine,
+    Attack4to4,
 }

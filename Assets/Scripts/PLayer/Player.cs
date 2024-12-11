@@ -229,6 +229,10 @@ public class Player : CharactorData, ICharactor
     public void Damage(int damage)
     {
         int newDamage = (damage / 2) - (totalStatus.def / 4);
+        if (newDamage < 0)
+        {
+            newDamage = 0;
+        }
         damageText.enabled = true;
         damageText.text = newDamage.ToString();
         damageText.transform.GetComponent<Animator>().Play("DamageText",0,0);

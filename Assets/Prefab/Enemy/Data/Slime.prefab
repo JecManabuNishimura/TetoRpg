@@ -116,11 +116,13 @@ MonoBehaviour:
   strength: 0.5
   vibrato: 30
   shakeFlag: 0
+  attackOrders: 00000000
   attackSettings:
   - name: 0
-    weight: 3
+    <weight>k__BackingField: 10
   - name: 1
-    weight: 10
+    <weight>k__BackingField: 5
+  spAttackSettings: []
   attackTarnCount: 15
   attackTarn: {fileID: 1799986551340116770, guid: 3f525500304f2a64c9b40be96166c8a8, type: 3}
   attackTarnSpoonPoint: {fileID: 8017468128887097154}

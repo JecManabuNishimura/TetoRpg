@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,7 +20,9 @@ namespace Enemy
         [SerializeField] private float strength = 30.0f;
         [SerializeField] private int vibrato = 30;
         [SerializeField] private bool shakeFlag = false;
+        [SerializeField] private AttackOrder[] attackOrders;
         [SerializeField] private AttackSetting[] attackSettings;
+        [SerializeField] private SpecialAttackSetting[] spAttackSettings;
         [SerializeField] private int attackTarnCount;
         [SerializeField] private GameObject attackTarn;
         [SerializeField] private Transform attackTarnSpoonPoint;
@@ -38,6 +42,7 @@ namespace Enemy
         private int BombAttackPosX;
 
         private int attackPattern;
+        private int orderNumber = 0;
 
         private bool SpecialAttackFlag = false;
         
@@ -70,54 +75,95 @@ namespace Enemy
                     Destroy(val);
                 }
                 area.Clear();
+                int pattern = 0;
                 // 攻撃の種類
-                
-                int pattern = SelectAttackPattern();
-                if(pattern == -1)
+                switch (attackOrders[orderNumber])
                 {
-                    Debug.LogError("攻撃パターンが設定されていません");
-                }
+                    case AttackOrder.Normal:
+                    {
+                        pattern = SelectAttackPattern(false);
+                        if (pattern == -1)
+                        {
+                            Debug.LogError("攻撃パターンが設定されていません");
+                        }
+                        attackPattern = pattern;
+                        switch (attackSettings[pattern].name)
+                        {
+                            // ボムの場合は落下までエリアを出さない（危険表示は出す予定）
+                            case AttackName.BombAttack:
+                            case AttackName.BombMultiAttack:
+                                GameManager.EnemyAttackFlag = true;
+                                return;
+                        }
 
-                attackPattern = pattern;
-                switch (attackSettings[pattern].name)
-                {
-                    // ボムの場合は落下までエリアを出さない（危険表示は出す予定）
-                    case AttackName.BombAttack:
-                    case AttackName.BombMultiAttack:
-                        GameManager.EnemyAttackFlag = true;
-                        return;
+                        var data = AttackData.GetAttack(attackSettings[pattern].name);
+                        foreach (var d in data)
+                        {
+                            GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0), Quaternion.identity);
+                            area.Add(aObj);
+                            aObj.transform.parent = attackObjPare.transform;
+                        }
+
+                        break;
+                    }
+                    case AttackOrder.Special:
+                    {
+                        pattern = SelectAttackPattern(true);
+                        if (pattern == -1)
+                        {
+                            Debug.LogError("攻撃パターンが設定されていません");
+                        }
+                        attackPattern = pattern;
+                        var data = AttackData.GetSpecialAttack(spAttackSettings[pattern].name);
+                        foreach (var d in data)
+                        {
+                            GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0), Quaternion.identity);
+                            area.Add(aObj);
+                            aObj.transform.parent = attackObjPare.transform;
+                        }
+                        break;
+                    }
                 }
-                var data = AttackData.GetAttack(attackSettings[pattern].name);
-                foreach (var d in data)
-                {
-                    GameObject aObj = Instantiate(attackArea, new Vector3(d.x,d.y,0), Quaternion.identity);
-                    area.Add(aObj);
-                    aObj.transform.parent = attackObjPare.transform;
-                }
+                
+                
+                
+                
 
                 //SpecialAttackFlag = true;
                 GameManager.EnemyAttackFlag = true;
-                //timerFlag = true;
             }
         }
 
-        int SelectAttackPattern ()
+        int SelectAttackPattern(bool isSpecial)
         {
-            int totalWeight = attackSettings.Sum(data => data.weight);
-            
-            int rand = Random.Range(1, totalWeight+1);
+            int totalWeight;
+            // 対象リストを選択
+            var targetSettings = isSpecial ? 
+                spAttackSettings.Cast<IWeighted>().ToList()
+                : attackSettings.Cast<IWeighted>().ToList();
+
+            // 総重みを計算
+            totalWeight = targetSettings.Sum(data => data.weight);
+
+            // ランダム値を生成（1からtotalWeightの間）
+            int rand = Random.Range(1, totalWeight + 1);
+
             int count = 0;
-            foreach (var val in attackSettings)
+            // 重みに基づいて選択
+            foreach (var val in targetSettings)
             {
-                if(rand <= val.weight)
+                if (rand <= val.weight)
                 {
                     return count;
                 }
                 rand -= val.weight;
                 count++;
             }
+
+            // 正常なケースでは到達しない
             return -1;
         }
+        
 
         private void StartShake(float duration, float strength, int vibrato, float randomness, bool fadeOut)
         {
@@ -169,57 +215,81 @@ namespace Enemy
         
         async Task Play()
         {
+            /*
             if (SpecialAttackFlag)
             {
                 AttackData.GetSpecialAttack(SpecialAttackName.LastAddLine);
                 GameManager.EnemyAttackFlag = false;
                 return;
-            }
-
-            switch (attackSettings[attackPattern].name)
+            }*/
+            switch (attackOrders[orderNumber])
             {
-                case AttackName.BombAttack:
+                case AttackOrder.Normal:
                 {
-                    await AttackBomb();
-                    break;
-                }
-                case AttackName.BombMultiAttack:
-                {
-                    for (int i = 0; i < Random.Range(2, 4); i++)
+                    switch (attackSettings[attackPattern].name)
                     {
-                        await AttackBomb();
-                        var areaCopy = area.ToArray();  // エラー回避用
-                        CreateAttackParticle(areaCopy);
-
-                        await Task.Delay(50);
-                        var count = await StartAttack(areaCopy);
-
-                        // ダメージ処理
-                        GameManager.player.Damage(count);
-                        foreach (var val in areaCopy)
+                        case AttackName.BombAttack:
                         {
-                            var position = val.transform.position;
-                            BoardManager.Instance.CheckDeleteLine((int)position.y);
+                            await AttackBomb();
+                            break;
                         }
-                        foreach (var val in area)
+                        case AttackName.BombMultiAttack:
                         {
-                            Destroy(val);
+                            for (int i = 0; i < Random.Range(2, 4); i++)
+                            {
+                                await AttackBomb();
+                                var areaCopy = area.ToArray();  // エラー回避用
+                                CreateAttackParticle(areaCopy);
+
+                                await Task.Delay(50);
+                                var count = await StartAttack(areaCopy);
+
+                                // ダメージ処理
+                                GameManager.player.Damage(count);
+                                foreach (var val in areaCopy)
+                                {
+                                    var position = val.transform.position;
+                                    BoardManager.Instance.CheckDeleteLine((int)position.y);
+                                }
+                                foreach (var val in area)
+                                {
+                                    Destroy(val);
+                                }
+                                area.Clear();
+                                parts.Clear();
+                            }
+                            break;
                         }
-                        area.Clear();
-                        parts.Clear();
+                        default:
+                        {
+                            var areaCopy = area.ToArray(); // エラー回避用
+                            CreateAttackParticle(areaCopy);
+
+                            await Task.Delay(50);
+                            var count = await StartAttack(areaCopy);
+
+                            // ダメージ処理
+                            GameManager.player.Damage(count);
+                            foreach (var val in areaCopy)
+                            {
+                                var position = val.transform.position;
+                                BoardManager.Instance.CheckDeleteLine((int)position.y);
+                            }
+                            break;
+                        }
                     }
                     break;
                 }
-                default:
+                case AttackOrder.Special:
                 {
                     var areaCopy = area.ToArray(); // エラー回避用
                     CreateAttackParticle(areaCopy);
 
                     await Task.Delay(50);
-                    var count = await StartAttack(areaCopy);
+                    var count = await StartAttack(areaCopy) * 1.5f;
 
                     // ダメージ処理
-                    GameManager.player.Damage(count);
+                    GameManager.player.Damage((int)count);
                     foreach (var val in areaCopy)
                     {
                         var position = val.transform.position;
@@ -310,6 +380,10 @@ namespace Enemy
             if(damage != 0)
             {
                 int newDamage = damage / 2 - status.def / 4;
+                if (newDamage < 0)
+                {
+                    newDamage = 0;
+                }
                 status.hp -= newDamage;
                 
                 
@@ -328,9 +402,28 @@ namespace Enemy
     }
 
     [Serializable]
-    public struct AttackSetting
+    public class AttackSetting : IWeighted
     {
         public AttackName name;
-        public int weight;
+        [field: SerializeField] public int weight { get; set; }
+    }
+    [Serializable]
+    public class SpecialAttackSetting : IWeighted
+    {
+        public SpecialAttackName name;
+        [field: SerializeField] public int weight {  get; set;}
+    }
+    
+    public interface IWeighted
+    {
+        int weight { get; set; }
+    }
+
+    [Serializable]
+    public enum AttackOrder
+    {
+        Normal,
+        Special,
     }
 }
+
