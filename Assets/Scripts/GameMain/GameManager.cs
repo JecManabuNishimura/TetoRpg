@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     public static int DeleteLine;
     public static int DeleteMino;
 
-    public static int playerDamage => (DeleteLine +(DeleteMino / 8)) * player.status.atk;
+    public static int playerDamage => (DeleteLine +(DeleteMino / 8)) * player.totalStatus.atk;
 
     // 操作用フラグ
     public static bool playerPut;
@@ -109,15 +109,15 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         BoardManager.Instance.Initialize();
         string uiName = "EquipmentUI";
-        string mapName = "Map";
+        string BattleName = "BattleScene";
         if(!IsSceneLoaded(uiName))
         {
             StartCoroutine(LoadSceneAdditive(uiName));
         }
 
-        if(!IsSceneLoaded(mapName))
+        if(!IsSceneLoaded(BattleName))
         {
-            StartCoroutine(LoadSceneAdditive(mapName));
+            StartCoroutine(LoadSceneAdditive(BattleName));
         }
     }
     private void Start()

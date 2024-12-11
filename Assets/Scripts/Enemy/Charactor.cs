@@ -315,8 +315,9 @@ namespace Enemy
                 
                 if(status.hp <= 0)
                 {
-                    await Task.Delay(500);
                     status.hp = 0;
+                    await Task.Delay(500);
+                    
                     gameObject.GetComponent<Animator>().enabled = false;
                     SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
                     await sr.DOFade(0, 1).AsyncWaitForCompletion();

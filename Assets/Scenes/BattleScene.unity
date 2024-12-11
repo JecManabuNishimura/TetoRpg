@@ -898,7 +898,6 @@ GameObject:
   m_Component:
   - component: {fileID: 667771775}
   - component: {fileID: 667771774}
-  - component: {fileID: 667771776}
   - component: {fileID: 667771777}
   - component: {fileID: 667771778}
   - component: {fileID: 667771779}
@@ -940,18 +939,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &667771776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 667771773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1592ea045c1fa3e449cce8b45783d72e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &667771777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1002,8 +989,8 @@ MonoBehaviour:
     treasureDropMaster: {fileID: 11400000, guid: b71c1071a4885b44ebd13ae2516c0dca, type: 2}
     parameter:
       HealDropRate: 0
-      BombDropRate: 10
-      StripesDropRate: 10
+      BombDropRate: 0
+      StripesDropRate: 0
       TresureDropRate: 30
     nextUpGauge: 20
   - stage: 2

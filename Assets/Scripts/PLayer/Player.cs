@@ -61,8 +61,7 @@ public class Player : CharactorData, ICharactor
     public void Initialize()
     {
         slider.value = 1;
-        status.hp = status.maxHp;
-        hpText.text = status.hp.ToString();
+        
         foreach (var state in MinoEffectStatusMaster.Entity.MinoEffectStatus)
         {
             BelongingsMinoEffect.Add(state,0);    
@@ -70,6 +69,8 @@ public class Player : CharactorData, ICharactor
         
         UpdateStatus();
         SetBelongingsMinoEffect();
+        totalStatus.hp = totalStatus.maxHp;
+        hpText.text = totalStatus.hp.ToString();
     }
 
     private void Update()
@@ -159,7 +160,7 @@ public class Player : CharactorData, ICharactor
     
     public void UpdateHp()
     {
-        hpText.text = status.hp.ToString();
+        hpText.text = totalStatus.hp.ToString();
     }
 
     public void AcquisitionMino(int id)
@@ -214,26 +215,26 @@ public class Player : CharactorData, ICharactor
     
     public void Healing()
     {
-        status.hp += GameManager.healingPoint;
-        if (status.hp >= status.maxHp)
+        totalStatus.hp += GameManager.healingPoint;
+        if (totalStatus.hp >= totalStatus.maxHp)
         {
-            status.hp = status.maxHp;
+            totalStatus.hp = totalStatus.maxHp;
         }
         var part = Instantiate(healingEffect);
         part.transform.position = transform.position;
         UpdateHp();
-        slider.value = (float)status.hp / (float)status.maxHp;
+        slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
     }
 
     public void Damage(int damage)
     {
-        int newDamage = (damage / 2) - (status.def / 4);
+        int newDamage = (damage / 2) - (totalStatus.def / 4);
         damageText.enabled = true;
         damageText.text = newDamage.ToString();
         damageText.transform.GetComponent<Animator>().Play("DamageText",0,0);
-        status.hp -= newDamage;
+        totalStatus.hp -= newDamage;
         UpdateHp();
-        slider.value = (float)status.hp / (float)status.maxHp;
+        slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
     }
 
     [Serializable]
