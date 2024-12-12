@@ -106,7 +106,7 @@ MonoBehaviour:
   status:
     maxHp: 50
     hp: 0
-    atk: 30
+    atk: 5
     def: 10
     critical: 0
   attackArea: {fileID: 2642718665519370728, guid: e3d6a8e77945f7c47b9e395b0fa5e81f, type: 3}
@@ -118,12 +118,12 @@ MonoBehaviour:
   shakeFlag: 0
   attackOrders: 00000000
   attackSettings:
-  - name: 0
-    <weight>k__BackingField: 10
+  - name: 5
+    <weight>k__BackingField: 50
   - name: 1
     <weight>k__BackingField: 5
   spAttackSettings: []
-  attackTarnCount: 15
+  attackTarnCount: 2
   attackTarn: {fileID: 1799986551340116770, guid: 3f525500304f2a64c9b40be96166c8a8, type: 3}
   attackTarnSpoonPoint: {fileID: 8017468128887097154}
   bombAttack: {fileID: 0}

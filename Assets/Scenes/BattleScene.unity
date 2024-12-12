@@ -900,7 +900,6 @@ GameObject:
   - component: {fileID: 667771774}
   - component: {fileID: 667771777}
   - component: {fileID: 667771778}
-  - component: {fileID: 667771779}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -972,36 +971,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e51b12187d495c42acb451c472dbf0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &667771779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 667771773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 190c6bf7074dbee468f44c6b94b8ede7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  status:
-  - stage: 1
-    treasureDropMaster: {fileID: 11400000, guid: b71c1071a4885b44ebd13ae2516c0dca, type: 2}
-    parameter:
-      HealDropRate: 0
-      BombDropRate: 0
-      StripesDropRate: 0
-      TresureDropRate: 30
-    nextUpGauge: 20
-  - stage: 2
-    treasureDropMaster: {fileID: 11400000, guid: 844b873bd4977d2459c59eef1f4b8226, type: 2}
-    parameter:
-      HealDropRate: 20
-      BombDropRate: 20
-      StripesDropRate: 0
-      TresureDropRate: 40
-    nextUpGauge: 20
-  enemyPos: {fileID: 2038817822}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2883,6 +2852,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2038817822}
+  - component: {fileID: 2038817823}
   m_Layer: 0
   m_Name: EnemyPos
   m_TagString: Untagged
@@ -2905,6 +2875,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2038817823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038817821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c507dd31656bbf44cb7ad8085bcffe25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2063105671
 GameObject:
   m_ObjectHideFlags: 0

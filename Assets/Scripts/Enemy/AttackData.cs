@@ -11,6 +11,8 @@ public class AttackData : MonoBehaviour
             AttackName.OneColLineRandom => OneColLineRandom(),
             AttackName.TwoRowLineRandom => TwoRowLineRandom(),
             AttackName.TwoRowLineConnect => TwoRowLineConnect(),
+            AttackName.CrossLineRandom => CrossLineRandom(),
+            AttackName.Cross5to5Random => Cross5to5Random(),
         };
     }
 
@@ -26,6 +28,10 @@ public class AttackData : MonoBehaviour
     //============================================================
     // 通常攻撃
     //============================================================
+    
+    //***********************************************
+    // 横一列攻撃
+    //***********************************************
     private static List<Vector2Int> OneRowLineRandom()
     {
         int y = Random.Range(3, 6);
@@ -37,6 +43,9 @@ public class AttackData : MonoBehaviour
 
         return pos;
     }
+    //***********************************************
+    // 縦一列攻撃
+    //***********************************************
     private static List<Vector2Int> OneColLineRandom()
     {
         int x = Random.Range(0, GameManager.boardWidth);
@@ -48,7 +57,9 @@ public class AttackData : MonoBehaviour
 
         return pos;
     }
-
+    //***********************************************
+    // 横２列攻撃　位置ランダム
+    //***********************************************
     private static List<Vector2Int> TwoRowLineRandom()
     {
         int y = Random.Range(2, 8);
@@ -73,6 +84,9 @@ public class AttackData : MonoBehaviour
 
         return pos;
     }
+    //***********************************************
+    // 横２列攻撃　位置上下
+    //***********************************************
     private static List<Vector2Int> TwoRowLineConnect()
     {
         int y = Random.Range(2, 8);
@@ -97,6 +111,56 @@ public class AttackData : MonoBehaviour
 
         return pos;
     }
+    //***********************************************
+    //　クロス攻撃 All
+    //***********************************************
+    private static List<Vector2Int> CrossLineRandom()
+    {
+        List<Vector2Int> pos = new();
+        int y = Random.Range(2, 8);
+        int x = Random.Range(0, GameManager.boardWidth);
+        for (int i = 1; i < GameManager.boardHeight; i++)
+        {
+            pos.Add(new Vector2Int(x,i));
+        }
+        for (int i = 0; i < GameManager.boardWidth; i++)
+        {
+            if(!pos.Contains(new Vector2Int(i,y)))
+            {
+                pos.Add(new Vector2Int(i,y));
+            }
+        }
+
+        return pos;
+    }
+    //***********************************************
+    //　クロス攻撃 5*5
+    //***********************************************
+    private static List<Vector2Int> Cross5to5Random()
+    {
+        List<Vector2Int> pos = new();
+        int y = Random.Range(2, 8);
+        int x = Random.Range(0, GameManager.boardWidth);
+        for (int i = 0; i < 5; i++)
+        {
+            if((y - 2)+i < GameManager.boardHeight && (y - 2)+i > 0)
+            {
+                pos.Add(new Vector2Int(x,(y - 2)+i));
+            }
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            if((x - 2)+i < GameManager.boardWidth && (x - 2) + i >= 0)
+            {
+                if(!pos.Contains(new Vector2Int((x - 2)+i,y)))
+                {
+                    pos.Add(new Vector2Int((x - 2)+i,y));
+                }
+            }
+        }
+
+        return pos;
+    }
 
     //============================================================
     // スペシャル攻撃
@@ -109,8 +173,8 @@ public class AttackData : MonoBehaviour
 
     private static List<Vector2Int> Attack4To4()
     {
-        var posX = Random.Range(1, GameManager.boardWidth - 2);
-        var posY = Random.Range(GameManager.boardHeight / 2, GameManager.boardHeight - 2);
+        var posX = BoardManager.Instance.GetRandomMinoPos().x;
+        var posY = BoardManager.Instance.GetRandomMinoPos().y;
         List<Vector2Int> pos = new();
         for (int y = 0; y < 4; y++)
         {
@@ -131,6 +195,8 @@ public enum AttackName
     OneRowLineRandom,
     TwoRowLineRandom,
     TwoRowLineConnect,
+    CrossLineRandom,
+    Cross5to5Random,
     BombAttack,
     BombMultiAttack,
 }

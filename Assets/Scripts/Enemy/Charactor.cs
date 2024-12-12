@@ -242,7 +242,7 @@ namespace Enemy
                                 CreateAttackParticle(areaCopy);
 
                                 await Task.Delay(50);
-                                var count = await StartAttack(areaCopy);
+                                var count = await StartAttack(areaCopy) * status.atk;
 
                                 // ダメージ処理
                                 GameManager.player.Damage(count);
@@ -266,7 +266,7 @@ namespace Enemy
                             CreateAttackParticle(areaCopy);
 
                             await Task.Delay(50);
-                            var count = await StartAttack(areaCopy);
+                            var count = await StartAttack(areaCopy) * status.atk;
 
                             // ダメージ処理
                             GameManager.player.Damage(count);
@@ -286,7 +286,7 @@ namespace Enemy
                     CreateAttackParticle(areaCopy);
 
                     await Task.Delay(50);
-                    var count = await StartAttack(areaCopy) * 1.5f;
+                    var count = (await StartAttack(areaCopy) * status.atk) * 1.5f;
 
                     // ダメージ処理
                     GameManager.player.Damage((int)count);

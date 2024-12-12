@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BoardManager 
 {
@@ -354,8 +355,25 @@ public class BoardManager
         return true;
     }
 
-    Vector2Int GetRandomMinoPos()
+    public Vector2Int GetRandomMinoPos()
     {
-        List<Vector2Int> postList        
+        List<Vector2Int> postList = new();
+        for (int y = 2; y < board.GetLength(0)-2; y++)
+        {
+            for (int x = 1; x < board.GetLength(1)-2; x++)
+            {
+                if (board[y, x] != 0)
+                {
+                    postList.Add(new Vector2Int(x,y));    
+                }
+            }
+        }
+
+        if (postList.Count == 0)
+        {
+            return new Vector2Int(Random.Range(1, board.GetLength(1) - 2), 2);
+        }
+
+        return postList[Random.Range(0, postList.Count)];
     }
 }

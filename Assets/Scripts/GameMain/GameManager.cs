@@ -45,7 +45,8 @@ public class GameManager : MonoBehaviour
     public static StageData stageData;
 
     public static CameraMove cameraMove;
-   
+
+    public static Transform enemyPos;
     
 
     public static async Task PlayerMove()
@@ -137,7 +138,7 @@ public class GameManager : MonoBehaviour
     {
         EnemyDown = false;
         
-        enemy = Instantiate(MapManager.Instance.GetEnemyObj, stageLoader.EnemyPos, Quaternion.identity).GetComponent<Enemy.Charactor>();
+        enemy = Instantiate(MapManager.Instance.GetEnemyObj, enemyPos.position, Quaternion.identity).GetComponent<Enemy.Charactor>();
         await CreateBlock?.Invoke();
         await StartBattle?.Invoke(stageLoader.NextCount);
     }

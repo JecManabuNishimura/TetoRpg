@@ -7,7 +7,6 @@ using UnityEngine;
 public class StageLoader : MonoBehaviour
 {
     [SerializeField] private List<StageStatus> status;
-    [SerializeField] private Transform enemyPos;
     
     public int NextCount => status.First(_ => _.stage == GameManager.nowStage).nextUpGauge;
     public TreasureDropMaster GetDropData()
@@ -26,7 +25,7 @@ public class StageLoader : MonoBehaviour
         GameManager.stageData = data.parameter;
     }
 
-    public Vector3 EnemyPos => enemyPos.position;
+    //public Vector3 EnemyPos => enemyPos.position;
 }
 
 [Serializable]
@@ -45,6 +44,11 @@ public enum Stage
     Stage2,
     Stage3,
     Stage4,
+    Stage5,
+    Stage6,
+    Stage7,
+    Stage8,
+    Stage9,
 }
 
 

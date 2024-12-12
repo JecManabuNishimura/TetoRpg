@@ -989,7 +989,12 @@ public class MinoManager : MonoBehaviour
             }
             else
             {
-                obj.GetComponent<Damage>().ChangeText((GameManager.playerDamage / 2 - GameManager.enemy.status.def / 4).ToString());
+                var damage = GameManager.playerDamage / 2 - GameManager.enemy.status.def / 4;
+                if (damage < 0)
+                {
+                    damage = 0;
+                }
+                obj.GetComponent<Damage>().ChangeText(damage.ToString());
             }
         }
         
