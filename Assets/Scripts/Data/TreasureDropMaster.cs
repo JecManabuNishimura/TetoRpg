@@ -62,7 +62,12 @@ public class TreasureDropMasterEditor : Editor
 
         // ItemDropDataリストの編集
         EditorGUILayout.LabelField("Item Drop Data List", EditorStyles.boldLabel);
-
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            EditorGUILayout.LabelField("WeaponId",GUILayout.Width(60));
+            EditorGUILayout.LabelField("GroupId",GUILayout.Width(60));
+            EditorGUILayout.LabelField("Drop%",GUILayout.Width(60));
+        }
         for (int i = 0; i < master.itemDropData.Count; i++)
         {
             var item = master.itemDropData[i];
@@ -73,11 +78,11 @@ public class TreasureDropMasterEditor : Editor
             int selectedIndex = equipmentIds.IndexOf(item.id);
             if (selectedIndex == -1) selectedIndex = 0; // デフォルト値に戻す
 
-            selectedIndex = EditorGUILayout.Popup("", selectedIndex, equipmentIds.ToArray(), GUILayout.Width(150));
+            selectedIndex = EditorGUILayout.Popup( selectedIndex, equipmentIds.ToArray(), GUILayout.Width(60));
             item.id = equipmentIds[selectedIndex];
-
+            item.groupId = EditorGUILayout.IntField(item.groupId, GUILayout.Width(60));
             // Drop Rateの編集
-            item.dropRate = EditorGUILayout.FloatField("", item.dropRate, GUILayout.Width(100));
+            item.dropRate = EditorGUILayout.FloatField( item.dropRate, GUILayout.Width(60));
 
             // 削除ボタン
             if (GUILayout.Button("Remove", GUILayout.Width(80)))
@@ -101,8 +106,9 @@ public class TreasureDropMasterEditor : Editor
             var item = master.minoDropData[i];
             using (new EditorGUILayout.HorizontalScope())
             {
-                item.id = EditorGUILayout.TextField(item.id,  GUILayout.Width(100));
-                item.dropRate = EditorGUILayout.FloatField("", item.dropRate, GUILayout.Width(100));
+                item.id = EditorGUILayout.TextField(item.id,  GUILayout.Width(60));
+                
+                item.dropRate = EditorGUILayout.FloatField("", item.dropRate, GUILayout.Width(50));
                 // 削除ボタン
                 if (GUILayout.Button("Remove", GUILayout.Width(80)))
                 {
@@ -114,7 +120,7 @@ public class TreasureDropMasterEditor : Editor
 
         if (GUILayout.Button("Add Mino"))
         {
-            master.minoDropData.Add(new ItemDropData { id = "0", dropRate = 0f });
+            master.minoDropData.Add(new ItemDropData { id = "0",groupId = 0, dropRate = 0f });
         }
 
         // 変更があれば保存
@@ -129,5 +135,6 @@ public class TreasureDropMasterEditor : Editor
 public class ItemDropData
 {
     public string id;
+    public int groupId;
     public float dropRate;
 } 

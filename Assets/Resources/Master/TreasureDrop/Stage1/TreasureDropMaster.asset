@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b88ce9fb285411e4cb4c2414396b85ac, type: 3}
-  m_Name: TreasureDropMaster_Stage1
+  m_Name: TreasureDropMaster
   m_EditorClassIdentifier: 
   itemDropData:
   - id: We01
-    dropRate: 25
-  - id: Sh01
-    dropRate: 25
-  - id: He01
-    dropRate: 25
-  - id: Ar01
-    dropRate: 25
-  minoDropData: []
+    groupId: 0
+    dropRate: 0
+  - id: We01
+    groupId: 0
+    dropRate: 0
+  minoDropData:
+  - id: 0
+    groupId: 0
+    dropRate: 0
