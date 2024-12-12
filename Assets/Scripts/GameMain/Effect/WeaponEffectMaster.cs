@@ -30,8 +30,23 @@ public class WeaponEffectMaster : ScriptableObject
         }
     }
 
-    [SerializeField] public  SerializableDictionary<string, WeaponEffectGroup> weaponEffectGroups;
+    [SerializeField] public  SerializableDictionary<string, List<WeaponEffectGroup>> weaponEffectGroups;
 }
+
+[Serializable]
+public class WeaponEffectGroup
+{
+    public int id;
+    public List<WeaponEffect> effects;
+}
+
+[Serializable]
+public class WeaponEffect
+{
+    public EffectStatus effect;
+    public int value;
+}
+
 #if UNITY_EDITOR
 [CustomEditor(typeof(WeaponEffectMaster))]
 public class WeaponEffectMasterEditor : Editor
@@ -42,7 +57,7 @@ public class WeaponEffectMasterEditor : Editor
 
         if (example.weaponEffectGroups == null)
         {
-            example.weaponEffectGroups = new SerializableDictionary<string, WeaponEffectGroup>();
+            example.weaponEffectGroups = new SerializableDictionary<string, List<WeaponEffectGroup>>();
         }
         // equipmentEffectDatas の ID 配列を作成
         string[] effectIds = new string[EquipmentMaster.Entity.equipData.Count];
@@ -72,67 +87,55 @@ public class WeaponEffectMasterEditor : Editor
                     example.weaponEffectGroups.Remove(key);
                     example.weaponEffectGroups[newKey] = group;
                 }
-                
-                // Removeボタン
-                if (GUILayout.Button("Remove", GUILayout.Width(60)))
+                if (GUILayout.Button("Add Group"))
                 {
-                    example.weaponEffectGroups.Remove(newKey);  // newKey を使用して削除
-                }
-            }
-
-            using (new EditorGUILayout.VerticalScope())
-            {
-                EditorGUILayout.LabelField("Group ID", example.weaponEffectGroups[key].id.ToString());
-                foreach (var data in example.weaponEffectGroups[key].effects.ToList())
-                {
-                    using (new EditorGUILayout.HorizontalScope())
+                    example.weaponEffectGroups[key].Add(new WeaponEffectGroup()
                     {
-                        // 各 WeaponEffect のフィールドを表示
-                        data.value =
-                            (EffectStatus)EditorGUILayout.EnumPopup(data.value);
-                        effectGroup.effects[i].value =
-                            EditorGUILayout.IntField(effectGroup.effects[i].value);
-
-                        // WeaponEffect の削除ボタン
-                        if (GUILayout.Button("Remove Effect"))
+                        id = example.weaponEffectGroups[key].Count,
+                        effects = new List<WeaponEffect>(),
+                    });
+                }
+                
+            }
+            EditorGUI.indentLevel++;
+            GUIStyle coloredBoxStyle = new GUIStyle(GUI.skin.box)
+            {
+                border = new RectOffset(1, 1, 1, 1),
+                margin = new RectOffset(5, 5, 5, 5),
+                padding = new RectOffset(10, 10, 10, 10)
+            };
+            using (new EditorGUILayout.VerticalScope(coloredBoxStyle))
+            {
+                foreach (var effect in example.weaponEffectGroups[key])
+                {
+                    using (new EditorGUILayout.HorizontalScope("Box"))
+                    {
+                        EditorGUILayout.LabelField(effect.id.ToString(), GUILayout.Width(40));
+                        if (GUILayout.Button("Add Effect"))
                         {
-                            effectGroup.effects.RemoveAt(i);
+                            effect.effects.Add(new WeaponEffect());
                         }
                     }
-                }
-            }
-            /*
-            // WeaponEffectGroup のリスト（effects）を表示
-            WeaponEffectGroup effectGroup = example.weaponEffectGroups[key];
-            if (effectGroup.effects != null)
-            {
-                using (new EditorGUILayout.VerticalScope("box"))
-                {
-                    for (int i = 0; i < effectGroup.effects.Count; i++)
+                    EditorGUI.indentLevel++;
+                    for (int i = 0; i < effect.effects.Count; i++)
                     {
-                        using (new EditorGUILayout.HorizontalScope())
+                        using (new EditorGUILayout.HorizontalScope("Box"))
                         {
-                            // 各 WeaponEffect のフィールドを表示
-                            effectGroup.effects[i].effect =
-                                (EffectStatus)EditorGUILayout.EnumPopup(effectGroup.effects[i].effect);
-                            effectGroup.effects[i].value =
-                                EditorGUILayout.IntField(effectGroup.effects[i].value);
-
-                            // WeaponEffect の削除ボタン
-                            if (GUILayout.Button("Remove Effect"))
+                            var data = effect.effects[i];
+                            data.effect =
+                                (EffectStatus)EditorGUILayout.EnumPopup(data.effect,GUILayout.Width(100));
+                            data.value =
+                                EditorGUILayout.IntField(data.value,GUILayout.Width(60));
+                            if (GUILayout.Button("Remove"))
                             {
-                                effectGroup.effects.RemoveAt(i);
+                                effect.effects.RemoveAt(i);
                             }
                         }
                     }
-                }
-                */
-            }
 
-            // Effect の追加ボタン
-            if (GUILayout.Button("Add Effect"))
-            {
-                effectGroup.effects.Add(new WeaponEffect());
+                    EditorGUI.indentLevel--;
+                }
+                EditorGUI.indentLevel--;
             }
         }
         // 新しいアイテムを追加するためのボタン
@@ -144,10 +147,7 @@ public class WeaponEffectMasterEditor : Editor
                 string newKey = equipData.id; // ID をキーとして使用
 
                 // 新しい WeaponEffectGroup を作成
-                WeaponEffectGroup newGroup = new WeaponEffectGroup
-                {
-                    effects = new List<WeaponEffect>() // 空の effects リストを作成
-                };
+                List<WeaponEffectGroup> newGroup = new List<WeaponEffectGroup>();
 
                 // weaponEffectGroups に追加
                 if (!example.weaponEffectGroups.ContainsKey(newKey))
@@ -159,17 +159,3 @@ public class WeaponEffectMasterEditor : Editor
     }
 }
 #endif
-
-[Serializable]
-public class WeaponEffectGroup
-{
-    public int id;
-    public List<WeaponEffect> effects;
-}
-
-[Serializable]
-public class WeaponEffect
-{
-    public EffectStatus effect;
-    public int value;
-}
