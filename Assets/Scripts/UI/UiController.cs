@@ -521,9 +521,6 @@ public class ArmorView : EquipmentDataCreate, IMenu
         else
         {
             haveCursorPos = gridCursorMove.MoveHorizontal(right);
-            /*haveCursorPos = right 
-                ? Mathf.Min(gridItems.Length - 1, haveCursorPos + 1) 
-                : Mathf.Max(0, haveCursorPos - 1);*/
             UpdateCursor(haveCursorPos);
             SetExplantionParameterSetting();
         }
@@ -535,11 +532,6 @@ public class ArmorView : EquipmentDataCreate, IMenu
         {
             haveCursorPos = gridCursorMove.MoveVertical(up);
             UpdateCursor(haveCursorPos);
-            /*haveCursorPos = up 
-                ? Mathf.Max(0, haveCursorPos - 4) 
-                : Mathf.Min(gridItems.Length - 1, haveCursorPos + 4);   
-            armorData.CursorIcon.transform.position = gridItems[haveCursorPos].position;
-            */ 
         }
         
     }
@@ -567,7 +559,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
     {
         Transform tran = armorData.ExplantionGroup.transform;
         Status s = EquipmentMaster.Entity.GetEquipmentData(
-                            SelectHaveList(cursorPos)[haveCursorPos]
+                            SelectHaveList(cursorPos)[haveCursorPos].WeaponId
                         ).status;
         for (int i = 0; i < tran.childCount ; i++)
         {
@@ -575,7 +567,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
             {
                 tran.GetChild(i).GetComponent<ParameterSetting>()
                     .SetText(EquipmentMaster.Entity.GetEquipmentData(
-                        SelectHaveList(cursorPos)[haveCursorPos]
+                        SelectHaveList(cursorPos)[haveCursorPos].WeaponId
                     ).name);
             }
             else
@@ -599,17 +591,23 @@ public class ArmorView : EquipmentDataCreate, IMenu
         var eName = SelectHaveList(cursorPos);
         if (eName != null)
         {
-            EquipmentData eData = EquipmentMaster.Entity.GetEquipmentData(eName[haveCursorPos]);
-            foreach (var status in eData.effect)
+            //EquipmentData eData = EquipmentMaster.Entity.GetEquipmentData(eName[haveCursorPos].Item1);
+            foreach (var list in eName)
             {
-                var data = GameObject.Instantiate(
-                    armorData.effectObj,
-                    armorData.ExplantionEffectGroup.transform);
-
-                data.GetComponent<EffectCreater>().SetText(
-                    EffectTextMaster.Entity.effectExplanation[status.effect],
-                    status.upState.ToString()
-                );
+                foreach (var status in WeaponEffectMaster.Instance.weaponEffectGroups[list.WeaponId][list.groupID].effects)
+                {
+                    if (status.effect != EffectStatus.None)
+                    {
+                        var data = GameObject.Instantiate(
+                            armorData.effectObj,
+                            armorData.ExplantionEffectGroup.transform);
+                        
+                        data.GetComponent<EffectCreater>().SetText(
+                            EffectTextMaster.Entity.effectExplanation[status.effect],
+                            status.value.ToString()
+                        );
+                    }
+                }
             }
         }
     }
@@ -638,7 +636,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
         else
         {
             // 装備選択に進むとき
-            (EqupmentPart,List<string>) esData = cursorPos switch
+            (EqupmentPart,List<EquipmentUniqueData>) esData = cursorPos switch
             {
                 0 => (EqupmentPart.Weapon,GameManager.player.haveWeaponList),
                 1 => (EqupmentPart.Shield,GameManager.player.haveShieldList),
@@ -654,7 +652,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
             armorData.ExplantionEffectGroup.gameObject.SetActive(false);
             haveItemSelectViewFlag = false;
             gridItems = GetGroupChildData(armorData.BelongingsGroup.transform);
-            UpdateCursor(haveCursorPos);
+            UpdateCursor(cursorPos);
 
         }
     }
@@ -692,18 +690,18 @@ public class EquipmentDataCreate
     protected ArmorData armorData;
     protected MinoViewData minoData;
 
-    protected Func<int, string> SelectEquipment = (i) =>
+    protected Func<int, EquipmentUniqueData> SelectEquipment = (i) =>
     {
         return i switch
         {
-            0 => GameManager.player.belongingsEquipment?.weaponId,
-            1 => GameManager.player.belongingsEquipment?.shieldId,
-            2 => GameManager.player.belongingsEquipment?.helmetId,
-            3 => GameManager.player.belongingsEquipment?.armorId,
+            0 => GameManager.player.belongingsEquipment?.weapon,
+            1 => GameManager.player.belongingsEquipment?.shield,
+            2 => GameManager.player.belongingsEquipment?.helmet,
+            3 => GameManager.player.belongingsEquipment?.armor,
         };
     };
 
-    protected Func<int, List<string>> SelectHaveList => (i) =>
+    protected Func<int, List<EquipmentUniqueData>> SelectHaveList => (i) =>
     {
         return i switch
         {
@@ -720,22 +718,20 @@ public class EquipmentDataCreate
         //MenuManager.Instance.GroupChildReset(MenuManager.Instance.armorData.HaveItemGroup.transform);
         MenuManager.Instance.armorData.HaveItemGroup.transform.ChildClear();
         // カーソルの位置によって取得内容を変更
-        List<string> esData = SelectHaveList(cursorPos);
+        var esData = SelectHaveList(cursorPos);
         foreach (var list in esData)
         {
             var obj = GameObject.Instantiate(
                 MenuManager.Instance.armorData.HaveItemObj,
                 MenuManager.Instance.armorData.HaveItemGroup.transform);
             obj.GetComponent<Image>().sprite =
-                EquipmentDatabase.Entity.GetEquipmentSpriteData(list).sprite;
+                EquipmentDatabase.Entity.GetEquipmentSpriteData(list.WeaponId).sprite;
         }
     }
     
     // 装備中の画像更新
     protected void UpdateBelongingsWeaponSprite()
     {
-        
-
         for (int i = 0; i < 4; i++)
         {
             var eName = SelectEquipment(i);
@@ -748,7 +744,7 @@ public class EquipmentDataCreate
                     2 => EquipmentDatabase.Entity.helmetData,
                     3 => EquipmentDatabase.Entity.armorData,
                 };
-                var data = esData.First(_ => _.weaponId == eName);
+                var data = esData.FirstOrDefault(_ => _.weaponId == eName.WeaponId);
                 if (data != null)
                 {
                     MenuManager.Instance.armorData.BelongingsSprite[i].SetImage(data.sprite);
@@ -774,17 +770,19 @@ public class EquipmentDataCreate
             var eName = SelectEquipment(i);
             if (eName != null)
             {
-                EquipmentData eData = EquipmentMaster.Entity.GetEquipmentData(eName);
-                foreach (var status in eData.effect)
+                foreach (var status in WeaponEffectMaster.Instance.weaponEffectGroups[eName.WeaponId][eName.groupID].effects)
                 {
-                    var data = GameObject.Instantiate(
-                        armorData.effectObj,
-                        armorData.EffectGroup.transform);
+                    if (status.effect != EffectStatus.None)
+                    {
+                        var data = GameObject.Instantiate(
+                            armorData.effectObj,
+                            armorData.EffectGroup.transform);
 
-                    data.GetComponent<EffectCreater>().SetText(
-                        EffectTextMaster.Entity.effectExplanation[status.effect],
-                        status.upState.ToString()
-                    );
+                        data.GetComponent<EffectCreater>().SetText(
+                            EffectTextMaster.Entity.effectExplanation[status.effect],
+                            status.value.ToString()
+                        );
+                    }
                 }
             }
         }

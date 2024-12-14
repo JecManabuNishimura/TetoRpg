@@ -94,29 +94,45 @@ public class EffectExplanation
 [System.Serializable]
 public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
 {
-    [SerializeField] private List<TKey> keys = new();
-    [SerializeField] private List<TValue> values = new();
+    [SerializeField] private List<TKey> keys = new List<TKey>();
+    [SerializeField] private List<TValue> values = new List<TValue>();
 
-    // シリアライズ前にキーと値のリストを同期
+    private Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
+
     public void OnBeforeSerialize()
     {
         keys.Clear();
         values.Clear();
-
-        foreach (var kvp in this)
+        foreach (var kvp in dictionary)
         {
             keys.Add(kvp.Key);
             values.Add(kvp.Value);
         }
     }
 
-    // シリアライズ後にリストからDictionaryに復元
     public void OnAfterDeserialize()
     {
-        Clear();
+        dictionary.Clear();
         for (int i = 0; i < keys.Count; i++)
         {
-            Add(keys[i], values[i]);
+            dictionary.Add(keys[i], values[i]);
         }
     }
+
+    public TValue this[TKey key]
+    {
+        get => dictionary[key];
+        set => dictionary[key] = value;
+    }
+
+    public void Add(TKey key, TValue value)
+    {
+        dictionary.Add(key, value);
+    }
+
+    public bool ContainsKey(TKey key) => dictionary.ContainsKey(key);
+
+    public void Clear() => dictionary.Clear();
+
+    public Dictionary<TKey, TValue>.KeyCollection Keys => dictionary.Keys;
 }

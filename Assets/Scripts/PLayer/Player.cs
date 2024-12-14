@@ -29,21 +29,21 @@ public class Player : CharactorData, ICharactor
         0,1,2,3,4,5,6,
     };
 
-    public List<string> haveWeaponList = new List<string>()
+    public List<EquipmentUniqueData> haveWeaponList = new ()
     {
-        "We01",
+        new EquipmentUniqueData("We01",0),
     };
-    public List<string> haveShieldList = new List<string>()
+    public List<EquipmentUniqueData> haveShieldList = new ()
     {
-        "Sh01",
+        new EquipmentUniqueData("Sh01",0)
     };
-    public List<string> haveHelmetList = new List<string>()
+    public List<EquipmentUniqueData> haveHelmetList = new ()
     {
-        "He01",
+        new EquipmentUniqueData("He01",0)
     };
-    public List<string> haveArmorList = new List<string>()
+    public List<EquipmentUniqueData> haveArmorList = new ()
     {
-        "Ar01",
+        new EquipmentUniqueData("Ar01",0)
     };
 
     public List<int> HaveMinoList => haveMinoList;
@@ -105,22 +105,22 @@ public class Player : CharactorData, ICharactor
         }
     }
     
-    public void SetEquipment(EqupmentPart part,string id)
+    public void SetEquipment(EqupmentPart part,EquipmentUniqueData data)
     {
         switch(part)
         {
             case EqupmentPart.Weapon:
                 // 同じものを装備する場合は外す
-                belongingsEquipment.weaponId = belongingsEquipment.weaponId == id ? null : id;
+                belongingsEquipment.weapon = belongingsEquipment.weapon == data ? null : data;
                 break;
             case EqupmentPart.Shield:
-                belongingsEquipment.shieldId = belongingsEquipment.shieldId == id ? null : id;
+                belongingsEquipment.shield = belongingsEquipment.shield == data ? null : data;
                 break;
             case EqupmentPart.Helmet:
-                belongingsEquipment.helmetId = belongingsEquipment.helmetId == id ? null : id;;
+                belongingsEquipment.helmet = belongingsEquipment.helmet == data ? null : data;
                 break;
             case EqupmentPart.Armor:
-                belongingsEquipment.armorId = belongingsEquipment.armorId == id ? null : id;;
+                belongingsEquipment.armor = belongingsEquipment.armor == data ? null : data;
                 break;
         }
 
@@ -129,31 +129,30 @@ public class Player : CharactorData, ICharactor
 
     private void UpdateStatus()
     {
-        // ミノ効果追加
         totalStatus = status;
 
         // 各装備データを取得し、null チェックを行う
-        var weaponData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.weaponId);
-        if (weaponData != null)
+        if (belongingsEquipment.weapon != null)
         {
+            var weaponData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.weapon.WeaponId);    
             totalStatus += weaponData.GetTotalStatus();
         }
 
-        var shieldData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.shieldId);
-        if (shieldData != null)
+        if (belongingsEquipment.shield != null)
         {
+            var shieldData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.shield.WeaponId);
             totalStatus += shieldData.GetTotalStatus();
         }
-
-        var helmetData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.helmetId);
-        if (helmetData != null)
+        
+        if (belongingsEquipment.helmet != null)
         {
+            var helmetData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.helmet.WeaponId);
             totalStatus += helmetData.GetTotalStatus();
         }
 
-        var armorData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.armorId);
-        if (armorData != null)
+        if (belongingsEquipment.armor != null)
         {
+            var armorData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.armor.WeaponId);
             totalStatus += armorData.GetTotalStatus();
         }
     }
@@ -170,33 +169,33 @@ public class Player : CharactorData, ICharactor
             haveMinoList.Add(id);    
         }
     }
-    public void AcquisitionItem(string itemId)
+    public void AcquisitionItem(EquipmentUniqueData data)
     {
-        var type = itemId.Substring(0, 2);
+        var type = data.WeaponId.Substring(0, 2);
         switch (type)
         {
             case "We":
-                if (!haveWeaponList.Contains(itemId))
+                if (!haveWeaponList.Contains(data))
                 {
-                    haveWeaponList.Add(itemId);
+                    haveWeaponList.Add(data);
                 }
                 break;
             case "Sh":
-                if (!haveShieldList.Contains(itemId))
+                if (!haveShieldList.Contains(data))
                 {
-                    haveShieldList.Add(itemId);
+                    haveShieldList.Add(data);
                 }
                 break;
             case "He":
-                if (!haveHelmetList.Contains(itemId))
+                if (!haveHelmetList.Contains(data))
                 {
-                    haveHelmetList.Add(itemId);
+                    haveHelmetList.Add(data);
                 }
                 break;
             case "Ar":
-                if (!haveArmorList.Contains(itemId))
+                if (!haveArmorList.Contains(data))
                 {
-                    haveArmorList.Add(itemId);
+                    haveArmorList.Add(data);
                 }
                 break;
             
@@ -244,11 +243,13 @@ public class Player : CharactorData, ICharactor
     [Serializable]
     public class BelongingsEquipment
     {
-        public string weaponId;
-        public string shieldId;
-        public string helmetId;
-        public string armorId;
+        public EquipmentUniqueData weapon;
+        public EquipmentUniqueData shield;
+        public EquipmentUniqueData helmet;
+        public EquipmentUniqueData armor;
     }
+
+    
 }
 
 public enum EqupmentPart

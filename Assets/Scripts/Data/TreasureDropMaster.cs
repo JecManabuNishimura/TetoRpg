@@ -9,7 +9,7 @@ public class TreasureDropMaster : ScriptableObject
 {
     public List<ItemDropData> itemDropData = new List<ItemDropData>();
     public List<ItemDropData> minoDropData = new List<ItemDropData>();
-    public string GetItemDataId()
+    public EquipmentUniqueData GetItemDataId()
     {
         var allData = itemDropData.Concat(minoDropData).ToList();
         float totalRate = 0f;
@@ -26,11 +26,11 @@ public class TreasureDropMaster : ScriptableObject
             cumulativeRate += item.dropRate;
             if (randomValue <= cumulativeRate)
             {
-                return item.id;
+                return new EquipmentUniqueData(item.id,item.groupId);
             }
         }
 
-        return null;
+        return new EquipmentUniqueData("0",0);
     }
 }
 #if UNITY_EDITOR

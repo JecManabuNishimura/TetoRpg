@@ -9,7 +9,6 @@ using UnityEngine;
 public class EquipmentMaster : ScriptableObject
 {
     public List<EquipmentData> equipData = new List<EquipmentData>();
-    public List<EquipmentEffectData> equipmentEffectDatas = new List<EquipmentEffectData>();
     private static EquipmentMaster _entity;
 
     public static EquipmentMaster Entity
@@ -37,7 +36,6 @@ public class EquipmentMaster : ScriptableObject
         if (index == null) return null;
         foreach (var d in equipData)
         {
-
             if (d.id == index)
             {
                 return d;
@@ -47,33 +45,11 @@ public class EquipmentMaster : ScriptableObject
         Debug.LogError("防具マスターに登録されていない番号:" + index);
         return null;
     }
-    public void ReadCSV(string csvFileName,string effectCsvFileName)
+    public void ReadCSV(string csvFileName)
     {
         // CSVファイルのフルパスを取得
         TextAsset csvFile = Resources.Load<TextAsset>(csvFileName);
-        TextAsset effectCsvFile = Resources.Load<TextAsset>(effectCsvFileName);
-        if (effectCsvFile != null)
-        {
-            string[] lines = effectCsvFile.text.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-            // 最初の行（ヘッダー）はスキップ
-            for (int i = 1; i < lines.Length; i++)
-            {
-                string[] data = lines[i].Split(',');
-                int id = int.Parse(data[0]);
-                string WeaponId = data[1];
-                string EffectName = data[2];
-                int value = int.Parse(data[3]);
-                if (!Enum.TryParse(EffectName, true, out EffectStatus Type))
-                {
-                    Type = EffectStatus.None;
-                }
-                equipmentEffectDatas.Add(new EquipmentEffectData(id,WeaponId, Type,value));
-            }
-        }
-        else
-        {
-            Debug.LogError(effectCsvFileName + "がResourcesフォルダに見つかりません。");
-        }
+
         if (csvFile != null)
         {
             string[] lines = csvFile.text.Split('\n');
@@ -91,18 +67,11 @@ public class EquipmentMaster : ScriptableObject
                 int hp = int.Parse(data[2]);
                 int atk = int.Parse(data[3]);
                 int def = int.Parse(data[4]);
-
-                // データをリストに追加
-                var effectdata =  equipmentEffectDatas.Where(x => x.weaponName == id).ToList();
+                
                 List<EffectUpStatus> upState = new ();
-                foreach (var ed in effectdata)
-                {
-                    upState.Add(new EffectUpStatus(ed.effect,ed.value));
-                }
                 equipData.Add(new EquipmentData(id,
                                                 name,
-                                                new Status(hp, atk, def,0),
-                                                upState.ToArray()));
+                                                new Status(hp, atk, def,0)));
             }
         }
         else
@@ -135,10 +104,9 @@ public class EquipmentMasterEditor : Editor
 
         if (GUILayout.Button("CSVを読み込む"))
         {
-            equipmentMaster.equipmentEffectDatas.Clear();
             equipmentMaster.equipData.Clear();
             // CSVの読み込み処理を呼び出す
-            equipmentMaster.ReadCSV("EquipmentData", "EffectData");
+            equipmentMaster.ReadCSV("EquipmentData");
         }
     }
 }
@@ -148,34 +116,43 @@ public class EquipmentData
 {
     public string id;
     public string name;
+    public int gourpId;
     public Status status;
-    public EffectUpStatus[] effect;
 
-    public EquipmentData(string id, string name, Status status, EffectUpStatus[] effect)
+    public EquipmentData(string id, string name, Status status)
     {
         this.id = id;
         this.name = name;
         this.status = status;
-        this.effect = effect;
     }
 
     public Status GetTotalStatus()
     {
         Status state = status;
-        foreach(var e in effect)
+        Dictionary<EffectStatus, Action<int>> effectActions = new Dictionary<EffectStatus, Action<int>>()
         {
-            switch (e.effect)
+            { EffectStatus.AtkUp, value => state.atk += value },
+            { EffectStatus.HpUp, value => state.hp += value },
+            { EffectStatus.AtkDown, value => state.atk -= value },
+            { EffectStatus.DefDown, value => state.def -= value },
+            { EffectStatus.None, value => {} } // 何もしない
+        };
+        try
+        {
+            foreach(var e in WeaponEffectMaster.Instance.weaponEffectGroups[id][gourpId].effects)
             {
-                case EffectStatus.AtkUp:
-                    state.atk += e.upState;
-                    break;
-                case EffectStatus.HpUp:
-                    state.hp += e.upState;
-                    break;
-                case EffectStatus.None:
-                    break;
+                if (effectActions.ContainsKey(e.effect))
+                {
+                    effectActions[e.effect](e.value);
+                }
             }
         }
+        catch (Exception e)
+        {
+            Debug.Log(id + ":" + gourpId);
+            throw;
+        }
+        
         return state;
 
     }
@@ -186,15 +163,11 @@ public struct EquipmentEffectData
 {
     public int id;
     public string weaponName;
-    public EffectStatus effect;
-    public int value;
 
-    public EquipmentEffectData(int id, string weaponName, EffectStatus effect,int value)
+    public EquipmentEffectData(int id, string weaponName)
     {
         this.id = id;
         this.weaponName = weaponName;
-        this.effect = effect;
-        this.value = value;
     }
 }
 
@@ -203,8 +176,11 @@ public enum EffectStatus
 {
     None,
     HpUp,
+    HpDown,                 // Hp量ダウン
     AtkUp,
+    AtkDown,                // 攻撃量ダウン
     DefUp,
+    DefDown,                // 防御力ダウン
     CriticalUp,
     HealDropUp,
     HealPowerUp,            // 回復量Up
@@ -218,6 +194,35 @@ public enum EffectStatus
     
 }
 
+[Serializable]
+public class EquipmentUniqueData
+{
+    public EquipmentUniqueData(string weaponId, int groupID)
+    {
+        WeaponId = weaponId;
+        this.groupID = groupID;
+    }
+
+    public string WeaponId;
+    public int groupID;
+    public static bool operator == (EquipmentUniqueData a, EquipmentUniqueData b)
+    {
+        // 両方が null の場合は等しいとみなす
+        if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
+            return true;
+
+        // 一方が null の場合、もう一方は null でないので異なるとみなす
+        if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
+            return false;
+
+        // それ以外の場合は通常の比較
+        return a.WeaponId == b.WeaponId && a.groupID == b.groupID;
+    }
+    public static bool operator != (EquipmentUniqueData a, EquipmentUniqueData b)
+    {
+        return !(a == b);
+    }
+}
 [Serializable]
 public struct EffectUpStatus
 {

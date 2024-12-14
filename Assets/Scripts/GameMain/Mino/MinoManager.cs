@@ -398,8 +398,8 @@ public class MinoManager : MonoBehaviour
                     {
                         if (!AttackFlag)
                         {
-                            var id = GameManager.stageLoader.GetDropData().GetItemDataId();
-                            if (int.TryParse(id, out int result))
+                            var unique = GameManager.stageLoader.GetDropData().GetItemDataId();
+                            if (int.TryParse(unique.WeaponId, out int result))
                             {
                                 // ミノだった場合
                                 var obj = CreateMiniMino(MinoData.Entity.GetMinoData(result));
@@ -413,10 +413,10 @@ public class MinoManager : MonoBehaviour
                             {
                                 // 装備品だった場合
                                 treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite
-                                    = EquipmentDatabase.Entity.GetEquipmentSpriteData(id)
+                                    = EquipmentDatabase.Entity.GetEquipmentSpriteData(unique.WeaponId)
                                         .sprite;
                                 treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                GameManager.player.AcquisitionItem(id);
+                                GameManager.player.AcquisitionItem(unique);
                             }
                             
                         }
