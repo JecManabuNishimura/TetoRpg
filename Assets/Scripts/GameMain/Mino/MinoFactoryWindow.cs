@@ -79,6 +79,10 @@ public class MinoFactoryWindow : EditorWindow
             if (GUILayout.Button("+", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
             {
                 minoSettingList.Add(new MinoSetting());
+                minoSettingList[^1].minoEffectGroups.Add( new MinoEffectGroup(minoSettingList[^1].minoEffectGroups.Count,new List<MinoEffect>()
+                {
+                    new ("None",0),
+                }));
             }
 
             if (GUILayout.Button("-", GUILayout.Width(60), GUILayout.Height(20))) // サイズを小さくした保存ボタン
@@ -107,8 +111,10 @@ public class MinoFactoryWindow : EditorWindow
             GUILayout.Height(position.height));
 
         GUILayout.BeginHorizontal();
+        int space = 0;
         for (int i = 0; i < minoSettingList.Count; i++)
         {
+            space += minoSettingList[i].minoEffectGroups.Count;
             var array = minoSettingList[i].minoDataList;
             if (array == null) return;
             using (new EditorGUILayout.VerticalScope(GUI.skin.box, GUILayout.Width(50)))
@@ -128,14 +134,6 @@ public class MinoFactoryWindow : EditorWindow
                                     new ("None",0),
                                 }));
                             }
-                            /*
-                            if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20)))
-                            {
-                                // 選択肢を削除
-                                selectedGroupOptions[i].RemoveAt(selectedGroupOptions[i].Count - 1);
-                                maxGroupHeight = 0;
-                            }
-                            */
                         }
 
                         // ここで画像を表示
@@ -187,8 +185,12 @@ public class MinoFactoryWindow : EditorWindow
                                         if(group.effects.Count != 0)
                                         {
                                             group.effects.RemoveAt(group.effects.Count - 1);
+                                            if (group.effects.Count == 0)
+                                            {
+                                                groupOptions.RemoveAt(counter);    
+                                            }
                                         }
-
+                                        
                                         break;
                                     }
                                 }
@@ -196,21 +198,28 @@ public class MinoFactoryWindow : EditorWindow
                                 // 各プルダウンメニューを表示
                                 foreach (var t in group.effects)
                                 {
-                                    string[] effectOptions =
-                                        minoEffectStatusMaster.MinoEffectStatus.ToArray(); // 文字列のリストを取得
-
-                                    string currentEffect = t.effect; // 現在選ばれている effect（string 型）
-
-                                    int currentIndex = Array.IndexOf(minoEffectStatusMaster.MinoEffectStatus.ToArray(), currentEffect);
-                                    if (currentIndex == -1) currentIndex = 0; // 見つからない場合は、デフォルトで0を使用
-
-                                    int newSelectedIndex = EditorGUILayout.Popup(currentIndex, effectOptions,
-                                        GUILayout.Width(60), GUILayout.Height(20));
-                                    
-                                    if (newSelectedIndex != currentIndex)
+                                    using (new EditorGUILayout.HorizontalScope())
                                     {
-                                        t.effect =
-                                            effectOptions[newSelectedIndex]; // 選ばれた string を groupOptions[j] に代入
+                                        string[] effectOptions =
+                                            minoEffectStatusMaster.MinoEffectStatus.ToArray(); // 文字列のリストを取得
+
+                                        string currentEffect = t.effect; // 現在選ばれている effect（string 型）
+
+                                        int currentIndex =
+                                            Array.IndexOf(minoEffectStatusMaster.MinoEffectStatus.ToArray(),
+                                                currentEffect);
+                                        if (currentIndex == -1) currentIndex = 0; // 見つからない場合は、デフォルトで0を使用
+
+                                        int newSelectedIndex = EditorGUILayout.Popup(currentIndex, effectOptions,
+                                            GUILayout.Width(60), GUILayout.Height(20));
+
+                                        if (newSelectedIndex != currentIndex)
+                                        {
+                                            t.effect =
+                                                effectOptions[newSelectedIndex]; // 選ばれた string を groupOptions[j] に代入
+                                        }
+
+                                        t.value = EditorGUILayout.IntField(t.value,GUILayout.Width(30));
                                     }
                                 }
                             }
@@ -226,7 +235,7 @@ public class MinoFactoryWindow : EditorWindow
                         }
                     }
 
-                    GUILayout.Space(30);
+                    //GUILayout.Space(30);
                 }
             }
 
@@ -234,8 +243,9 @@ public class MinoFactoryWindow : EditorWindow
             currentX += array.GetLength(1) * (cellSize + padding);
 
             // 配列の幅が広くなりすぎたら、次の行に折り返す
-            if (currentX + (cellSize + padding + 50) * 4 > position.width)
+            if (currentX + (cellSize + padding + 100) * 4 + (space * 80) > position.width)
             {
+                space = 0;
                 GUILayout.EndHorizontal(); // 現在の行を終了
                 GUILayout.BeginHorizontal(); // 新しい行を開始
                 currentX = startX; // X座標をリセット

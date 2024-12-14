@@ -19,63 +19,117 @@ MonoBehaviour:
     selectedGroupOptions:
     - id: 0
       effects:
-      - effect: None
-        value: 0
-      - effect: None
-        value: 0
+      - effect: HoldBlock
+        value: 1
   - minos: 0100000000000000000000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 0000000000000000010000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 00000000000000000000000000000000000000000100000001000000000000000000000001000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 0000000000000000000000000000000000000000ffffffff01000000000000000100000001000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 000000000000000000000000000000000100000001000000000000000000000000000000ffffffff010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
-  - minos: 0000000000000000000000000000000001000000ffffffff01000000000000000000000001000000000000000000000000000000000000000000000000000000
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
+  - minos: 0000000001000000000000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 01000000010000000000000000000000000000000100000000000000000000000000000001000000010000000100000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000000010000000100000001000000ffffffff
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 0000000000000000000000000000000001000000ffffffff00000000000000000100000001000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 0000000000000000000000000000000000000000ffffffff01000000000000000100000001000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 0100000000000000010000000000000001000000ffffffff01000000000000000000000000000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 00000000000000000000000000000000000000000100000001000000000000000000000000000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 0000000000000000000000000000000000000000ffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
   - minos: 000000000100000000000000000000000000000001000000000000000000000001000000ffffffff010000000000000000000000010000000000000000000000
     rows: 4
     cols: 4
-    selectedGroupOptions: []
+    selectedGroupOptions:
+    - id: 0
+      effects:
+      - effect: None
+        value: 0

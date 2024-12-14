@@ -200,5 +200,10 @@ namespace MyMethods
                 UnityEngine.Object.Destroy(tran.GetChild(i).gameObject);
             }
         }
+
+        public static int toInt(this string str)
+        {
+            return int.Parse(str);
+        }
     }
 }

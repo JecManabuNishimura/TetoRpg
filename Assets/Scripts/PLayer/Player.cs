@@ -18,15 +18,28 @@ public class Player : CharactorData, ICharactor
     public BelongingsEquipment belongingsEquipment = new ();
     
     // 装備しているMino
-    public List<int> belongingsMino = new()
+    public List<EquipmentUniqueData> belongingsMino = new()
     {
-        0,1,2,3,4,5,6,
+        new EquipmentUniqueData("0",0), 
+        new EquipmentUniqueData("1",0),
+        new EquipmentUniqueData("2",0),
+        new EquipmentUniqueData("3",0),
+        new EquipmentUniqueData("4",0),
+        new EquipmentUniqueData("5",0),
+        new EquipmentUniqueData("6",0),
+        
     };
     
     // 所持しているMino
-    public List<int> haveMinoList = new List<int>()
+    public List<EquipmentUniqueData> haveMinoList = new ()
     {
-        0,1,2,3,4,5,6,
+        new EquipmentUniqueData("0",0), 
+        new EquipmentUniqueData("1",0),
+        new EquipmentUniqueData("2",0),
+        new EquipmentUniqueData("3",0),
+        new EquipmentUniqueData("4",0),
+        new EquipmentUniqueData("5",0),
+        new EquipmentUniqueData("6",0),
     };
 
     public List<EquipmentUniqueData> haveWeaponList = new ()
@@ -46,8 +59,8 @@ public class Player : CharactorData, ICharactor
         new EquipmentUniqueData("Ar01",0)
     };
 
-    public List<int> HaveMinoList => haveMinoList;
-    public List<int> BelongingsMino => belongingsMino;
+    public List<EquipmentUniqueData> HaveMinoList => haveMinoList;
+    public List<EquipmentUniqueData> BelongingsMino => belongingsMino;
 
     public Dictionary<string,int > BelongingsMinoEffect = new ();
 
@@ -100,7 +113,7 @@ public class Player : CharactorData, ICharactor
             var data = MinoData.Entity.GetMinoEffect(val);
             foreach (var d in data)
             {
-                BelongingsMinoEffect[d]++;
+                BelongingsMinoEffect[d.effect] += d.value;
             }
         }
     }
@@ -162,11 +175,11 @@ public class Player : CharactorData, ICharactor
         hpText.text = totalStatus.hp.ToString();
     }
 
-    public void AcquisitionMino(int id)
+    public void AcquisitionMino(EquipmentUniqueData data)
     {
-        if (!haveMinoList.Contains(id))
+        if (!haveMinoList.Contains(data))
         {
-            haveMinoList.Add(id);    
+            haveMinoList.Add(data);    
         }
     }
     public void AcquisitionItem(EquipmentUniqueData data)
@@ -202,12 +215,12 @@ public class Player : CharactorData, ICharactor
         }
     }
 
-    public int GetBelongingsMino(int index)
+    public EquipmentUniqueData GetBelongingsMino(int index)
     { 
         if (index >= belongingsMino.Count)
         {
             Debug.LogError("所持容量より多いです:Player");
-            return -1;
+            return null;
         }
         return belongingsMino[index];
     }

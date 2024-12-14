@@ -35,10 +35,9 @@ public class MinoData : ScriptableObject
         return ConvertToNestedList(Parameters[index].minos,Parameters[index].rows,Parameters[index].cols);
     }
 
-    public List<string> GetMinoEffect(int index)
+    public List<MinoEffect> GetMinoEffect(EquipmentUniqueData data)
     {
-        //return Parameters[index].selectedGroupOptions;
-        return new List<string>();
+        return Parameters[int.Parse(data.WeaponId)].selectedGroupOptions[data.groupID].effects;
     }
     int[,] ConvertToNestedList(List<int> flatList, int rows, int cols)
     {

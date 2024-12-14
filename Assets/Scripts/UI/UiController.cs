@@ -276,9 +276,13 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             var val = MinoData.Entity.GetMinoEffect(mino);
             foreach (var data in val)
             {
-                var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
-                    MenuManager.Instance.minoData.belongingsEffectGroup.transform);
-                obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
+                if (data.effect != "None")
+                {
+                    var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
+                        MenuManager.Instance.minoData.belongingsEffectGroup.transform);
+                    obj.GetComponent<TextMeshProUGUI>().text =
+                        MinoEffectTextMaster.Entity.GetExplanationText(data.effect);
+                }
             }
         }
     }
@@ -291,7 +295,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         {
             var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
                 MenuManager.Instance.minoData.haveEffectGroup.transform);
-            obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data);
+            obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data.effect);
         }
     }
 
@@ -309,7 +313,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         else
         {
             
-            int minoNum = gridItems[currentIndex].GetComponent<MinoCreater>().GetMinoId();
+            EquipmentUniqueData minoNum = gridItems[currentIndex].GetComponent<MinoCreater>().GetMinoId();
             shakeInitPosition = gridItems[currentIndex].position;
             if (!GameManager.player.belongingsMino.Contains(minoNum))
             {
@@ -328,10 +332,10 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         
         BelongingMinoExplanation();
     }
-    void ChangeBelongingMino(int selectIndex, int minoNumber)
+    void ChangeBelongingMino(int selectIndex, EquipmentUniqueData data)
     {
         // ミノ装備
-        GameManager.player.BelongingsMino[selectIndex] = minoNumber;
+        GameManager.player.BelongingsMino[selectIndex] = data;
         // 対象の親オブジェクト（Transform）を取得
         Transform parentTransform = 
             MenuManager.Instance.minoData.circleLayoutGroup.GetSelectObj();
@@ -341,7 +345,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         {
             Object.Destroy(child.gameObject); // 子オブジェクトを削除
         }
-        MenuManager.Instance.minoData.circleLayoutGroup.GetSelectObj().GetComponent<MinoCreater>().UpdateId(minoNumber);
+        MenuManager.Instance.minoData.circleLayoutGroup.GetSelectObj().GetComponent<MinoCreater>().UpdateId(data);
         MenuManager.Instance.minoData.circleLayoutGroup.GetSelectObj().GetComponent<MinoCreater>().CreateMino();
     }
 
@@ -378,23 +382,6 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     {
         if (nowMode == NowMode.MinoSelect)
         {
-            /*
-            if (right)
-            {
-                if (currentIndex % 3 < columns - 1 && currentIndex < gridItems.Length - 1)
-                {
-                    currentIndex ++;
-                }
-                //currentIndex = Mathf.Min(gridItems.Length - 1, currentIndex + 1);
-            }
-            else
-            {
-                if (currentIndex% 3 > 0)
-                {
-                    currentIndex--;
-                }
-                //currentIndex = Mathf.Max(0, currentIndex - 1);
-            }*/
             currentIndex = gridCursorMove.MoveHorizontal(right);
 
             HaveMinoExplanation();
@@ -407,48 +394,6 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         }
     }
 
-    
-    /*
-    public void MoveCursor(bool up)
-    {
-        float contentHeight = minoData.scrollRect.content.rect.height;
-        float viewportHeight = minoData.scrollRect.viewport.rect.height;
-        float maxScrollPosition = contentHeight - viewportHeight;
-        float itemHeight = minoData.gridLayoutGroup.cellSize.y + minoData.gridLayoutGroup.spacing.y;
-        int rowCount = (int)(viewportHeight / minoData.gridLayoutGroup.cellSize.y);
-        if (up)
-        {
-            if (currentIndex - columns >= 0)
-            {
-                currentIndex -= columns;
-                ypos = Mathf.Clamp(ypos - 1, -1, Mathf.Min(rowCount, currentIndex));
-            }
-        }
-        else
-        {
-            currentIndex = Mathf.Min(currentIndex + columns, GameManager.player.haveMinoList.Count - 1);
-            ypos = Mathf.Clamp(ypos + 1, -1, Mathf.Min(rowCount, currentIndex));
-                
-        }
-
-        if (ypos == rowCount && !up)
-        {
-            var pos =minoData.scrollRect.content.anchoredPosition;
-            pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y + itemHeight, 0, (int)maxScrollPosition);
-
-            minoData.scrollRect.content.anchoredPosition = pos;
-            ypos--;
-        }
-        else if (ypos == -1 && up )
-        {
-            var pos =minoData.scrollRect.content.anchoredPosition;
-            pos.y = Mathf.Clamp(minoData.scrollRect.content.anchoredPosition.y - itemHeight, 0, maxScrollPosition);
-
-            minoData.scrollRect.content.anchoredPosition = pos;
-            ypos++;
-        }
-    }
-    */
     public void Vertical(bool up)
     {
         

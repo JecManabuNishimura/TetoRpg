@@ -407,7 +407,7 @@ public class MinoManager : MonoBehaviour
                                 obj.transform.localPosition = new Vector3(0, 0.5f, 0);
                                 treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                                 treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                GameManager.player.AcquisitionMino(result);
+                                GameManager.player.AcquisitionMino(unique);
                             }
                             else
                             {
@@ -606,9 +606,8 @@ public class MinoManager : MonoBehaviour
         }
         else
         {
-            //index = Random.Range(0, MinoFactory.TetoMinoLenght);
             // 所持数最大7に固定（現在）
-            index = GameManager.player.GetBelongingsMino(Random.Range(0, 7));
+            index = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();
         }
         clMinoObj.transform.position = Vector3.zero;       
         nowMinos = MinoFactory.GetMinoData(index, treasureFlag);

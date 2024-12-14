@@ -96,14 +96,12 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
 {
     [SerializeField] private List<TKey> keys = new List<TKey>();
     [SerializeField] private List<TValue> values = new List<TValue>();
-
-    private Dictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
-
+    
     public void OnBeforeSerialize()
     {
         keys.Clear();
         values.Clear();
-        foreach (var kvp in dictionary)
+        foreach (var kvp in this)
         {
             keys.Add(kvp.Key);
             values.Add(kvp.Value);
@@ -112,27 +110,14 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
 
     public void OnAfterDeserialize()
     {
-        dictionary.Clear();
+        Clear();
         for (int i = 0; i < keys.Count; i++)
         {
-            dictionary.Add(keys[i], values[i]);
+            Add(keys[i], values[i]);
         }
     }
 
-    public TValue this[TKey key]
-    {
-        get => dictionary[key];
-        set => dictionary[key] = value;
-    }
 
-    public void Add(TKey key, TValue value)
-    {
-        dictionary.Add(key, value);
-    }
 
-    public bool ContainsKey(TKey key) => dictionary.ContainsKey(key);
 
-    public void Clear() => dictionary.Clear();
-
-    public Dictionary<TKey, TValue>.KeyCollection Keys => dictionary.Keys;
 }

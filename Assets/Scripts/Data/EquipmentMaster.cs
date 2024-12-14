@@ -218,9 +218,23 @@ public class EquipmentUniqueData
         // それ以外の場合は通常の比較
         return a.WeaponId == b.WeaponId && a.groupID == b.groupID;
     }
+    
     public static bool operator != (EquipmentUniqueData a, EquipmentUniqueData b)
     {
         return !(a == b);
+    }
+    public override bool Equals(object obj)
+    {
+        if (obj is EquipmentUniqueData other)
+        {
+            return WeaponId == other.WeaponId && groupID == other.groupID;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(WeaponId, groupID);
     }
 }
 [Serializable]
