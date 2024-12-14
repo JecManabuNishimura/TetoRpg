@@ -17,7 +17,12 @@ MonoBehaviour:
     rows: 4
     cols: 4
     selectedGroupOptions:
-    - HoldBlock
+    - id: 0
+      effects:
+      - effect: None
+        value: 0
+      - effect: None
+        value: 0
   - minos: 0100000000000000000000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4

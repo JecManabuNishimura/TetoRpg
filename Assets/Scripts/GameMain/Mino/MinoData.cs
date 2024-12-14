@@ -37,7 +37,8 @@ public class MinoData : ScriptableObject
 
     public List<string> GetMinoEffect(int index)
     {
-        return Parameters[index].selectedGroupOptions;
+        //return Parameters[index].selectedGroupOptions;
+        return new List<string>();
     }
     int[,] ConvertToNestedList(List<int> flatList, int rows, int cols)
     {
@@ -59,6 +60,30 @@ public class MinoParameter
     public List<int> minos; // フラットなリスト
     public int rows;        // 行数
     public int cols;        // 列数
-    public List<string> selectedGroupOptions;
+    public List<MinoEffectGroup> selectedGroupOptions = new ();
+    //public List<string> selectedGroupOptions;
     
+}
+[Serializable]
+public class MinoEffectGroup
+{
+    public MinoEffectGroup(int id, List<MinoEffect> effects)
+    {
+        this.id = id;
+        this.effects = effects;
+    }
+    public int id;
+    public List<MinoEffect> effects;
+}
+
+[Serializable]
+public class MinoEffect
+{
+    public MinoEffect(string effectStatus, int value)
+    {
+        effect = effectStatus;
+        this.value = value;
+    }
+    public string effect;
+    public int value;
 }
