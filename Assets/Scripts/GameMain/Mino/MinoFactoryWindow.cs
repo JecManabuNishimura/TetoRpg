@@ -62,6 +62,7 @@ public class MinoFactoryWindow : EditorWindow
         buttonRotImage =
             AssetDatabase.LoadAssetAtPath<Texture2D>(
                 "Assets/Chess Studio/Puzzle Blocks Icon Pack/png/blockYellowDimond.png");
+        LoadData();
     }
 
     private void OnGUI()
@@ -107,9 +108,8 @@ public class MinoFactoryWindow : EditorWindow
             }
         }
 
-        scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true, GUILayout.Width(position.width),
-            GUILayout.Height(position.height));
-
+        scrollPosition = GUILayout.BeginScrollView(scrollPosition, true, true, GUILayout.Width(position.width),
+            GUILayout.Height(position.height - 25));
         GUILayout.BeginHorizontal();
         int space = 0;
         for (int i = 0; i < minoSettingList.Count; i++)
@@ -254,8 +254,9 @@ public class MinoFactoryWindow : EditorWindow
             }
         }
 
+        
         GUILayout.EndHorizontal();
-
+        GUILayout.Space(100);
         // スクロールビューを終了
         GUILayout.EndScrollView();
     }

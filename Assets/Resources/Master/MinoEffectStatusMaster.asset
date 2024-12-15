@@ -18,3 +18,15 @@ MonoBehaviour:
   - PredictionBlock
   - NextBlock
   - HoldBlock
+  - HoldRelease
+  - PredictionBRelease
+  - BombBlock
+  - StripesBlock
+  - StripesBlockRelease
+  - NextGaugeUp
+  - NextGaugeDown
+  - RotBlockCancel
+  - DownSpeedUp
+  - DownSpeedDown
+  - FieldUp
+  - FieldDown

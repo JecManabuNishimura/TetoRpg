@@ -137,7 +137,9 @@ public class GameManager : MonoBehaviour
     public static async void Battle()
     {
         EnemyDown = false;
-        
+        // フィールドブロック増減
+        boardWidth += player.BelongingsMinoEffect["FieldUp"];
+        boardWidth -= player.BelongingsMinoEffect["FieldDown"];
         enemy = Instantiate(MapManager.Instance.GetEnemyObj, enemyPos.position, Quaternion.identity).GetComponent<Enemy.Charactor>();
         await CreateBlock?.Invoke();
         await StartBattle?.Invoke(stageLoader.NextCount);

@@ -39,7 +39,7 @@ public class MinoManager : MonoBehaviour
     private int fallCount;
 
     private InputHandler inputHandler;
-    private readonly float fallTime = 1;
+    private float fallTime = 1;
 
     private bool treasureFlag = false;
     private int treasureNumber = 0;
@@ -125,7 +125,12 @@ public class MinoManager : MonoBehaviour
     private void Update()
     {
         if (!SelectMino || GameManager.menuFlag ) return;
+        // 落下速度
+        fallTime -= GameManager.player.BelongingsMinoEffect["DownSpeedUp"] * 0.4f;
+        fallTime += GameManager.player.BelongingsMinoEffect["DownSpeedDown"]* 0.4f;
+        // ホールド対応
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+        // 予測ブロック対応
         clMinoObj.SetActive(GameManager.player.BelongingsMinoEffect["PredictionBlock"] != 0);
         inputHandler.HandleInput();
             
@@ -331,6 +336,8 @@ public class MinoManager : MonoBehaviour
     private void RotMino()
     {
         if (SelectMino == null || treasureFlag) return;
+        // 回転禁止
+        if (GameManager.player.BelongingsMinoEffect["RotBlockCancel"] != 0) return;
         var nowPos = SelectMino.transform.position;
         rotNum = (rotNum +1) % 4;
         int[,] minoRot = MinoFactory.RotatePiece(nowMinos, rotNum,index);

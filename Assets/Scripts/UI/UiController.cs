@@ -281,7 +281,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
                     var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
                         MenuManager.Instance.minoData.belongingsEffectGroup.transform);
                     obj.GetComponent<TextMeshProUGUI>().text =
-                        MinoEffectTextMaster.Entity.GetExplanationText(data.effect);
+                        MinoEffectTextMaster.Entity.GetExplanationText(data.effect).Text;
                 }
             }
         }
@@ -295,7 +295,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
         {
             var obj = GameObject.Instantiate(MenuManager.Instance.minoData.minoEffectObj,
                 MenuManager.Instance.minoData.haveEffectGroup.transform);
-            obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data.effect);
+            obj.GetComponent<TextMeshProUGUI>().text = MinoEffectTextMaster.Entity.GetExplanationText(data.effect).Text;
         }
     }
 

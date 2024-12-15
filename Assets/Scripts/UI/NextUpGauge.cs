@@ -19,6 +19,8 @@ public class NextUpGauge : MonoBehaviour
 
     public void CreateGauge(int count)
     {
+        count += GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2;
+        count -= GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
         gaugeParent.transform.ChildClear ();
         gaugeList.Clear ();
         for (int i = 0; i < count; i++)

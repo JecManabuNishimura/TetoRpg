@@ -101,12 +101,19 @@ public class TreasureDropMasterEditor : Editor
         }
         
         EditorGUILayout.LabelField("Mino Drop Data List", EditorStyles.boldLabel);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            EditorGUILayout.LabelField("WeaponId",GUILayout.Width(60));
+            EditorGUILayout.LabelField("GroupId",GUILayout.Width(60));
+            EditorGUILayout.LabelField("Drop%",GUILayout.Width(60));
+        }
         for (int i = 0; i < master.minoDropData.Count; i++)
         {
             var item = master.minoDropData[i];
             using (new EditorGUILayout.HorizontalScope())
             {
                 item.id = EditorGUILayout.TextField(item.id,  GUILayout.Width(60));
+                item.groupId = EditorGUILayout.IntField(item.groupId,  GUILayout.Width(60));
                 
                 item.dropRate = EditorGUILayout.FloatField("", item.dropRate, GUILayout.Width(50));
                 // 削除ボタン

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -28,17 +29,31 @@ public class MinoEffectTextMaster : ScriptableObject
         }
     }
 
-    public SerializableDictionary<string, string> effectExplanation = new();
+    // スクリプタブルオブジェクトで自作クラスを使う場合は必ず、自作のDictionaryとメンバーはSerializeしなければならない
+    public SerializableDictionary<string, EffectTextData> effectExplanation = new();
 
-    public string GetExplanationText(string key)
+    [Serializable]
+    public class EffectTextData
+    {
+        [SerializeField]public string Text;
+        [SerializeField]public bool Negative;
+
+        public EffectTextData(string text, bool negative)
+        {
+            Text = text;
+            Negative = negative;
+        }
+    }
+    
+    public EffectTextData GetExplanationText(string key)
     {
         // Dictionaryから値を取得し、キーが存在しない場合はnullを返す
-        if (effectExplanation.TryGetValue(key, out string explanation))
+        if (effectExplanation.TryGetValue(key, out EffectTextData explanation))
         {
             return explanation;  // キーが存在する場合、値を返す
         }
 
-        return "";
+        return null;
     }
 }
 #if UNITY_EDITOR
@@ -61,7 +76,7 @@ public class MinoEffectTextMasterEditor : Editor
 
         if (example.effectExplanation == null)
         {
-            example.effectExplanation = new SerializableDictionary<string, string>();
+            example.effectExplanation = new SerializableDictionary<string, MinoEffectTextMaster.EffectTextData>();
         }
 
         // MinoEffectStatusMaster からキーを取得
@@ -80,7 +95,9 @@ public class MinoEffectTextMasterEditor : Editor
             string newKey = statusKeys[newSelectedIndex];
 
             // Value編集
-            example.effectExplanation[key] = EditorGUILayout.TextArea(example.effectExplanation[key], GUILayout.Width(200));
+            var effectTextData = example.effectExplanation[key];
+            effectTextData.Text = EditorGUILayout.TextArea(effectTextData.Text, GUILayout.Width(200));
+            effectTextData.Negative = EditorGUILayout.Toggle(effectTextData.Negative, GUILayout.Width(30));
 
             // Removeボタン
             if (GUILayout.Button("Remove", GUILayout.Width(60)))
@@ -91,7 +108,7 @@ public class MinoEffectTextMasterEditor : Editor
             // キーが変更された場合、Dictionaryを更新
             if (newKey != key)
             {
-                string value = example.effectExplanation[key];
+                MinoEffectTextMaster.EffectTextData value = effectTextData;
                 example.effectExplanation.Remove(key);
                 example.effectExplanation.Add(newKey, value);
             }
@@ -100,11 +117,17 @@ public class MinoEffectTextMasterEditor : Editor
         }
 
         // 新しい要素を追加
-        if (GUILayout.Button("Add New"))
+        if (GUILayout.Button("ReadEffect"))
         {
-            // 新しいキーをドロップダウンリストから追加
-            string newKey = statusKeys.FirstOrDefault(); // 最初のキーをデフォルトにする
-            example.effectExplanation.Add(newKey, "");
+            var Keys = statusMaster != null ? statusMaster.MinoEffectStatus : new System.Collections.Generic.List<string>();
+            foreach (var key in Keys)
+            {
+                if (!example.effectExplanation.ContainsKey(key))
+                {
+
+                    example.effectExplanation.Add(key,new MinoEffectTextMaster.EffectTextData("",false));
+                }
+            }
         }
 
         EditorUtility.SetDirty(target); // ScriptableObjectの変更を保存

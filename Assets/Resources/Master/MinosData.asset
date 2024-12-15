@@ -19,7 +19,31 @@ MonoBehaviour:
     selectedGroupOptions:
     - id: 0
       effects:
+      - effect: None
+        value: 0
+    - id: 1
+      effects:
+      - effect: DownSpeedUp
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldRelease
+        value: 1
+    - id: 3
+      effects:
+      - effect: RotBlockCancel
+        value: 1
+    - id: 4
+      effects:
       - effect: HoldBlock
+        value: 1
+      - effect: DownSpeedUp
+        value: 3
+    - id: 5
+      effects:
+      - effect: NextGaugeUp
+        value: 1
+      - effect: RotBlockCancel
         value: 1
   - minos: 0100000000000000000000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
@@ -29,6 +53,16 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: NextGaugeUp
+        value: 0
+    - id: 2
+      effects:
+      - effect: NextGaugeUp
+        value: 1
+      - effect: DownSpeedUp
+        value: 1
   - minos: 0000000000000000010000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4

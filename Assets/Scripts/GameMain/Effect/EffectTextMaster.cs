@@ -111,6 +111,11 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IS
     public void OnAfterDeserialize()
     {
         Clear();
+        if (keys.Count != values.Count)
+        {
+            Debug.LogError("Deserialization failed: keys and values counts mismatch.");
+            return;
+        }
         for (int i = 0; i < keys.Count; i++)
         {
             Add(keys[i], values[i]);
