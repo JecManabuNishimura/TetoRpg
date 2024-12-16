@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -209,10 +210,25 @@ public class MinoFactoryWindow : EditorWindow
                                             Array.IndexOf(minoEffectStatusMaster.MinoEffectStatus.ToArray(),
                                                 currentEffect);
                                         if (currentIndex == -1) currentIndex = 0; // 見つからない場合は、デフォルトで0を使用
-
+                                        GUIStyle popupStyle = new GUIStyle(EditorStyles.popup);
+                                        if(MinoEffectTextMaster.Entity.effectExplanation.FirstOrDefault(x => x.Key == effectOptions[currentIndex]).Value.Negative)
+                                        {
+                                            popupStyle.normal.textColor = Color.red; // 文字色を赤に変更
+                                        }
+                                        else
+                                        {
+                                            popupStyle.normal.textColor = Color.white; 
+                                        }
+                                        
+                                        
+                                        /*
                                         int newSelectedIndex = EditorGUILayout.Popup(currentIndex, effectOptions,
                                             GUILayout.Width(60), GUILayout.Height(20));
-
+                                        newSelectedIndex = EditorGUILayout.Popup(newSelectedIndex, effectOptions, popupStyle);
+                                        */
+                                        int newSelectedIndex = EditorGUI.Popup(
+                                            GUILayoutUtility.GetRect(60, 20), // サイズを指定
+                                            currentIndex, effectOptions, popupStyle);
                                         if (newSelectedIndex != currentIndex)
                                         {
                                             t.effect =

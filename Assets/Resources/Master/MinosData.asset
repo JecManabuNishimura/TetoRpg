@@ -35,7 +35,7 @@ MonoBehaviour:
         value: 1
     - id: 4
       effects:
-      - effect: HoldBlock
+      - effect: NextBlock
         value: 1
       - effect: DownSpeedUp
         value: 3
@@ -56,12 +56,24 @@ MonoBehaviour:
     - id: 1
       effects:
       - effect: NextGaugeUp
-        value: 0
+        value: 1
     - id: 2
       effects:
       - effect: NextGaugeUp
         value: 1
       - effect: DownSpeedUp
+        value: 1
+    - id: 3
+      effects:
+      - effect: DownSpeedDown
+        value: 1
+      - effect: HoldRelease
+        value: 1
+    - id: 4
+      effects:
+      - effect: RotBlockCancel
+        value: 1
+      - effect: HoldRelease
         value: 1
   - minos: 0000000000000000010000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
@@ -71,6 +83,22 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: NextGaugeDown
+        value: 1
+    - id: 2
+      effects:
+      - effect: HealRateUp
+        value: 1
+    - id: 3
+      effects:
+      - effect: DownSpeedUp
+        value: 1
+    - id: 4
+      effects:
+      - effect: RotBlockCancel
+        value: 1
   - minos: 00000000000000000000000000000000000000000100000001000000000000000000000001000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
@@ -79,6 +107,32 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: RotBlockCancel
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: DownSpeedUp
+        value: 1
+      - effect: NextGaugeDown
+        value: 1
+    - id: 3
+      effects:
+      - effect: HoldRelease
+        value: 1
+      - effect: HealRateUp
+        value: 1
+    - id: 4
+      effects:
+      - effect: PredictionBlock
+        value: 1
+      - effect: HoldBlock
+        value: 1
+      - effect: NextGaugeDown
+        value: 5
   - minos: 0000000000000000000000000000000000000000ffffffff01000000000000000100000001000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4

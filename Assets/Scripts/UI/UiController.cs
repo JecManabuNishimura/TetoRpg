@@ -328,6 +328,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
                 StartShake(gridItems[currentIndex].gameObject,0.5f, 5.5f, 30, 90, false);
             }
             MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
+            NextUpGauge.Instance.ReCount(GameManager.NowNextCount);
         }
         
         BelongingMinoExplanation();

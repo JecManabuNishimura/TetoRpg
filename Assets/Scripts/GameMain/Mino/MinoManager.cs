@@ -18,7 +18,7 @@ public class MinoManager : MonoBehaviour
     [SerializeField] private GameObject obstacleMino;
     [SerializeField] private GameObject TreasureObj;
     [SerializeField] private GameObject holdObj;
-    [SerializeField] private NextUpGauge nextUpGauge;
+    //[SerializeField] private NextUpGauge nextUpGauge;
     [SerializeField] private GameObject damgeText;
     
     private GameObject SelectMino;
@@ -91,9 +91,8 @@ public class MinoManager : MonoBehaviour
 
     private async Task StartBattle(int gaugeNum)
     {
-        
-        nextUpGauge.CreateGauge(gaugeNum);
-        await nextUpGauge.Play();
+        NextUpGauge.Instance.CreateGauge(gaugeNum);
+        await NextUpGauge.Instance.Play();
         CreateNewMino();
         downColPos = (int)SelectMino.transform.position.x;
     }
@@ -120,11 +119,12 @@ public class MinoManager : MonoBehaviour
                 Destroy(minoDataTable[y, x]);
             }
         }
-        nextUpGauge.Clear();
+        NextUpGauge.Instance.Clear();
     }
     private void Update()
     {
-        if (!SelectMino || GameManager.menuFlag ) return;
+        if (!SelectMino || GameManager.menuFlag) return;
+
         // 落下速度
         fallTime -= GameManager.player.BelongingsMinoEffect["DownSpeedUp"] * 0.4f;
         fallTime += GameManager.player.BelongingsMinoEffect["DownSpeedDown"]* 0.4f;
@@ -883,11 +883,11 @@ public class MinoManager : MonoBehaviour
 
     async Task ChangeFallCount()
     {
-        nextUpGauge.DownCount();
-        if (nextUpGauge.GetCount < 0)
+        NextUpGauge.Instance.DownCount();
+        if (NextUpGauge.Instance.GetCount < 0)
         {
             await CreateObstacleBlock();
-            nextUpGauge.ResetGauge();
+            NextUpGauge.Instance.ResetGauge();
         }
     }
 

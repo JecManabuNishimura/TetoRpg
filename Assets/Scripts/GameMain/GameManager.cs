@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
     public static CameraMove cameraMove;
 
     public static Transform enemyPos;
-    
+    public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
 
     public static async Task PlayerMove()
     {
@@ -142,7 +142,8 @@ public class GameManager : MonoBehaviour
         boardWidth -= player.BelongingsMinoEffect["FieldDown"];
         enemy = Instantiate(MapManager.Instance.GetEnemyObj, enemyPos.position, Quaternion.identity).GetComponent<Enemy.Charactor>();
         await CreateBlock?.Invoke();
-        await StartBattle?.Invoke(stageLoader.NextCount);
+        
+        await StartBattle?.Invoke(NowNextCount);
     }
  
     // 非同期でシーンを追加するコルーチン

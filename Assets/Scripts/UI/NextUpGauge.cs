@@ -9,6 +9,7 @@ using MyMethods;
 
 public class NextUpGauge : MonoBehaviour
 {
+    public static NextUpGauge Instance;
     [SerializeField] private GameObject gaugeObj;
     [SerializeField] private GameObject gaugeParent;
 
@@ -17,10 +18,21 @@ public class NextUpGauge : MonoBehaviour
     private int maxIndex;
     public int GetCount => nowIndex;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     public void CreateGauge(int count)
     {
-        count += GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2;
-        count -= GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
+
         gaugeParent.transform.ChildClear ();
         gaugeList.Clear ();
         for (int i = 0; i < count; i++)
@@ -41,6 +53,48 @@ public class NextUpGauge : MonoBehaviour
         }
 
         nowIndex = maxIndex - 1;
+    }
+
+    public void ReCount(int count)
+    {
+        if(count != maxIndex)
+        {
+            if (count < maxIndex)
+            {
+                // ­‚È‚¢•ªíœ
+                for (int i = count - 1; i < gaugeParent.transform.childCount; i++)
+                {
+                    Destroy(gaugeParent.transform.GetChild(i).gameObject);
+                    gaugeList.RemoveAt(gaugeList.Count - 1);
+                }
+                maxIndex = count;
+            }
+            else
+            {
+                for (int i = maxIndex-1; i < count; i++)
+                {
+                    gaugeList.Add(Instantiate(gaugeObj, gaugeParent.transform, true));
+                    DOTween.Restart(gaugeList[i], "close");
+                }
+                maxIndex = count;
+            }
+        }
+
+        if(count < maxIndex)
+        {
+            for(int i=nowIndex; i> count; i--)
+            {
+                DOTween.Restart(gaugeList[nowIndex], "close");
+                nowIndex--;
+            }  
+        }
+        for (int i = count - 1; i < gaugeParent.transform.childCount; i++)
+        {
+            Destroy(gaugeParent.transform.GetChild(i).gameObject);
+            gaugeList.RemoveAt(gaugeList.Count - 1);
+        }
+
+
     }
 
     public void DownCount()
