@@ -106,6 +106,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        EquipmentMaster.Entity.ReadCSV("EquipmentData");
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
         BoardManager.Instance.Initialize();

@@ -123,7 +123,7 @@ MonoBehaviour:
   - name: 1
     <weight>k__BackingField: 5
   spAttackSettings: []
-  attackTarnCount: 2
+  attackTarnCount: 15
   attackTarn: {fileID: 1799986551340116770, guid: 3f525500304f2a64c9b40be96166c8a8, type: 3}
   attackTarnSpoonPoint: {fileID: 8017468128887097154}
   bombAttack: {fileID: 0}

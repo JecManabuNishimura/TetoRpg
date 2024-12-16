@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "TreasureDropMaster", menuName = "Scriptable Objects/TreasureDropMaster")]
 public class TreasureDropMaster : ScriptableObject
@@ -11,131 +13,170 @@ public class TreasureDropMaster : ScriptableObject
     public List<ItemDropData> minoDropData = new List<ItemDropData>();
     public EquipmentUniqueData GetItemDataId()
     {
-        var allData = itemDropData.Concat(minoDropData).ToList();
-        float totalRate = 0f;
-        foreach (var item in allData)
+        int totalcount = minoDropData.Count + itemDropData.Count;
+        List<ItemDropData> item;
+        if (Random.Range(0, totalcount) < minoDropData.Count)
         {
-            totalRate += item.dropRate;
+            item = minoDropData;
         }
-
-        float randomValue = UnityEngine.Random.Range(0f, totalRate);
-
-        float cumulativeRate = 0f;
-        foreach (var item in allData)
+        else
         {
-            cumulativeRate += item.dropRate;
-            if (randomValue <= cumulativeRate)
+            item = itemDropData;
+        }
+        //var allData = itemDropData.Concat(minoDropData).ToList();
+        int rate = Random.Range(0, 100);
+        Rarity rarity = Rarity.D;
+        if (rate <= 1)
+        {
+            rarity = Rarity.SSS;
+        }
+        else if (rate < 5)
+        {
+            rarity = Rarity.SS;
+        }
+        else if (rate < 10)
+        {
+            rarity = Rarity.S;
+        }
+        else if (rate < 20)
+        {
+            rarity = Rarity.A;
+        }
+        else if (rate < 40)
+        {
+            rarity = Rarity.B;
+        }
+        else if (rate < 60)
+        {
+            rarity = Rarity.C;
+        }
+        else 
+        {
+            rarity = Rarity.D;
+        }
+        
+        var items = item.Where(x => x.dropRarity == rarity).ToList();
+        while (true)
+        {
+            if (items.Count == 0)
             {
-                return new EquipmentUniqueData(item.id,item.groupId);
+                int current = (int)rarity;
+                if (current > 0)
+                {
+                    rarity = (Rarity)(current - 1);
+                }
+                items = item.Where(x => x.dropRarity == rarity).ToList();
+            }
+            else
+            {
+                break;
             }
         }
 
-        return new EquipmentUniqueData("0",0);
+        var selectItem = items[Random.Range(0, items.Count)];
+        return new EquipmentUniqueData(selectItem.id,selectItem.groupId);
     }
 }
 #if UNITY_EDITOR
 [CustomEditor(typeof(TreasureDropMaster))]
 public class TreasureDropMasterEditor : Editor
 {
+    private ReorderableList itemDropList;
+    private ReorderableList minoDropList;
+    
     private List<string> equipmentIds = new List<string>();
+
+    private void OnEnable()
+    {
+        TreasureDropMaster master = (TreasureDropMaster)target;
+
+        EquipmentMaster equipmentMaster = Resources.Load<EquipmentMaster>("Master/EquipmentMaster");
+        if (equipmentMaster != null && equipmentMaster.equipData.Count > 0)
+        {
+            equipmentIds = equipmentMaster.equipData.Select(equip => equip.id).ToList();
+        }
+        else
+        {
+            equipmentIds.Add("0"); // デフォルト値
+        }
+
+        // itemDropDataのReorderableList設定
+        itemDropList = CreateReorderableList("Item Drop Data", master.itemDropData, true);
+
+        // minoDropDataのReorderableList設定
+        minoDropList = CreateReorderableList("Mino Drop Data", master.minoDropData, false);
+    }
 
     public override void OnInspectorGUI()
     {
-        // TreasureDropMasterインスタンスを取得
-        TreasureDropMaster master = (TreasureDropMaster)target;
+        serializedObject.Update();
+        itemDropList.DoLayoutList();
+        minoDropList.DoLayoutList();
+        serializedObject.ApplyModifiedProperties();
 
-        // EquipmentMasterをロード
-        EquipmentMaster equipmentMaster = Resources.Load<EquipmentMaster>("Master/EquipmentMaster");
-
-        if (equipmentMaster == null || equipmentMaster.equipData.Count == 0)
-        {
-            EditorGUILayout.HelpBox("EquipmentMasterが見つからない、または装備データが空です。", MessageType.Warning);
-            return;
-        }
-
-        // EquipmentDataのIDリストを準備
-        equipmentIds.Clear();
-        foreach (var equip in equipmentMaster.equipData)
-        {
-            equipmentIds.Add(equip.id);
-        }
-
-        // ItemDropDataリストの編集
-        EditorGUILayout.LabelField("Item Drop Data List", EditorStyles.boldLabel);
-        using (new EditorGUILayout.HorizontalScope())
-        {
-            EditorGUILayout.LabelField("WeaponId",GUILayout.Width(60));
-            EditorGUILayout.LabelField("GroupId",GUILayout.Width(60));
-            EditorGUILayout.LabelField("Drop%",GUILayout.Width(60));
-        }
-        for (int i = 0; i < master.itemDropData.Count; i++)
-        {
-            var item = master.itemDropData[i];
-
-            EditorGUILayout.BeginHorizontal();
-
-            // ドロップダウンでIDを選択
-            int selectedIndex = equipmentIds.IndexOf(item.id);
-            if (selectedIndex == -1) selectedIndex = 0; // デフォルト値に戻す
-
-            selectedIndex = EditorGUILayout.Popup( selectedIndex, equipmentIds.ToArray(), GUILayout.Width(60));
-            item.id = equipmentIds[selectedIndex];
-            item.groupId = EditorGUILayout.IntField(item.groupId, GUILayout.Width(60));
-            // Drop Rateの編集
-            item.dropRate = EditorGUILayout.FloatField( item.dropRate, GUILayout.Width(60));
-
-            // 削除ボタン
-            if (GUILayout.Button("Remove", GUILayout.Width(80)))
-            {
-                master.itemDropData.RemoveAt(i);
-                i--; // インデックス調整
-            }
-
-            EditorGUILayout.EndHorizontal();
-        }
-
-        // 新しい要素を追加
-        if (GUILayout.Button("Add Item"))
-        {
-            master.itemDropData.Add(new ItemDropData { id = equipmentIds[0], dropRate = 0f });
-        }
-        
-        EditorGUILayout.LabelField("Mino Drop Data List", EditorStyles.boldLabel);
-        using (new EditorGUILayout.HorizontalScope())
-        {
-            EditorGUILayout.LabelField("WeaponId",GUILayout.Width(60));
-            EditorGUILayout.LabelField("GroupId",GUILayout.Width(60));
-            EditorGUILayout.LabelField("Drop%",GUILayout.Width(60));
-        }
-        for (int i = 0; i < master.minoDropData.Count; i++)
-        {
-            var item = master.minoDropData[i];
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                item.id = EditorGUILayout.TextField(item.id,  GUILayout.Width(60));
-                item.groupId = EditorGUILayout.IntField(item.groupId,  GUILayout.Width(60));
-                
-                item.dropRate = EditorGUILayout.FloatField("", item.dropRate, GUILayout.Width(50));
-                // 削除ボタン
-                if (GUILayout.Button("Remove", GUILayout.Width(80)))
-                {
-                    master.minoDropData.RemoveAt(i);
-                    i--; // インデックス調整
-                }
-            }
-        }
-
-        if (GUILayout.Button("Add Mino"))
-        {
-            master.minoDropData.Add(new ItemDropData { id = "0",groupId = 0, dropRate = 0f });
-        }
-
-        // 変更があれば保存
         if (GUI.changed)
         {
-            EditorUtility.SetDirty(master);
+            EditorUtility.SetDirty(target);
         }
     }
+    private ReorderableList CreateReorderableList(string title, List<ItemDropData> dataList, bool useDropdown)
+    {
+        var list = new ReorderableList(dataList, typeof(ItemDropData), true, true, true, true);
+
+        // ヘッダー描画
+        list.drawHeaderCallback = (Rect rect) =>
+        {
+            float width = rect.width / 3;
+            EditorGUI.LabelField(new Rect(rect.x, rect.y, width, rect.height), "WeaponId");
+            EditorGUI.LabelField(new Rect(rect.x + width, rect.y, width, rect.height), "GroupId");
+            EditorGUI.LabelField(new Rect(rect.x + width * 2, rect.y, width, rect.height), "Rarity");
+        };
+
+        // 各要素の描画
+        list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        {
+            var item = dataList[index];
+            float width = rect.width / 3 - 5;
+
+            if (useDropdown)
+            {
+                // ドロップダウンメニューでID選択
+                int selectedIndex = equipmentIds.IndexOf(item.id);
+                if (selectedIndex == -1) selectedIndex = 0;
+
+                selectedIndex = EditorGUI.Popup(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight),
+                    selectedIndex, equipmentIds.ToArray());
+                item.id = equipmentIds[selectedIndex];
+            }
+            else
+            {
+                // テキストフィールドでID編集
+                item.id = EditorGUI.TextField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), item.id);
+            }
+
+            // GroupIdとDropRateの描画
+            item.groupId = EditorGUI.IntField(new Rect(rect.x + width + 5, rect.y, width, EditorGUIUtility.singleLineHeight), item.groupId);
+            item.dropRarity = (Rarity)EditorGUI.EnumPopup(new Rect(rect.x + (width * 2) + 10, rect.y, width, EditorGUIUtility.singleLineHeight), item.dropRarity);
+        };
+
+        // 要素の削除
+        list.onRemoveCallback = (list) =>
+        {
+            if (list.index >= 0 && list.index < dataList.Count)
+            {
+                dataList.RemoveAt(list.index);
+            }
+        };
+
+        // 要素の追加
+        list.onAddCallback = (list) =>
+        {
+            dataList.Add(new ItemDropData { id = useDropdown ? equipmentIds[0] : "0", groupId = 0, dropRarity = Rarity.D });
+        };
+
+        return list;
+    }
+   
 }
 #endif
 [Serializable]
@@ -143,5 +184,16 @@ public class ItemDropData
 {
     public string id;
     public int groupId;
-    public float dropRate;
-} 
+    public Rarity dropRarity;
+}
+
+public enum Rarity
+{
+    SSS,
+    SS,
+    S,
+    A,
+    B,
+    C,
+    D
+}

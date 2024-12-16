@@ -41,7 +41,7 @@ MonoBehaviour:
         value: 3
     - id: 5
       effects:
-      - effect: NextGaugeUp
+      - effect: NextGaugeDown
         value: 1
       - effect: RotBlockCancel
         value: 1
@@ -74,6 +74,8 @@ MonoBehaviour:
       - effect: RotBlockCancel
         value: 1
       - effect: HoldRelease
+        value: 1
+      - effect: BombBlock
         value: 1
   - minos: 0000000000000000010000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
@@ -141,6 +143,26 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: HealRateUp
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: DownSpeedUp
+        value: 4
+    - id: 3
+      effects:
+      - effect: HoldRelease
+        value: 1
+    - id: 4
+      effects:
+      - effect: BombBlock
+        value: 1
+      - effect: NextGaugeDown
+        value: 3
   - minos: 000000000000000000000000000000000100000001000000000000000000000000000000ffffffff010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
@@ -149,6 +171,24 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: NextGaugeDown
+        value: 4
+    - id: 2
+      effects:
+      - effect: NextGaugeUp
+        value: 1
+    - id: 3
+      effects:
+      - effect: RotBlockCancel
+        value: 1
+    - id: 4
+      effects:
+      - effect: BombBlock
+        value: 2
+      - effect: NextGaugeDown
+        value: 4
   - minos: 0000000001000000000000000000000001000000ffffffff01000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
@@ -157,7 +197,35 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
-  - minos: 01000000010000000000000000000000000000000100000000000000000000000000000001000000010000000100000000000000000000000000000000000000
+    - id: 1
+      effects:
+      - effect: HoldRelease
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldRelease
+        value: 1
+      - effect: DownSpeedUp
+        value: 2
+    - id: 3
+      effects:
+      - effect: RotBlockCancel
+        value: 1
+      - effect: HoldRelease
+        value: 1
+    - id: 4
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: NextGaugeDown
+        value: 4
+    - id: 5
+      effects:
+      - effect: PredictionBlock
+        value: 1
+      - effect: DownSpeedUp
+        value: 4
+  - minos: 0000000000000000000000000000000001000000ffffffff01000000000000000100000001000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
     selectedGroupOptions:
@@ -165,7 +233,37 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
-  - minos: 000000000000000000000000000000000000000000000000000000000100000000000000000000000000000001000000010000000100000001000000ffffffff
+    - id: 1
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: NextGaugeDown
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: PredictionBRelease
+        value: 1
+    - id: 3
+      effects:
+      - effect: DownSpeedUp
+        value: 1
+    - id: 4
+      effects:
+      - effect: DownSpeedDown
+        value: 1
+    - id: 5
+      effects:
+      - effect: RotBlockCancel
+        value: 1
+      - effect: HoldRelease
+        value: 1
+    - id: 6
+      effects:
+      - effect: HoldBlock
+        value: 1
+  - minos: 00000000000000000000000000000000000000000000000001000000010000000100000001000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
     selectedGroupOptions:
@@ -173,6 +271,32 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: HoldBlock
+        value: 1
+    - id: 2
+      effects:
+      - effect: PredictionBlock
+        value: 1
+    - id: 3
+      effects:
+      - effect: DownSpeedDown
+        value: 2
+      - effect: NextGaugeDown
+        value: 1
+    - id: 4
+      effects:
+      - effect: PredictionBRelease
+        value: 1
+      - effect: NextGaugeUp
+        value: 3
+    - id: 5
+      effects:
+      - effect: DownSpeedUp
+        value: 3
+      - effect: BombBlock
+        value: 2
   - minos: 0000000000000000000000000000000001000000ffffffff00000000000000000100000001000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
@@ -181,6 +305,36 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: DownSpeedUp
+        value: 4
+    - id: 2
+      effects:
+      - effect: DownSpeedDown
+        value: 1
+    - id: 3
+      effects:
+      - effect: StripesBlock
+        value: 1
+      - effect: HoldRelease
+        value: 1
+    - id: 4
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: PredictionBRelease
+        value: 1
+    - id: 5
+      effects:
+      - effect: PredictionBlock
+        value: 1
+      - effect: HoldBlock
+        value: 1
+      - effect: NextGaugeDown
+        value: 4
   - minos: 0000000000000000000000000000000000000000ffffffff01000000000000000100000001000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
@@ -189,6 +343,28 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: RotBlockCancel
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: DownSpeedUp
+        value: 2
+    - id: 3
+      effects:
+      - effect: StripesBlock
+        value: 1
+      - effect: PredictionBRelease
+        value: 1
+    - id: 4
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: NextGaugeDown
+        value: 4
   - minos: 0100000000000000010000000000000001000000ffffffff01000000000000000000000000000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
@@ -197,23 +373,83 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: HoldBlock
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: DownSpeedDown
+        value: 1
+    - id: 3
+      effects:
+      - effect: NextGaugeUp
+        value: 2
+      - effect: DownSpeedDown
+        value: 1
+      - effect: HoldRelease
+        value: 1
+    - id: 4
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: DownSpeedDown
+        value: 1
+    - id: 5
+      effects:
+      - effect: HoldRelease
+        value: 1
+      - effect: HealRateUp
+        value: 1
+      - effect: BombBlock
+        value: 1
   - minos: 00000000000000000000000000000000000000000100000001000000000000000000000000000000010000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
     selectedGroupOptions:
     - id: 0
       effects:
-      - effect: None
-        value: 0
+      - effect: PredictionBRelease
+        value: 1
+    - id: 1
+      effects:
+      - effect: NextGaugeDown
+        value: 2
+    - id: 2
+      effects:
+      - effect: DownSpeedUp
+        value: 4
+    - id: 3
+      effects:
+      - effect: StripesBlockRelease
+        value: 2
+    - id: 4
+      effects:
+      - effect: HoldRelease
+        value: 1
   - minos: 0000000000000000000000000000000000000000ffffffff00000000000000000000000000000000000000000000000000000000000000000000000000000000
     rows: 4
     cols: 4
     selectedGroupOptions:
     - id: 0
       effects:
-      - effect: None
-        value: 0
-  - minos: 000000000100000000000000000000000000000001000000000000000000000001000000ffffffff010000000000000000000000010000000000000000000000
+      - effect: DownSpeedUp
+        value: 2
+    - id: 1
+      effects:
+      - effect: HoldRelease
+        value: 1
+    - id: 2
+      effects:
+      - effect: NextGaugeDown
+        value: 2
+    - id: 3
+      effects:
+      - effect: StripesBlockRelease
+        value: 1
+  - minos: 00000000010000000000000000000000000000000100000000000000000000000100000001000000010000000000000000000000010000000000000000000000
     rows: 4
     cols: 4
     selectedGroupOptions:
@@ -221,3 +457,39 @@ MonoBehaviour:
       effects:
       - effect: None
         value: 0
+    - id: 1
+      effects:
+      - effect: PredictionBlock
+        value: 1
+      - effect: DownSpeedUp
+        value: 1
+    - id: 2
+      effects:
+      - effect: HoldBlock
+        value: 1
+      - effect: HealRateUp
+        value: 1
+      - effect: DownSpeedUp
+        value: 4
+    - id: 3
+      effects:
+      - effect: PredictionBlock
+        value: 1
+      - effect: HoldRelease
+        value: 1
+    - id: 4
+      effects:
+      - effect: HealRateUp
+        value: 1
+      - effect: DownSpeedDown
+        value: 1
+      - effect: NextGaugeUp
+        value: 2
+    - id: 5
+      effects:
+      - effect: BombBlock
+        value: 1
+      - effect: NextGaugeUp
+        value: 1
+      - effect: DownSpeedUp
+        value: 3

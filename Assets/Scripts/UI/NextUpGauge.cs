@@ -38,8 +38,6 @@ public class NextUpGauge : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             gaugeList.Add(Instantiate(gaugeObj, gaugeParent.transform, true));
-            var anims =  gaugeList[^1].GetComponents<DOTweenAnimation>();
-            var openAnim = anims.First(id => id.id == "open");
         }
         nowIndex = count - 1 ;
         maxIndex = count;
@@ -57,44 +55,36 @@ public class NextUpGauge : MonoBehaviour
 
     public void ReCount(int count)
     {
+
         if(count != maxIndex)
         {
             if (count < maxIndex)
             {
-                // ­‚È‚¢•ªíœ
-                for (int i = count - 1; i < gaugeParent.transform.childCount; i++)
+                
+                // ï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½íœ
+                for (int i = 0; i < maxIndex - count; i++)
                 {
-                    Destroy(gaugeParent.transform.GetChild(i).gameObject);
+                    // 1ã‚ˆã‚Šå°ã•ãã¯ã—ãªã„
+                    if (gaugeList.Count == 1)
+                    {
+                        break;
+                    }
+                    Destroy(gaugeList[^1].gameObject);
                     gaugeList.RemoveAt(gaugeList.Count - 1);
                 }
+
+                nowIndex = count-1;
                 maxIndex = count;
             }
             else
             {
-                for (int i = maxIndex-1; i < count; i++)
+                for (int i = maxIndex; i < count; i++)
                 {
                     gaugeList.Add(Instantiate(gaugeObj, gaugeParent.transform, true));
-                    DOTween.Restart(gaugeList[i], "close");
                 }
                 maxIndex = count;
             }
         }
-
-        if(count < maxIndex)
-        {
-            for(int i=nowIndex; i> count; i--)
-            {
-                DOTween.Restart(gaugeList[nowIndex], "close");
-                nowIndex--;
-            }  
-        }
-        for (int i = count - 1; i < gaugeParent.transform.childCount; i++)
-        {
-            Destroy(gaugeParent.transform.GetChild(i).gameObject);
-            gaugeList.RemoveAt(gaugeList.Count - 1);
-        }
-
-
     }
 
     public void DownCount()
