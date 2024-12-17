@@ -83,8 +83,8 @@ public class WeaponEffectGroup
         this.id = id;
         this.effects = effects;
     }
-    public int id;
-    public List<WeaponEffect> effects;
+    [SerializeField] public int id;
+    [SerializeField] public List<WeaponEffect> effects;
 }
 
 [Serializable]
@@ -95,8 +95,8 @@ public class WeaponEffect
         effect = effectStatus;
         this.value = value;
     }
-    public EffectStatus effect;
-    public int value;
+    [SerializeField] public EffectStatus effect;
+    [SerializeField] public int value;
 }
 /*
 #if UNITY_EDITOR

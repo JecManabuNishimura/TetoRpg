@@ -24,7 +24,15 @@ public struct Status
     }
 
     public static Status operator +(Status a, Status b)
-        => new Status(a.maxHp + b.hp, a.atk + b.atk, a.def + b.def,a.critical + b.critical);
+    {
+        Status status = new Status();
+        status.hp = Mathf.Max(1,a.maxHp + b.hp);
+        status.atk = Mathf.Max(0, a.atk + b.atk);
+        status.def = Mathf.Max(0, a.def + b.def);
+        status.critical = Mathf.Max(0, a.critical + b.critical);
+        return status;
+    }
+        
 
     public static Status Zero()
     {

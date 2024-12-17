@@ -20,4 +20,8 @@ Sh01,5,AtkUp,1
 Sh01,6,DefDown,5
 Sh01,6,AtkUp,4
 He01,0,None,0
+He01,1,DefUp,2
+He01,2,DefUp,3
+He01,3,DefUp,4
+He01,0,None,0
 Ar01,0,None,0

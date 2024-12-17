@@ -71,3 +71,21 @@ MonoBehaviour:
   - id: 4
     groupId: 2
     dropRarity: 6
+  - id: 5
+    groupId: 0
+    dropRarity: 6
+  - id: 5
+    groupId: 1
+    dropRarity: 6
+  - id: 5
+    groupId: 2
+    dropRarity: 6
+  - id: 6
+    groupId: 0
+    dropRarity: 6
+  - id: 6
+    groupId: 1
+    dropRarity: 6
+  - id: 6
+    groupId: 2
+    dropRarity: 6
