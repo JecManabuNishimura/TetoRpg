@@ -540,7 +540,22 @@ public class ArmorView : EquipmentDataCreate, IMenu
             //EquipmentData eData = EquipmentMaster.Entity.GetEquipmentData(eName[haveCursorPos].Item1);
             foreach (var list in eName)
             {
-                foreach (var status in WeaponEffectMaster.Instance.weaponEffectGroups[list.WeaponId][list.groupID].effects)
+                WeaponEffectMaster.Entity.GetWeaponEffect(list.WeaponId, list.groupID).effects
+                    .Where(e => e.effect != EffectStatus.None)
+                    .ToList()
+                    .ForEach(status =>
+                    {
+                        var data = GameObject.Instantiate(
+                            armorData.effectObj,
+                            armorData.ExplantionEffectGroup.transform);
+
+                        data.GetComponent<EffectCreater>().SetText(
+                            EffectTextMaster.Entity.effectExplanation[status.effect],
+                            status.value.ToString());
+                    });
+                    /*
+                
+                foreach (var status in WeaponEffectMaster.Entity.weaponEffectGroups[list.WeaponId][list.groupID].effects)
                 {
                     if (status.effect != EffectStatus.None)
                     {
@@ -554,6 +569,7 @@ public class ArmorView : EquipmentDataCreate, IMenu
                         );
                     }
                 }
+                */
             }
         }
     }
@@ -716,6 +732,20 @@ public class EquipmentDataCreate
             var eName = SelectEquipment(i);
             if (eName != null)
             {
+                WeaponEffectMaster.Entity.GetWeaponEffect(eName.WeaponId, eName.groupID).effects
+                    .Where(e => e.effect != EffectStatus.None)
+                    .ToList()
+                    .ForEach(status =>
+                    {
+                        var data = GameObject.Instantiate(
+                            armorData.effectObj,
+                            armorData.ExplantionEffectGroup.transform);
+
+                        data.GetComponent<EffectCreater>().SetText(
+                            EffectTextMaster.Entity.effectExplanation[status.effect],
+                            status.value.ToString());
+                    });
+                /*
                 foreach (var status in WeaponEffectMaster.Instance.weaponEffectGroups[eName.WeaponId][eName.groupID].effects)
                 {
                     if (status.effect != EffectStatus.None)
@@ -730,6 +760,7 @@ public class EquipmentDataCreate
                         );
                     }
                 }
+                */
             }
         }
     }

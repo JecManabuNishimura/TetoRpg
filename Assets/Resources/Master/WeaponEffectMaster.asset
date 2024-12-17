@@ -1,0 +1,160 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83a772bf64fb8884da3492018ea82981, type: 3}
+  m_Name: WeaponEffectMaster
+  m_EditorClassIdentifier: 
+  WeaponDatas:
+  - weaponId: He01
+    groupData:
+      id: 0
+      effects:
+      - effect: 0
+        value: 0
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 1
+      effects:
+      - effect: 6
+        value: 5
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 2
+      effects:
+      - effect: 4
+        value: 3
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 3
+      effects:
+      - effect: 3
+        value: 10
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 5
+      effects:
+      - effect: 3
+        value: 6
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 6
+      effects:
+      - effect: 4
+        value: 6
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 7
+      effects:
+      - effect: 4
+        value: 7
+      - effect: 6
+        value: 5
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 8
+      effects:
+      - effect: 6
+        value: 3
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 9
+      effects:
+      - effect: 4
+        value: 15
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 10
+      effects:
+      - effect: 4
+        value: 13
+      - effect: 6
+        value: 5
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 11
+      effects:
+      - effect: 6
+        value: 6
+      - effect: 3
+        value: 8
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 12
+      effects:
+      - effect: 4
+        value: 13
+      - effect: 6
+        value: 10
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 13
+      effects:
+      - effect: 4
+        value: 14
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 14
+      effects:
+      - effect: 3
+        value: 3
+      - effect: 6
+        value: 5
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 17
+      effects:
+      - effect: 4
+        value: 9
+    deleteFlag: 0
+  - weaponId: He01
+    groupData:
+      id: 19
+      effects:
+      - effect: 4
+        value: 5
+      - effect: 6
+        value: 7
+    deleteFlag: 0
+  - weaponId: We01
+    groupData:
+      id: 0
+      effects:
+      - effect: 0
+        value: 0
+    deleteFlag: 0
+  - weaponId: Sh01
+    groupData:
+      id: 0
+      effects:
+      - effect: 0
+        value: 0
+    deleteFlag: 0
+  - weaponId: Ar01
+    groupData:
+      id: 0
+      effects:
+      - effect: 0
+        value: 0
+    deleteFlag: 0

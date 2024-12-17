@@ -139,13 +139,10 @@ public class EquipmentData
         };
         try
         {
-            foreach(var e in WeaponEffectMaster.Instance.weaponEffectGroups[id][gourpId].effects)
-            {
-                if (effectActions.ContainsKey(e.effect))
-                {
-                    effectActions[e.effect](e.value);
-                }
-            }
+            WeaponEffectMaster.Entity.GetWeaponEffect(id, gourpId).effects
+                .Where(e => effectActions.ContainsKey(e.effect))
+                .ToList()
+                .ForEach(e => effectActions[e.effect](e.value));
         }
         catch (Exception e)
         {

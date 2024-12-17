@@ -20,8 +20,6 @@ public class MinoFactoryWindow : EditorWindow
         }
     }
     
-
-    
     // 画像を格納する変数
     private Texture2D buttonFalseImage;
     private Texture2D buttonTrueImage;

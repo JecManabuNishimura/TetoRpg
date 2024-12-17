@@ -5,13 +5,151 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-//[CreateAssetMenu(fileName = "WeaponEffectMaster", menuName = "Scriptable Objects/WeaponEffectMaster")]
-public class WeaponEffectMaster : MonoBehaviour //: ScriptableObject
+[CreateAssetMenu(fileName = "WeaponEffectMaster", menuName = "Scriptable Objects/WeaponEffectMaster")]
+public class WeaponEffectMaster : ScriptableObject
+{
+    private static WeaponEffectMaster _entity;
+
+    public static WeaponEffectMaster Entity
+    {
+        get
+        {
+            //初アクセス時にロードする
+            if (_entity == null)
+            {
+                _entity = Resources.Load<WeaponEffectMaster>("Master/WeaponEffectMaster");
+
+                //ロード出来なかった場合はエラーログを表示
+                if (_entity == null)
+                {
+                    Debug.LogError(nameof(WeaponEffectMaster) + " not found");
+                }
+            }
+
+            return _entity;
+        }
+    }
+
+
+    public List<CreateWeaponData> WeaponDatas = new();
+
+    public WeaponEffectGroup GetWeaponEffect(string weaponId, int groupId)
+    {
+         return WeaponDatas.FirstOrDefault(x => x.weaponId == weaponId && x.groupData.id == groupId)?.groupData;
+
+    }
+}
+#if UNITY_EDITOR
+[CustomEditor(typeof(WeaponEffectMaster))]
+public class WeaponEffectMasterEditor : Editor
+{
+    private string searchQuery = "";
+    public override void OnInspectorGUI()
+    {
+        // WeaponEffectMasterのインスタンスを取得
+        WeaponEffectMaster weaponEffectMaster = (WeaponEffectMaster)target;
+        searchQuery = EditorGUILayout.TextField("Search", searchQuery);
+        // WeaponDatasリストの表示
+        EditorGUILayout.LabelField("WeaponDatas", EditorStyles.boldLabel);
+        // WeaponDatasを検索文字列に基づいてフィルタリング
+        var filteredWeaponDatas = string.IsNullOrEmpty(searchQuery) 
+            ? weaponEffectMaster.WeaponDatas 
+            : weaponEffectMaster.WeaponDatas
+                .Where(weaponData => weaponData.groupData.effects
+                    .Any(e => e.effect.ToString().Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+        for (int i = 0; i < filteredWeaponDatas.Count; i++)
+        {
+            var weaponData = filteredWeaponDatas[i];
+
+            // WeaponIdの表示
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                EditorGUILayout.TextField(weaponData.weaponId + "  " + weaponData.groupData.id, GUILayout.Width(60));
+                if (GUILayout.Button("Delete",GUILayout.Width(100)))
+                {
+                    weaponEffectMaster.WeaponDatas.RemoveAt(i);
+                }
+            }
+
+            EditorGUI.indentLevel++;
+            foreach (var e in weaponData.groupData.effects)
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    GUIStyle popupStyle = new GUIStyle(EditorStyles.popup);
+                    if (e.effect.ToString().Contains("Down"))
+                    {
+                        popupStyle.normal.textColor = Color.red;
+                    }
+                    else
+                    {
+                        popupStyle.normal.textColor = Color.blue;
+                    }
+                    
+                    e.effect = (EffectStatus)EditorGUILayout.EnumPopup(e.effect, popupStyle, GUILayout.Width(150));
+
+                    e.value = EditorGUILayout.IntField(e.value, GUILayout.Width(60));
+                }
+            }
+            EditorGUI.indentLevel--;
+            // 区切り線を表示（オプション）
+            EditorGUILayout.Space();
+        }
+
+        // 変更があった場合、インスペクタを更新
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(weaponEffectMaster);
+        }
+
+        // デフォルトのインスペクタを表示（必要に応じて）
+        base.OnInspectorGUI();
+    }
+}
+#endif
+
+[Serializable]
+public class WeaponEffectGroup
+{
+    public WeaponEffectGroup(int id, List<WeaponEffect> effects)
+    {
+        this.id = id;
+        this.effects = effects;
+    }
+    [SerializeField] public int id;
+    [SerializeField] public List<WeaponEffect> effects;
+}
+
+[Serializable]
+public class WeaponEffect
+{
+    public WeaponEffect(EffectStatus effectStatus, int value)
+    {
+        effect = effectStatus;
+        this.value = value;
+    }
+    [SerializeField] public EffectStatus effect;
+    [SerializeField] public int value;
+}
+
+[Serializable]
+public class CreateWeaponData
+{
+    [SerializeField] public string weaponId;
+    [SerializeField] public WeaponEffectGroup groupData;
+    [SerializeField] public bool deleteFlag;
+
+}
+
+/*
+[CreateAssetMenu(fileName = "WeaponEffectMaster", menuName = "Scriptable Objects/WeaponEffectMaster")]
+public class WeaponEffectMaster : ScriptableObject
 {
     public static WeaponEffectMaster Instance;
     
 
-    public  Dictionary<string, List<WeaponEffectGroup>> weaponEffectGroups = new ();
+    public  SerializableDictionary<string, List<WeaponEffectGroup>> weaponEffectGroups = new ();
 
     private void Awake()
     {
@@ -23,7 +161,7 @@ public class WeaponEffectMaster : MonoBehaviour //: ScriptableObject
         
         ReadCSV("WeaponEffectList");
     }
-    
+  
     public void ReadCSV(string fileName)
     {
         TextAsset csvFile = Resources.Load<TextAsset>(fileName);
@@ -75,30 +213,8 @@ public class WeaponEffectMaster : MonoBehaviour //: ScriptableObject
     }
 }
 
-[Serializable]
-public class WeaponEffectGroup
-{
-    public WeaponEffectGroup(int id, List<WeaponEffect> effects)
-    {
-        this.id = id;
-        this.effects = effects;
-    }
-    [SerializeField] public int id;
-    [SerializeField] public List<WeaponEffect> effects;
-}
 
-[Serializable]
-public class WeaponEffect
-{
-    public WeaponEffect(EffectStatus effectStatus, int value)
-    {
-        effect = effectStatus;
-        this.value = value;
-    }
-    [SerializeField] public EffectStatus effect;
-    [SerializeField] public int value;
-}
-/*
+
 #if UNITY_EDITOR
 [CustomEditor(typeof(WeaponEffectMaster))]
 public class WeaponEffectMasterEditor : Editor
@@ -204,4 +320,5 @@ public class WeaponEffectMasterEditor : Editor
         EditorGUI.DrawRect(rect, color);  // 指定した色で矩形（線）を描画
     }
 }
-#endif*/
+#endif
+*/

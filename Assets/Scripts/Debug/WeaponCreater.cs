@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
@@ -13,13 +14,7 @@ public class WeaponCreater : EditorWindow
         public int ToValue;
         public int FromValue;
     }
-    [Serializable]
-    public class CreateWeaponData
-    {
-        [SerializeField] public string weaponId;
-        [SerializeField] public WeaponEffectGroup groupData;
-        [SerializeField] public bool deleteFlag;
-    }
+
     private string weaponId;
     private int createCount;
     private int effectCount;
@@ -43,49 +38,76 @@ public class WeaponCreater : EditorWindow
     
     private void OnGUI()
     {
-        if (GUILayout.Button("Create", GUILayout.Width(150), GUILayout.Height(20)))
+        using (new EditorGUILayout.HorizontalScope("Box"))
         {
-            weapons.Clear();
-            if (weaponId == "")
+            if (GUILayout.Button("Create", GUILayout.Width(150), GUILayout.Height(20)))
             {
-                Debug.Log("WeaponId‚ðŽw’è‚µ‚Ä‚­‚¾‚³‚¢");
-                return;
-            }
-            if(createCount <= 0)
-            {
-                Debug.Log("createCount‚ð1ˆÈã‚É‚µ‚Ä‚­‚¾‚³‚¢");
-                return;
-            }
-            if (effectCount <= 0)
-            {
-                Debug.Log("effectCount‚ð1ˆÈã‚É‚µ‚Ä‚­‚¾‚³‚¢");
-                return;
-            }
-            for(int i=0; i< createCount; i++)
-            {
-                CreateWeaponData weaponData = new CreateWeaponData();
-                weaponData.weaponId = weaponId;
-                weaponData.groupData = new(i,new List<WeaponEffect>());
-                List<int> numberList = new List<int>();
-                for(int c=0; c< effects.Count; c++)
+                weapons.Clear();
+                if (weaponId == "")
                 {
-                    numberList.Add(c);
+                    Debug.Log("WeaponId‚ðŽw’è‚µ‚Ä‚­‚¾‚³‚¢");
+                    return;
                 }
 
-                int count = UnityEngine.Random.Range(1, effectCount + 1);
-                for (int j = 0; j < count; j++)
+                if (createCount <= 0)
                 {
-                    int randomNum = UnityEngine.Random.Range(0, numberList.Count);
-                    var rand = effects[numberList[randomNum]];
-                    numberList.RemoveAt(randomNum);
-                    weaponData.groupData.effects.Add(
-                        new WeaponEffect(
-                            rand.effect,
-                            UnityEngine.Random.Range(rand.ToValue, rand.FromValue + 1)));
+                    Debug.Log("createCount‚ð1ˆÈã‚É‚µ‚Ä‚­‚¾‚³‚¢");
+                    return;
                 }
-                weapons.Add(weaponData);
+
+                if (effectCount <= 0)
+                {
+                    Debug.Log("effectCount‚ð1ˆÈã‚É‚µ‚Ä‚­‚¾‚³‚¢");
+                    return;
+                }
+
+                for (int i = 0; i < createCount; i++)
+                {
+                    CreateWeaponData weaponData = new CreateWeaponData();
+                    weaponData.weaponId = weaponId;
+                    weaponData.groupData = new(i, new List<WeaponEffect>());
+                    List<int> numberList = new List<int>();
+                    for (int c = 0; c < effects.Count; c++)
+                    {
+                        numberList.Add(c);
+                    }
+
+                    int count = UnityEngine.Random.Range(1, effectCount + 1);
+                    for (int j = 0; j < count; j++)
+                    {
+                        int randomNum = UnityEngine.Random.Range(0, numberList.Count);
+                        var rand = effects[numberList[randomNum]];
+                        numberList.RemoveAt(randomNum);
+                        weaponData.groupData.effects.Add(
+                            new WeaponEffect(
+                                rand.effect,
+                                UnityEngine.Random.Range(rand.ToValue, rand.FromValue + 1)));
+                    }
+
+                    weapons.Add(weaponData);
+                }
+            }
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Writing", GUILayout.Width(150), GUILayout.Height(20)))
+            {
+                string fileName = "Master/WeaponEffectMaster";
+                
+                WeaponEffectMaster database = Resources.Load<WeaponEffectMaster>(fileName);
+
+                foreach (var w in weapons)
+                {
+                    CreateWeaponData data = new()
+                    {
+                        weaponId = w.weaponId,
+                        groupData = w.groupData,
+                    };
+                    database.WeaponDatas.Add(data);
+                }
+                EditorUtility.SetDirty(database);
+                AssetDatabase.SaveAssets();
             }
         }
+
         using (new EditorGUILayout.VerticalScope(GUILayout.Width(400)))
         {
             using (new EditorGUILayout.HorizontalScope("Box", GUILayout.Width(200)))
