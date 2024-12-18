@@ -15,6 +15,7 @@ public class TreasureDropMaster : ScriptableObject
     {
         int totalcount = minoDropData.Count + itemDropData.Count;
         List<ItemDropData> item;
+        /*
         if (Random.Range(0, totalcount) < minoDropData.Count)
         {
             item = minoDropData;
@@ -23,6 +24,8 @@ public class TreasureDropMaster : ScriptableObject
         {
             item = itemDropData;
         }
+        */
+        item = minoDropData;
         //var allData = itemDropData.Concat(minoDropData).ToList();
         int rate = Random.Range(0, 100);
         Rarity rarity = Rarity.D;
@@ -61,10 +64,7 @@ public class TreasureDropMaster : ScriptableObject
             if (items.Count == 0)
             {
                 int current = (int)rarity;
-                if (current > 0)
-                {
-                    rarity = (Rarity)(current - 1);
-                }
+                rarity = (Rarity)(current + 1);
                 items = item.Where(x => x.dropRarity == rarity).ToList();
             }
             else

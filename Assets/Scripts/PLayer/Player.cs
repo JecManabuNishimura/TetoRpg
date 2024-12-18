@@ -147,25 +147,29 @@ public class Player : CharactorData, ICharactor
         // 各装備データを取得し、null チェックを行う
         if (belongingsEquipment.weapon != null)
         {
-            var weaponData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.weapon.WeaponId);    
+            var weaponData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.weapon.WeaponId);
+            weaponData.groupId = belongingsEquipment.weapon.groupID;
             totalStatus += weaponData.GetTotalStatus();
         }
 
         if (belongingsEquipment.shield != null)
         {
             var shieldData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.shield.WeaponId);
-            totalStatus += shieldData.GetTotalStatus();
+            shieldData.groupId = belongingsEquipment.shield.groupID;
+            totalStatus +=  shieldData.GetTotalStatus();
         }
         
         if (belongingsEquipment.helmet != null)
         {
             var helmetData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.helmet.WeaponId);
+            helmetData.groupId = belongingsEquipment.helmet.groupID;
             totalStatus += helmetData.GetTotalStatus();
         }
 
         if (belongingsEquipment.armor != null)
         {
             var armorData = EquipmentMaster.Entity.GetEquipmentData(belongingsEquipment.armor.WeaponId);
+            armorData.groupId = belongingsEquipment.armor.groupID;
             totalStatus += armorData.GetTotalStatus();
         }
     }

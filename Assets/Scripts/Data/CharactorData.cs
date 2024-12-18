@@ -30,6 +30,7 @@ public struct Status
         status.atk = Mathf.Max(0, a.atk + b.atk);
         status.def = Mathf.Max(0, a.def + b.def);
         status.critical = Mathf.Max(0, a.critical + b.critical);
+        status.maxHp = Mathf.Max(1,a.maxHp + b.hp);
         return status;
     }
         

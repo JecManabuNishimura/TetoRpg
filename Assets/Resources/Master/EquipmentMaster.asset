@@ -12,4 +12,1282 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e73a07b17e26044860df5e174ce20c, type: 3}
   m_Name: EquipmentMaster
   m_EditorClassIdentifier: 
-  equipData: []
+  equipData:
+  - id: We01
+    name: "\u666E\u901A\u306E\u5263"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 5
+      def: 0
+      critical: 0
+  - id: We02
+    name: "\u30DB\u30CD\u3053\u3093\u307C\u3046"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 10
+      def: 0
+      critical: 0
+  - id: We03
+    name: "\u3064\u308B\u306F\u3057"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 20
+      def: 0
+      critical: 0
+  - id: We04
+    name: "\u304A\u304A\u304D\u306A\u6728\u5200"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 35
+      def: 0
+      critical: 0
+  - id: We05
+    name: "\u5175\u58EB\u306E\u77ED\u5263"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 40
+      def: 0
+      critical: 0
+  - id: We06
+    name: "\u5305\u4E01"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 40
+      def: 0
+      critical: 0
+  - id: We07
+    name: "\u4E08\u592B\u306A\u8599\u5200"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 40
+      def: 5
+      critical: 0
+  - id: We08
+    name: "\u4E0B\u3063\u7AEF\u306E\u30CA\u30A4\u30D5"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 40
+      def: 0
+      critical: 0
+  - id: We09
+    name: "\u3072\u304B\u308A\u306E\u3064\u308B\u304E"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 30
+      def: 0
+      critical: 0
+  - id: We10
+    name: "\u30D4\u30B3\u30D4\u30B3\u30CF\u30F3\u30DE\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 20
+      def: 0
+      critical: 0
+  - id: We11
+    name: "\u76D7\u8CCA\u306E\u30CA\u30A4\u30D5"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 40
+      def: 0
+      critical: 0
+  - id: We12
+    name: "\u3044\u3084\u3057\u306E\u30EC\u30A4\u30D4\u30A2"
+    groupId: 0
+    status:
+      maxHp: 5
+      hp: 0
+      atk: 40
+      def: 0
+      critical: 0
+  - id: We13
+    name: "\u30A2\u30B5\u30B7\u30F3\u30C0\u30AC\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 50
+      def: 0
+      critical: 0
+  - id: We14
+    name: "\u9B54\u7269\u306E\u722A"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 55
+      def: 0
+      critical: 0
+  - id: We15
+    name: "\u30A2\u30A4\u30A2\u30F3\u30BD\u30FC\u30C9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 70
+      def: 0
+      critical: 0
+  - id: We16
+    name: "\u5175\u58EB\u306E\u5263"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 80
+      def: 0
+      critical: 0
+  - id: We17
+    name: "\u30AC\u30E9\u30B9\u306E\u5927\u5263"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 60
+      def: 0
+      critical: 0
+  - id: We18
+    name: "\u5DE8\u5927\u30C8\u30DE\u30DB\u30FC\u30AF"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 70
+      def: 0
+      critical: 0
+  - id: We19
+    name: "\u30E2\u30FC\u30CB\u30F3\u30B0\u30B9\u30BF\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 80
+      def: 0
+      critical: 0
+  - id: We20
+    name: "\u30A8\u30CD\u30EB\u30AE\u30FC\u30AC\u30F3\u30C8\u30EC\u30C3\u30C8"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 70
+      def: 0
+      critical: 0
+  - id: We21
+    name: "\u30F4\u30A1\u30F3\u30D1\u30A4\u30A2\u30BD\u30FC\u30C9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 70
+      def: 0
+      critical: 0
+  - id: We22
+    name: "\u30B4\u30FC\u30EC\u30E0\u30CF\u30F3\u30DE\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 70
+      def: 30
+      critical: 0
+  - id: We23
+    name: "\u30B5\u30E0\u30E9\u30A4\u30BD\u30FC\u30C9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 90
+      def: 0
+      critical: 0
+  - id: We24
+    name: "\u8FD1\u885B\u5175\u306E\u4E21\u624B\u5263"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 120
+      def: 0
+      critical: 0
+  - id: We25
+    name: "\u5929\u4F7F\u306E\u30EC\u30A4\u30D4\u30A2"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 100
+      def: 0
+      critical: 0
+  - id: We26
+    name: "\u30ED\u30DC\u30C3\u30C8\u30C9\u30EA\u30EB"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 120
+      def: 0
+      critical: 0
+  - id: We27
+    name: "\u60AA\u9B54\u30B9\u30D4\u30A2"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 150
+      def: 0
+      critical: 0
+  - id: We28
+    name: "\u30DF\u30B9\u30EA\u30EB\u30C0\u30AC\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 130
+      def: 0
+      critical: 0
+  - id: We29
+    name: "\u6D77\u8CCA\u30AB\u30C8\u30E9\u30B9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 120
+      def: 0
+      critical: 0
+  - id: We30
+    name: "\u30AF\u30E9\u30FC\u30B1\u30F3\u30B9\u30EC\u30A4\u30E4\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 140
+      def: 0
+      critical: 0
+  - id: We31
+    name: "\u30D6\u30E9\u30C3\u30C9\u30D5\u30A1\u30F3\u30B0"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 110
+      def: 0
+      critical: 0
+  - id: We32
+    name: "\u5951\u7D04\u306E\u938C"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 180
+      def: 0
+      critical: 0
+  - id: We33
+    name: "\u30DE\u30B5\u30E0\u30CD"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 130
+      def: 0
+      critical: 0
+  - id: We34
+    name: "\u30DF\u30EA\u30BF\u30EA\u30FC\u30CA\u30A4\u30D5"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 150
+      def: 0
+      critical: 0
+  - id: We35
+    name: "\u30B0\u30E9\u30D3\u30C6\u30A3\u30E1\u30A4\u30B9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 140
+      def: 0
+      critical: 0
+  - id: We36
+    name: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30D6\u30EC\u30FC\u30C9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 120
+      def: 0
+      critical: 0
+  - id: We37
+    name: "\u795D\u798F\u306E\u30EC\u30A4\u30D4\u30A2"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 140
+      def: 0
+      critical: 0
+  - id: We38
+    name: "\u307E\u307C\u308D\u3057\u306E\u5927\u69CD"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 140
+      def: 0
+      critical: 0
+  - id: We39
+    name: "\u3067\u3093\u305B\u3064\u306E\u5927\u5263"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 160
+      def: 0
+      critical: 0
+  - id: We40
+    name: "\u30A2\u30DE\u30CE\u30E0\u30E9\u30AF\u30E2"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 150
+      def: 0
+      critical: 0
+  - id: We41
+    name: "\u30CF\u30EB\u30D0\u30FC\u30C9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 190
+      def: 0
+      critical: 0
+  - id: We42
+    name: "\u306F\u3084\u3076\u3055\u306E\u5263"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 150
+      def: 0
+      critical: 0
+  - id: We43
+    name: "\u30A2\u30C8\u30E0\u30A6\u30A7\u30DD\u30F3"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 230
+      def: 0
+      critical: 0
+  - id: We44
+    name: "\u30A4\u30F3\u30D5\u30A3\u30CB\u30C6\u30A3\u30A8\u30C3\u30B8"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 210
+      def: 0
+      critical: 0
+  - id: We45
+    name: "\u30C9\u30E9\u30B4\u30F3\u30AF\u30ED\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 280
+      def: 0
+      critical: 0
+  - id: We46
+    name: "\u30DE\u30B9\u30BF\u30FC\u30BD\u30FC\u30C9"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 260
+      def: 0
+      critical: 0
+  - id: We47
+    name: "\u30A8\u30AF\u30B9\u30AB\u30EA\u30D0\u30FC"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 300
+      def: 0
+      critical: 0
+  - id: Sh01
+    name: "\u666E\u901A\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Sh02
+    name: "\u65C5\u7ACB\u3061\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 5
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Sh03
+    name: "\u3046\u308D\u3053\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 5
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Sh04
+    name: "\u30A2\u30A4\u30A2\u30F3\u30B7\u30FC\u30EB\u30C9"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 8
+      critical: 0
+  - id: Sh05
+    name: "\u3057\u3093\u3074\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Sh06
+    name: "\u5192\u967A\u8005\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Sh07
+    name: "\u6226\u58EB\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Sh08
+    name: "\u30B7\u30EB\u30D0\u30FC\u30B7\u30FC\u30EB\u30C9"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Sh09
+    name: "\u30DF\u30E9\u30FC\u30B7\u30FC\u30EB\u30C9"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Sh10
+    name: "\u3072\u304B\u308A\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Sh11
+    name: "\u3044\u3084\u3057\u306E\u304A\u307E\u3082\u308A"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Sh12
+    name: "\u30A2\u30B5\u30B7\u30F3\u30DE\u30F3\u30C8"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Sh13
+    name: "\u5175\u58EB\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 15
+      critical: 0
+  - id: Sh14
+    name: "\u30AC\u30E9\u30B9\u306E\u5927\u696F"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Sh15
+    name: "\u30A8\u30CD\u30EB\u30AE\u30FC\u30B7\u30FC\u30EB\u30C9"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 20
+      critical: 0
+  - id: Sh16
+    name: "\u30B8\u30E3\u30A4\u30A2\u30F3\u30C8\u30D9\u30EB\u30C8"
+    groupId: 0
+    status:
+      maxHp: 100
+      hp: 0
+      atk: 0
+      def: 0
+      critical: 0
+  - id: Sh17
+    name: "\u30B5\u30E0\u30E9\u30A4\u306E\u7BED\u624B"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 0
+      def: 20
+      critical: 0
+  - id: Sh18
+    name: "\u8FD1\u885B\u5175\u306E\u5927\u696F"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: Sh19
+    name: "\u5929\u4F7F\u306E\u304A\u307E\u3082\u308A"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: Sh20
+    name: "\u30ED\u30DC\u30C3\u30C8\u30A2\u30FC\u30E0"
+    groupId: 0
+    status:
+      maxHp: 55
+      hp: 0
+      atk: 0
+      def: 35
+      critical: 0
+  - id: Sh21
+    name: "\u60AA\u9B54\u306E\u304A\u307E\u3082\u308A"
+    groupId: 0
+    status:
+      maxHp: 55
+      hp: 0
+      atk: 0
+      def: 35
+      critical: 0
+  - id: Sh22
+    name: "\u7ADC\u6BBA\u3057\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 10
+      def: 40
+      critical: 0
+  - id: Sh23
+    name: "\u5951\u7D04\u306E\u6307\u8F2A"
+    groupId: 0
+    status:
+      maxHp: 80
+      hp: 0
+      atk: 10
+      def: 60
+      critical: 0
+  - id: Sh24
+    name: "\u30D5\u30E9\u30A4\u30D1\u30F3"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: Sh25
+    name: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30D0\u30C3\u30AF\u30E9\u30FC"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: Sh26
+    name: "\u795D\u798F\u306E\u304A\u307E\u3082\u308A"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 45
+      critical: 0
+  - id: Sh27
+    name: "\u307E\u307C\u308D\u3057\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: Sh28
+    name: "\u3067\u3093\u305B\u3064\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: Sh29
+    name: "\u30C9\u30E9\u30B4\u30F3\u306E\u5927\u696F"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 30
+      def: 50
+      critical: 0
+  - id: Sh30
+    name: "\u82F1\u96C4\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 70
+      hp: 0
+      atk: 0
+      def: 60
+      critical: 0
+  - id: Sh31
+    name: "\u30A4\u30FC\u30B8\u30B9\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 0
+      def: 100
+      critical: 0
+  - id: Sh32
+    name: "\u52C7\u8005\u306E\u76FE"
+    groupId: 0
+    status:
+      maxHp: 80
+      hp: 0
+      atk: 0
+      def: 60
+      critical: 0
+  - id: He01
+    name: "\u666E\u901A\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: He02
+    name: "\u65C5\u7ACB\u3061\u306E\u5E3D\u5B50"
+    groupId: 0
+    status:
+      maxHp: 5
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: He03
+    name: "\u3046\u308D\u3053\u306E\u304B\u3076\u3068"
+    groupId: 0
+    status:
+      maxHp: 5
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: He04
+    name: "\u30A2\u30A4\u30A2\u30F3\u30D8\u30EB\u30E0"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 8
+      critical: 0
+  - id: He05
+    name: "\u3057\u3093\u3074\u306E\u8033\u98FE\u308A"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: He06
+    name: "\u5192\u967A\u8005\u306E\u5E3D\u5B50"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He07
+    name: "\u6226\u58EB\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 2
+      def: 5
+      critical: 0
+  - id: He08
+    name: "\u30B7\u30EB\u30D0\u30FC\u30D8\u30EB\u30E0"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He09
+    name: "\u3072\u304B\u308A\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He10
+    name: "\u76D7\u8CCA\u306E\u5E3D\u5B50"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He11
+    name: "\u30B5\u30F3\u30B0\u30E9\u30B9"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He12
+    name: "\u3044\u3084\u3057\u306E\u9AEA\u98FE\u308A"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He13
+    name: "\u30A2\u30B5\u30B7\u30F3\u30DE\u30B9\u30AF"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 3
+      def: 10
+      critical: 0
+  - id: He14
+    name: "\u304A\u3070\u3051\u30CF\u30C3\u30C8"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He15
+    name: "\u5175\u58EB\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 15
+      critical: 0
+  - id: He16
+    name: "\u30AC\u30E9\u30B9\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: He18
+    name: "\u30A8\u30CD\u30EB\u30AE\u30FC\u30D8\u30EB\u30E0"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 20
+      critical: 0
+  - id: He19
+    name: "\u30B5\u30E0\u30E9\u30A4\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 0
+      def: 20
+      critical: 0
+  - id: He20
+    name: "\u8FD1\u885B\u5175\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: He21
+    name: "\u5929\u4F7F\u306E\u30EA\u30F3\u30B0"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: He22
+    name: "\u30ED\u30DC\u30C3\u30C8\u30D8\u30C3\u30C9"
+    groupId: 0
+    status:
+      maxHp: 55
+      hp: 0
+      atk: 0
+      def: 35
+      critical: 0
+  - id: He23
+    name: "\u60AA\u9B54\u306E\u30EA\u30F3\u30B0"
+    groupId: 0
+    status:
+      maxHp: 55
+      hp: 0
+      atk: 0
+      def: 35
+      critical: 0
+  - id: He24
+    name: "\u6D77\u8CCA\u5E3D\u5B50"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: He25
+    name: "\u7ADC\u6BBA\u3057\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 10
+      def: 40
+      critical: 0
+  - id: He26
+    name: "\u5951\u7D04\u306E\u51A0"
+    groupId: 0
+    status:
+      maxHp: 80
+      hp: 0
+      atk: 10
+      def: 60
+      critical: 0
+  - id: He27
+    name: "\u30DF\u30EA\u30BF\u30EA\u30FC\u30D8\u30EB\u30E0"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 45
+      critical: 0
+  - id: He28
+    name: "\u795D\u798F\u306E\u9AEA\u98FE\u308A"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 45
+      critical: 0
+  - id: He29
+    name: "\u307E\u307C\u308D\u3057\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: He30
+    name: "\u3067\u3093\u305B\u3064\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: He31
+    name: "\u30C9\u30E9\u30B4\u30F3\u306E\u89D2"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 30
+      def: 50
+      critical: 0
+  - id: He32
+    name: "\u82F1\u96C4\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 70
+      hp: 0
+      atk: 0
+      def: 60
+      critical: 0
+  - id: He33
+    name: "\u52C7\u8005\u306E\u515C"
+    groupId: 0
+    status:
+      maxHp: 80
+      hp: 0
+      atk: 0
+      def: 60
+      critical: 0
+  - id: Ar01
+    name: "\u666E\u901A\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 0
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Ar02
+    name: "\u65C5\u7ACB\u3061\u306E\u670D"
+    groupId: 0
+    status:
+      maxHp: 5
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Ar03
+    name: "\u3046\u308D\u3053\u306E\u670D"
+    groupId: 0
+    status:
+      maxHp: 5
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Ar04
+    name: "\u30A2\u30A4\u30A2\u30F3\u30E1\u30A4\u30EB"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 8
+      critical: 0
+  - id: Ar05
+    name: "\u3057\u3093\u3074\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Ar06
+    name: "\u5192\u967A\u8005\u306E\u670D"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Ar07
+    name: "\u6226\u58EB\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 10
+      hp: 0
+      atk: 0
+      def: 5
+      critical: 0
+  - id: Ar08
+    name: "\u30B7\u30EB\u30D0\u30FC\u30E1\u30A4\u30EB"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Ar09
+    name: "\u3072\u304B\u308A\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Ar10
+    name: "\u76D7\u8CCA\u306E\u670D"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Ar11
+    name: "\u3044\u3084\u3057\u306E\u306F\u3054\u308D\u3082"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Ar12
+    name: "\u304A\u3070\u3051\u30ED\u30FC\u30D6"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Ar13
+    name: "\u5175\u58EB\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 15
+      critical: 0
+  - id: Ar14
+    name: "\u30AC\u30E9\u30B9\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 20
+      hp: 0
+      atk: 0
+      def: 10
+      critical: 0
+  - id: Ar16
+    name: "\u30A8\u30CD\u30EB\u30AE\u30FC\u30A2\u30FC\u30DE\u30FC"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 20
+      critical: 0
+  - id: Ar17
+    name: "\u30B5\u30E0\u30E9\u30A4\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 0
+      def: 20
+      critical: 0
+  - id: Ar18
+    name: "\u8FD1\u885B\u5175\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: Ar19
+    name: "\u5929\u4F7F\u306E\u306F\u3054\u308D\u3082"
+    groupId: 0
+    status:
+      maxHp: 50
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: Ar20
+    name: "\u30ED\u30DC\u30C3\u30C8\u30DC\u30C7\u30A3"
+    groupId: 0
+    status:
+      maxHp: 55
+      hp: 0
+      atk: 0
+      def: 35
+      critical: 0
+  - id: Ar21
+    name: "\u60AA\u9B54\u306E\u3046\u308D\u3053"
+    groupId: 0
+    status:
+      maxHp: 55
+      hp: 0
+      atk: 0
+      def: 35
+      critical: 0
+  - id: Ar22
+    name: "\u6D77\u8CCA\u306E\u670D"
+    groupId: 0
+    status:
+      maxHp: 30
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: Ar23
+    name: "\u7ADC\u6BBA\u3057\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 10
+      def: 40
+      critical: 0
+  - id: Ar24
+    name: "\u5951\u7D04\u306E\u30ED\u30FC\u30D6"
+    groupId: 0
+    status:
+      maxHp: 80
+      hp: 0
+      atk: 10
+      def: 60
+      critical: 0
+  - id: Ar25
+    name: "\u30DF\u30EA\u30BF\u30EA\u30FC\u30A2\u30FC\u30DE\u30FC"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 45
+      critical: 0
+  - id: Ar26
+    name: "\u30AF\u30EA\u30B9\u30BF\u30EB\u30E1\u30A4\u30EB"
+    groupId: 0
+    status:
+      maxHp: 40
+      hp: 0
+      atk: 0
+      def: 30
+      critical: 0
+  - id: Ar27
+    name: "\u795D\u798F\u306E\u306F\u3054\u308D\u3082"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 45
+      critical: 0
+  - id: Ar28
+    name: "\u307E\u307C\u308D\u3057\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: Ar29
+    name: "\u3067\u3093\u305B\u3064\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 0
+      def: 50
+      critical: 0
+  - id: Ar30
+    name: "\u30C9\u30E9\u30B4\u30F3\u306E\u3046\u308D\u3053"
+    groupId: 0
+    status:
+      maxHp: 60
+      hp: 0
+      atk: 30
+      def: 50
+      critical: 0
+  - id: Ar31
+    name: "\u82F1\u96C4\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 70
+      hp: 0
+      atk: 0
+      def: 60
+      critical: 0
+  - id: Ar32
+    name: "\u52C7\u8005\u306E\u93A7"
+    groupId: 0
+    status:
+      maxHp: 80
+      hp: 0
+      atk: 0
+      def: 60
+      critical: 0

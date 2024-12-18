@@ -65,9 +65,36 @@ public class WeaponEffectMasterEditor : Editor
 {
     private string searchQuery = "";
     private string weaponId = "";
+    private List<bool> selectNumber = new ();
+    private TreasureDropMaster[] drops;
+    private void OnEnable()
+    {
+        drops = Resources.LoadAll<TreasureDropMaster>("Master/TreasureDrop");
+        foreach (var VARIABLE in drops)
+        {
+            selectNumber.Add(false);
+        }
+    }
+
     public override void OnInspectorGUI()
     {
-        
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            int count = 0;
+            foreach (var d in drops)
+            {
+                string fileName = "";
+                string assetPath = AssetDatabase.GetAssetPath(d);
+                fileName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+                string[] parts = fileName.Split('_'); // "_" で分割
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    EditorGUILayout.LabelField(parts[1],GUILayout.Width(50));    
+                    selectNumber[count] = EditorGUILayout.Toggle(selectNumber[count],GUILayout.Width(60));    
+                }
+                count++;
+            }
+        }
 
         // WeaponEffectMasterのインスタンスを取得
         WeaponEffectMaster weaponEffectMaster = (WeaponEffectMaster)target;
@@ -95,8 +122,6 @@ public class WeaponEffectMasterEditor : Editor
                     .Any(e => e.effect.ToString().Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase))) // Effectでフィルタリング
             )
             .ToList();
-        TreasureDropMaster[] drops = Resources.LoadAll<TreasureDropMaster>("Master/TreasureDrop");
-
 
         for (int i = 0; i < filteredWeaponDatas.Count; i++)
         {
@@ -137,6 +162,23 @@ public class WeaponEffectMasterEditor : Editor
             using (new EditorGUILayout.HorizontalScope())
             {
                 EditorGUILayout.TextField(weaponData.weaponId + "  " + weaponData.groupData.id, GUILayout.Width(60));
+                if (GUILayout.Button("Add",GUILayout.Width(50)))
+                {
+                    for (int s = 0; s < selectNumber.Count; s++)
+                    {
+                        if (selectNumber[s])
+                        {
+                            drops[s].itemDropData.Add(new ItemDropData()
+                            {
+                                id = weaponData.weaponId,
+                                groupId = weaponData.groupData.id,
+                                dropRarity = Rarity.D,
+                            });    
+                        }
+                            
+                    }
+                    
+                }
                 if (GUILayout.Button("Delete",GUILayout.Width(100)))
                 {
                     weaponEffectMaster.WeaponDatas.Remove(weaponData);

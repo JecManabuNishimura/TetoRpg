@@ -2870,8 +2870,6 @@ MonoBehaviour:
     groupID: 0
   - WeaponId: 6
     groupID: 0
-  - WeaponId: 0
-    groupID: 5
   haveWeaponList:
   - WeaponId: We01
     groupID: 0

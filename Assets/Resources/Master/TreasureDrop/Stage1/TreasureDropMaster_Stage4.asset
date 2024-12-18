@@ -1,0 +1,229 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b88ce9fb285411e4cb4c2414396b85ac, type: 3}
+  m_Name: TreasureDropMaster_Stage4
+  m_EditorClassIdentifier: 
+  itemDropData:
+  - id: We01
+    groupId: 0
+    dropRarity: 6
+  - id: We01
+    groupId: 1
+    dropRarity: 6
+  - id: We01
+    groupId: 2
+    dropRarity: 6
+  - id: We01
+    groupId: 4
+    dropRarity: 6
+  - id: We01
+    groupId: 5
+    dropRarity: 6
+  - id: We01
+    groupId: 6
+    dropRarity: 6
+  - id: We01
+    groupId: 10
+    dropRarity: 6
+  - id: We01
+    groupId: 11
+    dropRarity: 6
+  - id: We01
+    groupId: 8
+    dropRarity: 6
+  - id: We01
+    groupId: 3
+    dropRarity: 4
+  - id: Sh01
+    groupId: 1
+    dropRarity: 6
+  - id: Sh01
+    groupId: 2
+    dropRarity: 6
+  - id: Sh01
+    groupId: 3
+    dropRarity: 6
+  - id: Sh01
+    groupId: 4
+    dropRarity: 6
+  - id: Sh01
+    groupId: 5
+    dropRarity: 6
+  - id: Sh01
+    groupId: 6
+    dropRarity: 6
+  - id: Sh01
+    groupId: 7
+    dropRarity: 6
+  - id: He01
+    groupId: 0
+    dropRarity: 6
+  - id: He01
+    groupId: 1
+    dropRarity: 6
+  - id: He01
+    groupId: 2
+    dropRarity: 6
+  - id: He01
+    groupId: 3
+    dropRarity: 6
+  - id: He01
+    groupId: 4
+    dropRarity: 6
+  - id: He01
+    groupId: 5
+    dropRarity: 6
+  - id: He01
+    groupId: 6
+    dropRarity: 6
+  - id: Ar01
+    groupId: 0
+    dropRarity: 6
+  - id: Ar01
+    groupId: 1
+    dropRarity: 6
+  - id: Ar01
+    groupId: 2
+    dropRarity: 6
+  - id: Ar01
+    groupId: 3
+    dropRarity: 6
+  - id: Ar01
+    groupId: 4
+    dropRarity: 6
+  - id: Ar01
+    groupId: 5
+    dropRarity: 6
+  - id: Ar01
+    groupId: 6
+    dropRarity: 6
+  - id: Ar01
+    groupId: 7
+    dropRarity: 6
+  - id: Ar01
+    groupId: 8
+    dropRarity: 5
+  - id: Ar01
+    groupId: 9
+    dropRarity: 6
+  - id: Ar01
+    groupId: 10
+    dropRarity: 5
+  - id: Sh01
+    groupId: 0
+    dropRarity: 6
+  - id: Ar01
+    groupId: 19
+    dropRarity: 6
+  - id: Ar01
+    groupId: 18
+    dropRarity: 6
+  - id: He01
+    groupId: 25
+    dropRarity: 6
+  - id: He01
+    groupId: 22
+    dropRarity: 6
+  - id: He01
+    groupId: 18
+    dropRarity: 6
+  - id: He01
+    groupId: 16
+    dropRarity: 6
+  - id: He01
+    groupId: 7
+    dropRarity: 4
+  - id: We01
+    groupId: 13
+    dropRarity: 4
+  - id: We01
+    groupId: 9
+    dropRarity: 4
+  minoDropData:
+  - id: 0
+    groupId: 0
+    dropRarity: 6
+  - id: 0
+    groupId: 1
+    dropRarity: 6
+  - id: 0
+    groupId: 2
+    dropRarity: 6
+  - id: 1
+    groupId: 0
+    dropRarity: 6
+  - id: 1
+    groupId: 1
+    dropRarity: 6
+  - id: 1
+    groupId: 2
+    dropRarity: 6
+  - id: 2
+    groupId: 0
+    dropRarity: 6
+  - id: 2
+    groupId: 1
+    dropRarity: 6
+  - id: 2
+    groupId: 2
+    dropRarity: 6
+  - id: 3
+    groupId: 0
+    dropRarity: 6
+  - id: 3
+    groupId: 1
+    dropRarity: 6
+  - id: 3
+    groupId: 2
+    dropRarity: 6
+  - id: 4
+    groupId: 0
+    dropRarity: 6
+  - id: 4
+    groupId: 1
+    dropRarity: 6
+  - id: 4
+    groupId: 2
+    dropRarity: 6
+  - id: 5
+    groupId: 0
+    dropRarity: 6
+  - id: 5
+    groupId: 1
+    dropRarity: 6
+  - id: 5
+    groupId: 2
+    dropRarity: 6
+  - id: 6
+    groupId: 0
+    dropRarity: 6
+  - id: 6
+    groupId: 1
+    dropRarity: 6
+  - id: 6
+    groupId: 2
+    dropRarity: 6
+  - id: 7
+    groupId: 0
+    dropRarity: 4
+  - id: 8
+    groupId: 0
+    dropRarity: 4
+  - id: 9
+    groupId: 0
+    dropRarity: 4
+  - id: 3
+    groupId: 4
+    dropRarity: 4
+  - id: 8
+    groupId: 2
+    dropRarity: 3

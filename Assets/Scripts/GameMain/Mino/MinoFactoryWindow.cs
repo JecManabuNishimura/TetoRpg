@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MyMethods;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -33,7 +34,9 @@ public class MinoFactoryWindow : EditorWindow
     //private List<List<List<int>>> selectedGroupOptions = new(); // 各グループに複数選択肢を保持
     private float buttonSize = 30f;
     private Rect buttonRect;
-
+    private TreasureDropMaster[] drops;
+    private List<bool> selectNumber = new ();
+    
     float totalWidth = Screen.width - 20f; // 画面幅
 
     // スクロール位置を管理する変数
@@ -51,6 +54,11 @@ public class MinoFactoryWindow : EditorWindow
 
     private void OnEnable()
     {
+        drops = Resources.LoadAll<TreasureDropMaster>("Master/TreasureDrop");
+        foreach (var VARIABLE in drops)
+        {
+            selectNumber.Add(false);
+        }
         minoEffectStatusMaster = MinoEffectStatusMaster.Entity;
         // 画像をエディタのアセットフォルダからロード
         buttonFalseImage =
@@ -106,9 +114,25 @@ public class MinoFactoryWindow : EditorWindow
                 LoadData();
             }
         }
-
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            int count = 0;
+            foreach (var d in drops)
+            {
+                string fileName = "";
+                string assetPath = AssetDatabase.GetAssetPath(d);
+                fileName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+                string[] parts = fileName.Split('_'); // "_" で分割
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    EditorGUILayout.LabelField(parts[1],GUILayout.Width(50));    
+                    selectNumber[count] = EditorGUILayout.Toggle(selectNumber[count]);    
+                }
+                count++;
+            }
+        }
         scrollPosition = GUILayout.BeginScrollView(scrollPosition, true, true, GUILayout.Width(position.width),
-            GUILayout.Height(position.height - 25));
+            GUILayout.Height(position.height - 70));
         GUILayout.BeginHorizontal();
         int space = 0;
         for (int i = 0; i < minoSettingList.Count; i++)
@@ -172,6 +196,50 @@ public class MinoFactoryWindow : EditorWindow
                         {
                             using (new EditorGUILayout.VerticalScope())
                             {
+                                if (GUILayout.Button("Add", GUILayout.Width(50)))
+                                {
+                                    for (int s = 0; s < selectNumber.Count; s++)
+                                    {
+                                        if (selectNumber[s])
+                                        {
+                                            drops[s].minoDropData.Add(new ItemDropData()
+                                            {
+                                                id = i.ToString(),
+                                                groupId = group.id,
+                                                dropRarity = Rarity.D,
+                                            });    
+                                        }
+                                    }
+                                }
+                                
+                                foreach (var d in drops)
+                                {
+                                    foreach (var mino in d.minoDropData)
+                                    {
+                                        if (mino.id.toInt() == i && mino.groupId == group.id)
+                                        {
+                                            string fileName = "";
+#if UNITY_EDITOR
+                                            // AssetDatabaseを使ってファイルパスを取得
+                                            string assetPath = AssetDatabase.GetAssetPath(d);  // dはTreasureDropMasterのインスタンス
+                                            fileName = System.IO.Path.GetFileNameWithoutExtension(assetPath); // ファイル名（拡張子なし）を取得
+                                            // ファイル名から "_" 以降を取り出す
+                                            string[] parts = fileName.Split('_'); // "_" で分割
+                                            if (parts.Length > 1)
+                                            {
+                                                // "_" 以降の部分（最初の部分を除く）
+                                                fileName = parts[1];
+                                            }
+                                            else
+                                            {
+                                                // "_" がない場合はそのままのファイル名を使用
+                                                fileName = parts[0];
+                                            }
+#endif
+                                            GUILayout.Label(fileName,GUILayout.Width(50));        
+                                        }
+                                    }
+                                }
                                 using (new EditorGUILayout.HorizontalScope())
                                 {
                                     GUILayout.Label(counter.ToString());
@@ -217,13 +285,7 @@ public class MinoFactoryWindow : EditorWindow
                                         {
                                             popupStyle.normal.textColor = Color.white; 
                                         }
-                                        
-                                        
-                                        /*
-                                        int newSelectedIndex = EditorGUILayout.Popup(currentIndex, effectOptions,
-                                            GUILayout.Width(60), GUILayout.Height(20));
-                                        newSelectedIndex = EditorGUILayout.Popup(newSelectedIndex, effectOptions, popupStyle);
-                                        */
+
                                         int newSelectedIndex = EditorGUI.Popup(
                                             GUILayoutUtility.GetRect(60, 20), // サイズを指定
                                             currentIndex, effectOptions, popupStyle);

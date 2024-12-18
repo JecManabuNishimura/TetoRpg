@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 [CreateAssetMenu(fileName = "EquipmentMaster", menuName = "Scriptable Objects/EquipmentMaster")]
@@ -47,6 +48,7 @@ public class EquipmentMaster : ScriptableObject
     }
     public void ReadCSV(string csvFileName)
     {
+        equipData.Clear();
         // CSVファイルのフルパスを取得
         TextAsset csvFile = Resources.Load<TextAsset>(csvFileName);
 
@@ -78,6 +80,7 @@ public class EquipmentMaster : ScriptableObject
         {
             Debug.LogError(csvFileName + "がResourcesフォルダに見つかりません。");
         }
+        EditorUtility.SetDirty(this);
     }
 }
 #if UNITY_EDITOR
@@ -91,6 +94,8 @@ public class EquipmentMasterEditor : Editor
     {
         // インスペクタが表示される際に、ターゲットのScriptableObjectを取得
         equipmentMaster = (EquipmentMaster)target;
+        equipmentMaster = Resources.Load<EquipmentMaster>("Master/EquipmentMaster");
+        EditorUtility.SetDirty(equipmentMaster);
     }
 
     public override void OnInspectorGUI()
@@ -116,7 +121,7 @@ public class EquipmentData
 {
     public string id;
     public string name;
-    public int gourpId;
+    public int groupId;
     public Status status;
 
     public EquipmentData(string id, string name, Status status)
@@ -132,21 +137,22 @@ public class EquipmentData
         Dictionary<EffectStatus, Action<int>> effectActions = new Dictionary<EffectStatus, Action<int>>()
         {
             { EffectStatus.AtkUp, value => state.atk += value },
-            { EffectStatus.HpUp, value => state.hp += value },
             { EffectStatus.AtkDown, value => state.atk -= value },
+            { EffectStatus.HpUp, value => state.hp += value },
+            { EffectStatus.HpDown, value => state.hp -= value },
+            { EffectStatus.DefUp, value => state.def += value },
             { EffectStatus.DefDown, value => state.def -= value },
+            { EffectStatus.CriticalUp, value => state.critical += value },
             { EffectStatus.None, value => {} } // 何もしない
         };
         try
         {
-            WeaponEffectMaster.Entity.GetWeaponEffect(id, gourpId).effects
-                .Where(e => effectActions.ContainsKey(e.effect))
-                .ToList()
+            　WeaponEffectMaster.Entity.GetWeaponEffect(id, groupId).effects
                 .ForEach(e => effectActions[e.effect](e.value));
         }
         catch (Exception e)
         {
-            Debug.Log(id + ":" + gourpId);
+            Debug.Log(id + ":" + groupId);
             throw;
         }
         
@@ -178,7 +184,8 @@ public enum EffectStatus
     AtkDown,                // 攻撃量ダウン
     DefUp,
     DefDown,                // 防御力ダウン
-    CriticalUp,
+    CriticalUp,             // 会心率アップ
+    CriticalDown,           // 会心率ダウン
     HealDropUp,
     HealPowerUp,            // 回復量Up
     AllAttackDropUp,        // 全体攻撃出現率アップ    
