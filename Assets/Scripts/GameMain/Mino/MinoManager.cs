@@ -20,6 +20,7 @@ public class MinoManager : MonoBehaviour
     [SerializeField] private GameObject holdObj;
     //[SerializeField] private NextUpGauge nextUpGauge;
     [SerializeField] private GameObject damgeText;
+    [SerializeField] private GameObject newTextObj;
     
     private GameObject SelectMino;
     private GameObject clMinoObj;
@@ -123,8 +124,6 @@ public class MinoManager : MonoBehaviour
     }
     private void Update()
     {
-        if (!SelectMino || GameManager.menuFlag) return;
-
         // 落下速度
         fallTime -= GameManager.player.BelongingsMinoEffect["DownSpeedUp"] * 0.2f;
         fallTime += GameManager.player.BelongingsMinoEffect["DownSpeedDown"]* 0.2f;
@@ -132,6 +131,9 @@ public class MinoManager : MonoBehaviour
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
         // 予測ブロック対応
         clMinoObj.SetActive(GameManager.player.BelongingsMinoEffect["PredictionBlock"] != 0);
+        if (!SelectMino || GameManager.menuFlag) return;
+
+
         inputHandler.HandleInput();
 
         if (fallTime <= 0.1f)
@@ -415,10 +417,14 @@ public class MinoManager : MonoBehaviour
                                 // ミノだった場合
                                 var obj = CreateMiniMino(MinoData.Entity.GetMinoData(result));
                                 obj.transform.parent = treasure.spriteObj.transform.GetChild(0).transform.transform;
-                                obj.transform.localPosition = new Vector3(0, 0.5f, 0);
+                                obj.transform.localPosition = new Vector3(0, 0.5f, -1);
                                 treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                                 treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                GameManager.player.AcquisitionMino(unique);
+                                if(GameManager.player.AcquisitionMino(unique))
+                                {
+                                    var text = Instantiate(newTextObj, obj.transform);
+                                    text.transform.localPosition = new Vector3(0, 3f, -1);
+                                }
                             }
                             else
                             {
@@ -427,7 +433,13 @@ public class MinoManager : MonoBehaviour
                                     = EquipmentDatabase.Entity.GetEquipmentSpriteData(unique.WeaponId)
                                         .sprite;
                                 treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                GameManager.player.AcquisitionItem(unique);
+                                if (GameManager.player.AcquisitionItem(unique))
+                                {
+                                    var text = Instantiate(newTextObj, treasure.spriteObj.transform.GetChild(0).transform);
+                                    text.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                                    text.transform.localPosition = new Vector3(0, 1f, -1);
+                                    
+                                }
                             }
                             
                         }

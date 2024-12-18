@@ -958,6 +958,7 @@ MonoBehaviour:
   TreasureObj: {fileID: 526652331542382861, guid: c51eeaa9042348945abe59883828a7a4, type: 3}
   holdObj: {fileID: 88767308}
   damgeText: {fileID: 2838069768400012324, guid: 6a49382b70339234aa9f25cef3292b48, type: 3}
+  newTextObj: {fileID: 4215997097355505068, guid: 43cbf61af8fc87246881a826192dd04d, type: 3}
 --- !u!114 &667771778
 MonoBehaviour:
   m_ObjectHideFlags: 0

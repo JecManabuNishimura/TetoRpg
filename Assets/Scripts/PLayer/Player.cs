@@ -179,14 +179,17 @@ public class Player : CharactorData, ICharactor
         hpText.text = totalStatus.hp.ToString();
     }
 
-    public void AcquisitionMino(EquipmentUniqueData data)
+    public bool AcquisitionMino(EquipmentUniqueData data)
     {
         if (!haveMinoList.Contains(data))
         {
-            haveMinoList.Add(data);    
+            haveMinoList.Add(data);
+            return true;
         }
+
+        return false;
     }
-    public void AcquisitionItem(EquipmentUniqueData data)
+    public bool AcquisitionItem(EquipmentUniqueData data)
     {
         var type = data.WeaponId.Substring(0, 2);
         switch (type)
@@ -195,28 +198,33 @@ public class Player : CharactorData, ICharactor
                 if (!haveWeaponList.Contains(data))
                 {
                     haveWeaponList.Add(data);
+                    return true;
                 }
                 break;
             case "Sh":
                 if (!haveShieldList.Contains(data))
                 {
                     haveShieldList.Add(data);
+                    return true;
                 }
                 break;
             case "He":
                 if (!haveHelmetList.Contains(data))
                 {
                     haveHelmetList.Add(data);
+                    return true;
                 }
                 break;
             case "Ar":
                 if (!haveArmorList.Contains(data))
                 {
                     haveArmorList.Add(data);
+                    return true;
                 }
                 break;
-            
         }
+
+        return false;
     }
 
     public EquipmentUniqueData GetBelongingsMino(int index)
