@@ -36,7 +36,27 @@ public class WeaponEffectMaster : ScriptableObject
     public WeaponEffectGroup GetWeaponEffect(string weaponId, int groupId)
     {
          return WeaponDatas.FirstOrDefault(x => x.weaponId == weaponId && x.groupData.id == groupId)?.groupData;
+    }
 
+    public void ResetGroupID()
+    {
+        string prevId = "";
+        int counter = 0;
+        foreach (var item in WeaponDatas)
+        {
+            if(prevId == item.weaponId)
+            {
+                item.groupData.id = counter;
+                counter++;
+            }
+            else
+            {
+                prevId = item.weaponId;
+                counter = 0;
+                item.groupData.id = counter;
+                counter++;
+            }
+        }
     }
 }
 #if UNITY_EDITOR
@@ -44,35 +64,93 @@ public class WeaponEffectMaster : ScriptableObject
 public class WeaponEffectMasterEditor : Editor
 {
     private string searchQuery = "";
+    private string weaponId = "";
     public override void OnInspectorGUI()
     {
+        
+
         // WeaponEffectMasterのインスタンスを取得
         WeaponEffectMaster weaponEffectMaster = (WeaponEffectMaster)target;
-        searchQuery = EditorGUILayout.TextField("Search", searchQuery);
+        GUILayout.BeginVertical("Box");
+        EditorGUILayout.LabelField("Search", GUILayout.Width(60));
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            EditorGUILayout.LabelField("weaponId", GUILayout.Width(60));
+            weaponId = EditorGUILayout.TextField( weaponId, GUILayout.Width(100));
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            EditorGUILayout.LabelField("Effect", GUILayout.Width(60));
+            searchQuery = EditorGUILayout.TextField(searchQuery, GUILayout.Width(100));
+        }
+        weaponEffectMaster.ResetGroupID();
+        EditorGUILayout.EndVertical();
         // WeaponDatasリストの表示
         EditorGUILayout.LabelField("WeaponDatas", EditorStyles.boldLabel);
         // WeaponDatasを検索文字列に基づいてフィルタリング
-        var filteredWeaponDatas = string.IsNullOrEmpty(searchQuery) 
-            ? weaponEffectMaster.WeaponDatas 
-            : weaponEffectMaster.WeaponDatas
-                .Where(weaponData => weaponData.groupData.effects
-                    .Any(e => e.effect.ToString().Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase)))
-                .ToList();
+        var filteredWeaponDatas = weaponEffectMaster.WeaponDatas
+            .Where(weaponData =>
+                (string.IsNullOrEmpty(weaponId) || weaponData.weaponId.Contains(weaponId, System.StringComparison.OrdinalIgnoreCase)) && // weaponIdでフィルタリング
+                (string.IsNullOrEmpty(searchQuery) || weaponData.groupData.effects
+                    .Any(e => e.effect.ToString().Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase))) // Effectでフィルタリング
+            )
+            .ToList();
+        TreasureDropMaster[] drops = Resources.LoadAll<TreasureDropMaster>("Master/TreasureDrop");
+
+
         for (int i = 0; i < filteredWeaponDatas.Count; i++)
         {
             var weaponData = filteredWeaponDatas[i];
+            if(weaponData.useStage == null)
+            {
+                weaponData.useStage = new List<string>();
+            }
+            weaponData.useStage.Clear();
+            foreach (var d in drops)
+            {
+                if(d.itemDropData.FirstOrDefault(x => x.id == weaponData.weaponId && x.groupId == weaponData.groupData.id) != null)
+                {
+                    string fileName = "";
+#if UNITY_EDITOR
+                    // AssetDatabaseを使ってファイルパスを取得
+                    string assetPath = AssetDatabase.GetAssetPath(d);  // dはTreasureDropMasterのインスタンス
+                    fileName = System.IO.Path.GetFileNameWithoutExtension(assetPath); // ファイル名（拡張子なし）を取得
+                    // ファイル名から "_" 以降を取り出す
+                    string[] parts = fileName.Split('_'); // "_" で分割
+                    if (parts.Length > 1)
+                    {
+                        // "_" 以降の部分（最初の部分を除く）
+                        fileName = parts[1];
+                    }
+                    else
+                    {
+                        // "_" がない場合はそのままのファイル名を使用
+                        fileName = parts[0];
+                    }
+#endif
 
+                    // useStageにファイル名を追加
+                    weaponData.useStage.Add(fileName);
+                }
+            }
             // WeaponIdの表示
             using (new EditorGUILayout.HorizontalScope())
             {
                 EditorGUILayout.TextField(weaponData.weaponId + "  " + weaponData.groupData.id, GUILayout.Width(60));
                 if (GUILayout.Button("Delete",GUILayout.Width(100)))
                 {
-                    weaponEffectMaster.WeaponDatas.RemoveAt(i);
+                    weaponEffectMaster.WeaponDatas.Remove(weaponData);
+                    return;
+                }
+
+                foreach(var s in weaponData.useStage)
+                {
+                    EditorGUILayout.TextArea(s, GUILayout.Width(50));
                 }
             }
 
             EditorGUI.indentLevel++;
+            int count = 0;
             foreach (var e in weaponData.groupData.effects)
             {
                 using (new EditorGUILayout.HorizontalScope())
@@ -90,7 +168,13 @@ public class WeaponEffectMasterEditor : Editor
                     e.effect = (EffectStatus)EditorGUILayout.EnumPopup(e.effect, popupStyle, GUILayout.Width(150));
 
                     e.value = EditorGUILayout.IntField(e.value, GUILayout.Width(60));
+
+                    if (GUILayout.Button("D", GUILayout.Width(20)))
+                    {
+                        weaponData.groupData.effects.RemoveAt(count);
+                    }
                 }
+                count++;
             }
             EditorGUI.indentLevel--;
             // 区切り線を表示（オプション）
@@ -139,6 +223,7 @@ public class CreateWeaponData
     [SerializeField] public string weaponId;
     [SerializeField] public WeaponEffectGroup groupData;
     [SerializeField] public bool deleteFlag;
+    [SerializeField] public List<string> useStage;
 
 }
 

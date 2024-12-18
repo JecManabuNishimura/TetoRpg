@@ -23,7 +23,49 @@ MonoBehaviour:
     groupId: 2
     dropRarity: 6
   - id: We01
+    groupId: 4
+    dropRarity: 6
+  - id: We01
+    groupId: 5
+    dropRarity: 6
+  - id: We01
+    groupId: 6
+    dropRarity: 6
+  - id: We01
+    groupId: 10
+    dropRarity: 6
+  - id: We01
+    groupId: 11
+    dropRarity: 6
+  - id: We01
+    groupId: 8
+    dropRarity: 6
+  - id: We01
     groupId: 3
+    dropRarity: 4
+  - id: Sh01
+    groupId: 1
+    dropRarity: 6
+  - id: Sh01
+    groupId: 2
+    dropRarity: 6
+  - id: Sh01
+    groupId: 3
+    dropRarity: 6
+  - id: Sh01
+    groupId: 4
+    dropRarity: 6
+  - id: Sh01
+    groupId: 5
+    dropRarity: 6
+  - id: Sh01
+    groupId: 6
+    dropRarity: 6
+  - id: Sh01
+    groupId: 7
+    dropRarity: 6
+  - id: Ar01
+    groupId: 0
     dropRarity: 6
   minoDropData:
   - id: 0

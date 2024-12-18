@@ -171,7 +171,17 @@ public class TreasureDropMasterEditor : Editor
         // 要素の追加
         list.onAddCallback = (list) =>
         {
-            dataList.Add(new ItemDropData { id = useDropdown ? equipmentIds[0] : "0", groupId = 0, dropRarity = Rarity.D });
+            // 新しいアイテムのIDを直前のアイテムに設定
+            string newId = equipmentIds[0]; // デフォルトは最初のID
+
+            // もしdataListにアイテムがあれば、その最後のIDを次のアイテムに設定
+            if (dataList.Count > 0)
+            {
+                var lastItem = dataList[dataList.Count - 1];
+                newId = lastItem.id; // 直前のIDを新しいアイテムのIDとして設定
+            }
+
+            dataList.Add(new ItemDropData { id = newId, groupId = 0, dropRarity = Rarity.D });
         };
 
         return list;
