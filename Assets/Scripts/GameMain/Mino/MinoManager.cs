@@ -827,6 +827,10 @@ public class MinoManager : MonoBehaviour
                 if (!BoardManager.Instance.IsValidPosition(newPosition))
                 {
                     PlacePiece();
+                    for (int i = 0; i < SelectMino.transform.childCount; i++)
+                    {
+                        SelectMino.transform.GetChild(i).GetComponent<MinoBlock>().CreateDownEffect();    
+                    }
                     SelectMino = null;
                     int childCount = clMinoObj.transform.childCount;
 
@@ -835,7 +839,10 @@ public class MinoManager : MonoBehaviour
                         Destroy(clMinoObj.transform.GetChild(i).gameObject);
                     }
 
+
+                    
                     GameManager.playerPut = true;
+                    
                     
                     await GameManager.PlayerMove();
                     // 敵死亡時　何もしない
@@ -884,6 +891,7 @@ public class MinoManager : MonoBehaviour
         {
             
             GameManager.playerPut = true;
+
             await GameManager.PlayerMove();
             // 敵死亡時　何もしない
             if (GameManager.EnemyDown)
@@ -938,7 +946,7 @@ public class MinoManager : MonoBehaviour
             yield return new WaitForSeconds(0.08f);
         }
     }
-    void PlacePiece()
+    async Task PlacePiece()
     {
         bool treFlag = false;
         foreach (Transform child in SelectMino.transform)
@@ -1020,7 +1028,7 @@ public class MinoManager : MonoBehaviour
             }
         }
         
-        GameManager.enemy.Damage(GameManager.playerDamage);
+        await GameManager.enemy.Damage(GameManager.playerDamage);
         holFlag = false;
     }
 

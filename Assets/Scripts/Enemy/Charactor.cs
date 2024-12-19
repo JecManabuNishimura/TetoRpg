@@ -366,7 +366,7 @@ namespace Enemy
             throw new NotImplementedException();
         }
 
-        public async void Damage(int damage)
+        public async Task Damage(int damage)
         {
             if(damage != 0)
             {

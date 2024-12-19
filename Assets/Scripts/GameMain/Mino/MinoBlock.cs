@@ -1,14 +1,16 @@
+using System;
 using UnityEngine;
 
 public class MinoBlock : MonoBehaviour
 {
     [SerializeField] private ImageDatabase imgDB;
-
+    [SerializeField] private ParticleSystem particle;
     public int index;
     public MinoType minoType;
     public int TreasureNumber;
     public bool deleteFlag = false;
     public Vector3 TreimagePos;
+    
 
     public void SetMinoData(MinoType type, int index,int number = 0,Vector3 pos = new ())
     {
@@ -30,6 +32,11 @@ public class MinoBlock : MonoBehaviour
                 MinoType.Bomb => imgDB.bombImage.texture,
                 MinoType.Stripes => imgDB.stripesImage.texture,
             };
+    }
+
+    public void CreateDownEffect()
+    {
+        Instantiate(particle, transform.position + Vector3.up * 3, Quaternion.Euler(-90f, 0f, 0f));
     }
 }
 

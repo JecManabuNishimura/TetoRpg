@@ -56,6 +56,10 @@ public class GameManager : MonoBehaviour
         {
             if(playerPut)
             {
+                if (!maxPutposFlag)
+                {
+                    enemy.CountDown();    
+                }
                 
                 if (DownFlag)
                 {
@@ -79,6 +83,7 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
+                    enemy.CheckputPos();
                     if (EnemyAttackFlag)
                     {
                         await EnemyAttack?.Invoke()!;
@@ -86,12 +91,8 @@ public class GameManager : MonoBehaviour
 
                         DownMino?.Invoke();
                         await Task.Delay(1000);
-                        enemy.CheckputPos();
                     }
-                    else
-                    {
-                        enemy.CountDown();
-                    }
+                    
 
                     if (LineCreateFlag)
                     {

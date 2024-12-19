@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -250,7 +251,7 @@ public class Player : CharactorData, ICharactor
         slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
     }
 
-    public void Damage(int damage)
+    public async Task Damage(int damage)
     {
         int newDamage = (damage / 2) - (totalStatus.def / 4);
         if (newDamage < 0)
@@ -263,6 +264,7 @@ public class Player : CharactorData, ICharactor
         totalStatus.hp -= newDamage;
         UpdateHp();
         slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
+        await Task.Yield();
     }
 
     [Serializable]
