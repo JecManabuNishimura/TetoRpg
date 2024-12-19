@@ -2874,6 +2874,8 @@ MonoBehaviour:
   haveWeaponList:
   - WeaponId: We01
     groupID: 0
+  - WeaponId: We01
+    groupID: 9
   haveShieldList:
   - WeaponId: Sh01
     groupID: 0

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -125,12 +126,17 @@ namespace Enemy
                     }
                 }
                 
-                
-                
-                
-
-                //SpecialAttackFlag = true;
                 GameManager.EnemyAttackFlag = true;
+            }
+        }
+
+        public void CheckputPos()
+        {
+            //　一番上まで積まれたら攻撃開始
+            if (GameManager.maxPutposFlag)
+            {
+                //GameManager.EnemyAttackFlag = true;
+                attackCount = 0;
             }
         }
 
@@ -186,17 +192,8 @@ namespace Enemy
                 StartShake(duration, strength, vibrato, 90, false);
                 shakeFlag = false;
             }
+            
 
-            if (GameManager.maxPutposFlag)
-            {
-                //ReadyAttack();
-            }
-            //　一番上まで積まれたら攻撃開始
-            if (GameManager.maxPutposFlag)
-            {
-                GameManager.EnemyAttackFlag = true;
-                attackCount = 0;
-            }
             if(attackCount <= 0)
             {
                 ReadyAttack();
@@ -215,13 +212,6 @@ namespace Enemy
         
         async Task Play()
         {
-            /*
-            if (SpecialAttackFlag)
-            {
-                AttackData.GetSpecialAttack(SpecialAttackName.LastAddLine);
-                GameManager.EnemyAttackFlag = false;
-                return;
-            }*/
             switch (attackOrders[orderNumber])
             {
                 case AttackOrder.Normal:
@@ -308,6 +298,7 @@ namespace Enemy
             GameManager.EnemyAttackFlag = false;
             attackTime = 0;
             attackCount = attackTarnCount;
+
         }
 
         private async Task AttackBomb()
@@ -398,6 +389,21 @@ namespace Enemy
                     GameManager.EnemyDown = true;
                 }
             }
+        }
+
+        public void EnemyDeath()
+        {
+            foreach (var p in parts)
+            {
+                Destroy(p.gameObject);
+            }
+            foreach (var val in area)
+            {
+                Destroy(val);
+            }
+            area.Clear();
+            parts.Clear();
+            Destroy(this.gameObject);
         }
     }
 

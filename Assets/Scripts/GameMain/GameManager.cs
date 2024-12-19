@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -55,7 +56,7 @@ public class GameManager : MonoBehaviour
         {
             if(playerPut)
             {
-                enemy.CountDown();
+                
                 if (DownFlag)
                 {
                     await Task.Delay(1000);
@@ -71,7 +72,7 @@ public class GameManager : MonoBehaviour
                 {
                     BoardManager.Instance.ClearBoard();
                     ClearBlock?.Invoke();
-                    Destroy(enemy.gameObject);
+                    enemy.EnemyDeath();
                     MapManager.Instance.EndBattle();
                     nowStage = GetNextEnumValue(nowStage);
                     stageLoader.SetStageStatus();
@@ -85,6 +86,11 @@ public class GameManager : MonoBehaviour
 
                         DownMino?.Invoke();
                         await Task.Delay(1000);
+                        enemy.CheckputPos();
+                    }
+                    else
+                    {
+                        enemy.CountDown();
                     }
 
                     if (LineCreateFlag)
@@ -209,5 +215,6 @@ namespace MyMethods
         {
             return int.Parse(str);
         }
+        
     }
 }

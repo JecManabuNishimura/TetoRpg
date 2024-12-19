@@ -126,7 +126,7 @@ public class BoardManager
         DeleteMino?.Invoke(x, y,true);
         
         await Task.Delay(200);
-        CheckMaxPutPos();
+        //CheckMaxPutPos();
         SetTestBlock?.Invoke();
     }
 
