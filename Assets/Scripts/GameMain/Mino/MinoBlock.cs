@@ -4,7 +4,7 @@ using UnityEngine;
 public class MinoBlock : MonoBehaviour
 {
     [SerializeField] private ImageDatabase imgDB;
-    [SerializeField] private ParticleSystem particle;
+    [SerializeField] private GameObject particle;
     public int index;
     public MinoType minoType;
     public int TreasureNumber;
@@ -36,7 +36,8 @@ public class MinoBlock : MonoBehaviour
 
     public void CreateDownEffect()
     {
-        Instantiate(particle, transform.position + Vector3.up * 3, Quaternion.Euler(-90f, 0f, 0f));
+        var obj = Instantiate(particle, transform.position + Vector3.up * 2, Quaternion.identity);
+        Destroy(obj, 0.5f);
     }
 }
 

@@ -7,12 +7,14 @@ using UnityEngine;
 
 public class testBlock : MonoBehaviour
 {
+    [SerializeField] private GameObject backGround;
     public GameObject block;
     public GameObject checkBlock;
     private GameObject checkParent;
     public GameObject parent;
-
+    
     private List<GameObject> blockList = new();
+    private GameObject bgObj;
     
     public int distance = 1;
     void Start()
@@ -36,10 +38,11 @@ public class testBlock : MonoBehaviour
     private void ClearBlock()
     {
         parent.transform.ChildClear();
+        Destroy(bgObj);
     }
     private async Task CreateBlock()
     {
-        /*
+        
         for (int y = 0; y < GameManager.boardHeight -1; y++)
         {
             for (int x = 0; x < GameManager.boardWidth; x++)
@@ -48,7 +51,8 @@ public class testBlock : MonoBehaviour
                 await Task.Yield();
             }
         }
-        */
+        
+        /*
         for (int y = 0; y < GameManager.boardHeight -1; y++)
         {
             for (int x = 0; x < (GameManager.boardWidth / 2) + 1; x++)
@@ -58,7 +62,9 @@ public class testBlock : MonoBehaviour
                 await Task.Yield();
             }
         }
+        */
 
+        bgObj = Instantiate(backGround);
     }
 
     private void Update()

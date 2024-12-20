@@ -262,6 +262,9 @@ namespace Enemy
                             GameManager.player.Damage(count);
                             foreach (var val in areaCopy)
                             {
+                                // たまにここでエラーになるが、理由がわからない
+                                // 要素が消されているというようなエラーが出る
+                                // 消している瞬間に座標がずれているような気がする
                                 var position = val.transform.position;
                                 BoardManager.Instance.CheckDeleteLine((int)position.y);
                             }

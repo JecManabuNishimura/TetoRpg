@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imgDB: {fileID: 11400000, guid: 63636f2c1b25b434c96a99fd8b0fb66a, type: 2}
-  particle: {fileID: 7700142664410401758, guid: e1bd7beba67a9144c91883b03c15c6b0, type: 3}
+  particle: {fileID: 9052369766081572450, guid: e1bd7beba67a9144c91883b03c15c6b0, type: 3}
   index: 0
   minoType: 0
   TreasureNumber: 0
