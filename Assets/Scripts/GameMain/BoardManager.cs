@@ -108,16 +108,22 @@ public class BoardManager
 
     public void CheckMaxPutPos()
     {
-        if (board[20, 4] != 0 || board[19, 4] != 0 || 
-            board[20, 5] != 0 || board[19, 5] != 0 || 
-            board[20, 6] != 0 || board[19, 6] != 0)
+        int startX = GameManager.boardWidth / 2 - 1;
+        int startY = GameManager.boardHeight - 2;
+
+        for (int y = startY; y <= startY + 1; y++)
         {
-            GameManager.maxPutposFlag = true;
+            for (int x = startX; x <= startX + 1; x++)
+            {
+                if (board[y, x] != 0)
+                {
+                    GameManager.maxPutposFlag = true;
+                    return;
+                }
+            }
         }
-        else
-        {
-            GameManager.maxPutposFlag = false;
-        }
+        GameManager.maxPutposFlag = false;
+        
     }
     
     public async Task EnemyAttack(int x,int y)

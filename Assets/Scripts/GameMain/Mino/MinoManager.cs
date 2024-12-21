@@ -82,7 +82,7 @@ public class MinoManager : MonoBehaviour
             HoldMino = HoldMino,
         };
         
-        minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
+
         minoListObj = new GameObject
         {
             name = "minoListObj"
@@ -92,6 +92,7 @@ public class MinoManager : MonoBehaviour
 
     private async Task StartBattle(int gaugeNum)
     {
+        minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         NextUpGauge.Instance.CreateGauge(gaugeNum);
         await NextUpGauge.Instance.Play();
         CreateNewMino();
@@ -559,7 +560,7 @@ public class MinoManager : MonoBehaviour
             clMinoObj.transform.position = Vector3.zero;
             CreatePiece(holdMino[0].minoData);
             
-            SelectMino.transform.position = CreatePoint.transform.position;
+            SelectMino.transform.position = new Vector3(GameManager.boardWidth / 2-2,GameManager.boardHeight,0);
             CheckUnder();
             Destroy(holdMino[0].minoObj);
             holdMino.RemoveAt(0);
@@ -635,7 +636,7 @@ public class MinoManager : MonoBehaviour
         clMinoObj.transform.position = Vector3.zero;       
         nowMinos = MinoFactory.GetMinoData(index, treasureFlag);
         CreatePiece(nowMinos,true);
-        SelectMino.transform.position = CreatePoint.transform.position;
+        SelectMino.transform.position = new Vector3(GameManager.boardWidth / 2-2,GameManager.boardHeight,0);
         CheckUnder();
     }
 
@@ -829,7 +830,7 @@ public class MinoManager : MonoBehaviour
                     PlacePiece();
                     for (int i = 0; i < SelectMino.transform.childCount; i++)
                     {
-                        SelectMino.transform.GetChild(i).GetComponent<MinoBlock>().CreateDownEffect();    
+                        SelectMino.transform.GetChild(i).GetComponent<MinoBlock>()?.CreateDownEffect();    
                     }
                     SelectMino = null;
                     int childCount = clMinoObj.transform.childCount;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -125,7 +126,7 @@ namespace Enemy
                         break;
                     }
                 }
-                
+                Debug.Log("抽選");
                 GameManager.EnemyAttackFlag = true;
             }
         }
@@ -210,8 +211,19 @@ namespace Enemy
             attackCount--;
         }
         
-        async Task Play()
+        async UniTask Play()
         {
+            Debug.Log("攻撃" );
+            // 座標を保存するリスト
+            var positions = new List<Vector3>();
+            foreach (var obj in area)
+            {
+                if (obj != null) // nullチェック
+                {
+                    positions.Add(obj.transform.position);
+                }
+            }
+
             switch (attackOrders[orderNumber])
             {
                 case AttackOrder.Normal:
@@ -229,17 +241,16 @@ namespace Enemy
                             {
                                 await AttackBomb();
                                 var areaCopy = area.ToArray();  // エラー回避用
-                                CreateAttackParticle(areaCopy);
+                                CreateAttackParticle(positions);
 
                                 await Task.Delay(50);
-                                var count = await StartAttack(areaCopy) * status.atk;
+                                var count = await StartAttack(positions) * status.atk;
 
                                 // ダメージ処理
                                 GameManager.player.Damage(count);
-                                foreach (var val in areaCopy)
+                                foreach (var val in positions)
                                 {
-                                    var position = val.transform.position;
-                                    BoardManager.Instance.CheckDeleteLine((int)position.y);
+                                    BoardManager.Instance.CheckDeleteLine((int)val.y);
                                 }
                                 foreach (var val in area)
                                 {
@@ -252,21 +263,16 @@ namespace Enemy
                         }
                         default:
                         {
-                            var areaCopy = area.ToArray(); // エラー回避用
-                            CreateAttackParticle(areaCopy);
-
+                            CreateAttackParticle(positions);
+                            Debug.Log("開始");
                             await Task.Delay(50);
-                            var count = await StartAttack(areaCopy) * status.atk;
+                            var count = await StartAttack(positions) * status.atk;
 
                             // ダメージ処理
                             GameManager.player.Damage(count);
-                            foreach (var val in areaCopy)
+                            foreach (var val in positions)
                             {
-                                // たまにここでエラーになるが、理由がわからない
-                                // 要素が消されているというようなエラーが出る
-                                // 消している瞬間に座標がずれているような気がする
-                                var position = val.transform.position;
-                                BoardManager.Instance.CheckDeleteLine((int)position.y);
+                                BoardManager.Instance.CheckDeleteLine((int)val.y);
                             }
                             break;
                         }
@@ -275,33 +281,43 @@ namespace Enemy
                 }
                 case AttackOrder.Special:
                 {
-                    var areaCopy = area.ToArray(); // エラー回避用
-                    CreateAttackParticle(areaCopy);
+                    CreateAttackParticle(positions);
 
                     await Task.Delay(50);
-                    var count = (await StartAttack(areaCopy) * status.atk) * 1.5f;
+                    var count = (await StartAttack(positions) * status.atk) * 1.5f;
 
                     // ダメージ処理
                     GameManager.player.Damage((int)count);
-                    foreach (var val in areaCopy)
+                    foreach (var val in positions)
                     {
-                        var position = val.transform.position;
-                        BoardManager.Instance.CheckDeleteLine((int)position.y);
+                        BoardManager.Instance.CheckDeleteLine((int)val.y);
                     }
                     break;
                 }
             }
             
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            foreach (var p in parts)
+            {
+                if (p != null)
+                {
+                    Destroy(p.gameObject);    
+                }
+            }
             parts.Clear();
             foreach (var val in area)
             {
                 Destroy(val);
             }
+
             area.Clear();
             GameManager.EnemyAttackFlag = false;
             attackTime = 0;
             attackCount = attackTarnCount;
-
         }
 
         private async Task AttackBomb()
@@ -327,14 +343,14 @@ namespace Enemy
             }
         }
 
-        private async Task<int> StartAttack(GameObject[] areaCopy)
+        private async Task<int> StartAttack(List<Vector3> areaCopy)
         {
             int count = 0;
             foreach (var val in areaCopy)
             {
                 if (val != null)
                 {
-                    var position = val.transform.position;
+                    var position = val;
                     if (!BoardManager.Instance.HitCheck((int)position.x, (int)position.y))
                     {
                         parts[count].GetComponent<Bullet>().StartMove();
@@ -347,13 +363,13 @@ namespace Enemy
             return count;
         }
 
-        private void CreateAttackParticle(GameObject[] areaCopy)
+        private void CreateAttackParticle(List<Vector3> areaCopy)
         {
             foreach (var val in areaCopy)
             {
                 if (val != null)
                 {
-                    var position = val.transform.position;
+                    var position = val;
                     if (!BoardManager.Instance.HitCheck((int)position.x, (int)position.y))
                     {
                         parts.Add(Instantiate(particle, new Vector3(position.x, position.y, 0), Quaternion.identity));
@@ -396,16 +412,8 @@ namespace Enemy
 
         public void EnemyDeath()
         {
-            foreach (var p in parts)
-            {
-                Destroy(p.gameObject);
-            }
-            foreach (var val in area)
-            {
-                Destroy(val);
-            }
-            area.Clear();
-            parts.Clear();
+            Initialize();
+            Destroy(attackObjPare);
             Destroy(this.gameObject);
         }
     }
@@ -435,4 +443,3 @@ namespace Enemy
         Special,
     }
 }
-

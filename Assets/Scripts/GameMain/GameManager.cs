@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SubsystemsImplementation;
@@ -13,10 +14,10 @@ public class GameManager : MonoBehaviour
 {
     public static Player player;
     public static Enemy.Charactor enemy;
-    public static int boardWidth = 10;
-    public static int boardHeight = 21;
+    public static int boardWidth = 8;
+    public static int boardHeight = 20;
     
-    public static event Func<Task> EnemyAttack;
+    public static event Func<UniTask> EnemyAttack;
     public static event Action DownMino;
     public static event Func<Task> FallingMino;
     public static event Func<Task> CreateLineBlock;
@@ -50,6 +51,20 @@ public class GameManager : MonoBehaviour
     public static Transform enemyPos;
     public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            BoardManager.Instance.ClearBoard();
+            ClearBlock?.Invoke();
+            enemy.EnemyDeath();
+            enemy = null;
+            MapManager.Instance.EndBattle();
+            nowStage = GetNextEnumValue(nowStage);
+            stageLoader.SetStageStatus();
+        }
+    }
+
     public static async Task PlayerMove()
     {
         while (true)
@@ -74,9 +89,11 @@ public class GameManager : MonoBehaviour
                 }
                 if (EnemyDown)
                 {
+                    EnemyDown = false;
                     BoardManager.Instance.ClearBoard();
                     ClearBlock?.Invoke();
                     enemy.EnemyDeath();
+                    enemy = null;
                     MapManager.Instance.EndBattle();
                     nowStage = GetNextEnumValue(nowStage);
                     stageLoader.SetStageStatus();
@@ -86,7 +103,12 @@ public class GameManager : MonoBehaviour
                     enemy.CheckputPos();
                     if (EnemyAttackFlag)
                     {
-                        await EnemyAttack?.Invoke()!;
+                        if (EnemyAttack != null)
+                        {
+                            Debug.Log("攻撃始まり    ");
+                            await EnemyAttack.Invoke();
+                        }
+
                         await Task.Delay(500);
 
                         DownMino?.Invoke();
@@ -116,7 +138,7 @@ public class GameManager : MonoBehaviour
         EquipmentMaster.Entity.ReadCSV("EquipmentData");
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
-        BoardManager.Instance.Initialize();
+        
         string uiName = "EquipmentUI";
         string BattleName = "BattleScene";
         if(!IsSceneLoaded(uiName))
@@ -144,11 +166,16 @@ public class GameManager : MonoBehaviour
 
     public static async void Battle()
     {
+        
         EnemyDown = false;
+        boardWidth = stageData.boardWith;
+        boardHeight = stageData.boardHeight;
+        BoardManager.Instance.Initialize();
         // フィールドブロック増減
         boardWidth += player.BelongingsMinoEffect["FieldUp"];
         boardWidth -= player.BelongingsMinoEffect["FieldDown"];
         enemy = Instantiate(MapManager.Instance.GetEnemyObj, enemyPos.position, Quaternion.identity).GetComponent<Enemy.Charactor>();
+        
         await CreateBlock?.Invoke();
         
         await StartBattle?.Invoke(NowNextCount);
@@ -194,6 +221,8 @@ public class GameManager : MonoBehaviour
 [Serializable]
 public class StageData
 {
+    public int boardHeight;
+    public int boardWith;
     public int HealDropRate;
     public int BombDropRate;
     public int StripesDropRate;

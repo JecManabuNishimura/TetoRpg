@@ -47,9 +47,9 @@ public class testBlock : MonoBehaviour
         {
             for (int x = 0; x < GameManager.boardWidth; x++)
             {
-                CreateObj(new Vector3(x, -y, 0));
-                await Task.Yield();
+                CreateObj(new Vector3(x, y, 0));
             }
+            await Task.Yield();
         }
         
         /*
@@ -65,6 +65,12 @@ public class testBlock : MonoBehaviour
         */
 
         bgObj = Instantiate(backGround);
+        //var pos = bgObj.transform.position;
+        //var scale = bgObj.transform.localScale;
+        bgObj.transform.localScale = new Vector3(GameManager.boardWidth,  0.8f * GameManager.boardHeight + 0.2f);
+        //pos.x = bgObj.transform.localScale.x / 2 - 0.5f;
+        bgObj.transform.position = new Vector3( GameManager.boardWidth / 2.0f -0.5f ,
+            GameManager.boardHeight / 2.0f ,15);
     }
 
     private void Update()
