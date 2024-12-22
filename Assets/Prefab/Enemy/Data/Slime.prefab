@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status:
-    maxHp: 3
+    maxHp: 50
     hp: 0
     atk: 5
     def: 10
@@ -120,7 +120,7 @@ MonoBehaviour:
   - name: 1
     <weight>k__BackingField: 50
   spAttackSettings: []
-  attackTarnCount: 5
+  attackTarnCount: 10
   attackTarn: {fileID: 1799986551340116770, guid: 3f525500304f2a64c9b40be96166c8a8, type: 3}
   attackTarnSpoonPoint: {fileID: 8017468128887097154}
   bombAttack: {fileID: 0}

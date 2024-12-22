@@ -87,14 +87,15 @@ public class MinoManager : MonoBehaviour
         {
             name = "minoListObj"
         };
-        holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+        
     }
 
     private async Task StartBattle(int gaugeNum)
     {
+        holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
         minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         NextUpGauge.Instance.CreateGauge(gaugeNum);
-        await NextUpGauge.Instance.Play();
+        //await NextUpGauge.Instance.Play();
         CreateNewMino();
         downColPos = (int)SelectMino.transform.position.x;
     }
@@ -122,6 +123,11 @@ public class MinoManager : MonoBehaviour
             }
         }
         NextUpGauge.Instance.Clear();
+        foreach (var treasure in treasuresTable.ToList())
+        {
+            Destroy(treasure.spriteObj);
+        }
+        treasuresTable.Clear();
     }
     private void Update()
     {
@@ -908,8 +914,8 @@ public class MinoManager : MonoBehaviour
 
     async Task ChangeFallCount()
     {
-        NextUpGauge.Instance.DownCount();
-        if (NextUpGauge.Instance.GetCount < 0)
+        NextUpGauge.Instance.CountUp();
+        if (NextUpGauge.Instance.GetCount == GameManager.boardWidth)
         {
             await CreateObstacleBlock();
             NextUpGauge.Instance.ResetGauge();

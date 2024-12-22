@@ -412,6 +412,7 @@ namespace Enemy
 
         public void EnemyDeath()
         {
+            GameManager.EnemyAttack -= Play;
             Initialize();
             Destroy(attackObjPare);
             Destroy(this.gameObject);

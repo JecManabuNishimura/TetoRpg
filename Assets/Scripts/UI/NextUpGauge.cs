@@ -10,13 +10,14 @@ using MyMethods;
 public class NextUpGauge : MonoBehaviour
 {
     public static NextUpGauge Instance;
-    [SerializeField] private GameObject gaugeObj;
-    [SerializeField] private GameObject gaugeParent;
-
+    [SerializeField] private GameObject nextObj;
+    [SerializeField] private GameObject blockObj;
+    [SerializeField] private GameObject blockBackObj;
+    [SerializeField] private GameObject arrowObj;
+    
     private List<GameObject> gaugeList = new ();
-    private int nowIndex;
-    private int maxIndex;
-    public int GetCount => nowIndex;
+    private GameObject gauge;
+    public int GetCount => gaugeList.Count;
 
     private void Awake()
     {
@@ -32,79 +33,43 @@ public class NextUpGauge : MonoBehaviour
 
     public void CreateGauge(int count)
     {
-
-        gaugeParent.transform.ChildClear ();
-        gaugeList.Clear ();
-        for (int i = 0; i < count; i++)
+        var obj = Instantiate(nextObj);
+        obj.GetComponent<SpriteRenderer>().size = new Vector2(GameManager.boardWidth + 0.8f, 1.65f);
+        obj.transform.position = new Vector3(GameManager.boardWidth / 2.0f - 0.5f, -1.7f, 0);
+        for (int i = 0; i < GameManager.boardWidth; i++)
         {
-            gaugeList.Add(Instantiate(gaugeObj, gaugeParent.transform, true));
+            var back = Instantiate(blockBackObj, obj.transform);
+            back.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), -0.1f, 0);
+            var arrow = Instantiate(arrowObj, obj.transform);
+            arrow.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 0.77f, 0);
         }
-        nowIndex = count - 1 ;
-        maxIndex = count;
+        gauge = obj;
     }
 
     public void ResetGauge()
     {
-        foreach (var anim in gaugeList)
+        foreach (var list in gaugeList)
         {
-            DOTween.Restart(anim,"open");
+            Destroy(list);
         }
-
-        nowIndex = maxIndex - 1;
+        gaugeList.Clear();
     }
+    
 
-    public void ReCount(int count)
+    public void CountUp()
     {
-
-        if(count != maxIndex)
-        {
-            if (count < maxIndex)
-            {
-                
-                // ���Ȃ����폜
-                for (int i = 0; i < maxIndex - count; i++)
-                {
-                    // 1より小さくはしない
-                    if (gaugeList.Count == 1)
-                    {
-                        break;
-                    }
-                    Destroy(gaugeList[^1].gameObject);
-                    gaugeList.RemoveAt(gaugeList.Count - 1);
-                }
-
-                nowIndex = count-1;
-                maxIndex = count;
-            }
-            else
-            {
-                for (int i = maxIndex; i < count; i++)
-                {
-                    gaugeList.Add(Instantiate(gaugeObj, gaugeParent.transform, true));
-                }
-                maxIndex = count;
-            }
-        }
+        var obj = Instantiate(blockObj, gauge.transform);
+        obj.transform.localPosition = new Vector3(gaugeList.Count - (GameManager.boardWidth / 2.0f - 0.5f), -0.1f, 0);
+        gaugeList.Add(obj);
     }
-
-    public void DownCount()
-    {
-        DOTween.Restart(gaugeList[nowIndex],"close");
-        nowIndex--;
-    }
-
-    public async Task Play()
-    {
-        foreach (var anim in gaugeList)
-        {
-            DOTween.Restart(anim,"open");
-            await Task.Delay(100);
-        }
-    }
-
+    
     public void Clear()
     {
-        gaugeParent.transform.ChildClear();
+        foreach (var list in gaugeList)
+        {
+            Destroy(list);
+        }
         gaugeList.Clear();
+        Destroy(gauge);
     }
 }

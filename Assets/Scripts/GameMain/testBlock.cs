@@ -65,10 +65,8 @@ public class testBlock : MonoBehaviour
         */
 
         bgObj = Instantiate(backGround);
-        //var pos = bgObj.transform.position;
-        //var scale = bgObj.transform.localScale;
-        bgObj.transform.localScale = new Vector3(GameManager.boardWidth,  0.8f * GameManager.boardHeight + 0.2f);
-        //pos.x = bgObj.transform.localScale.x / 2 - 0.5f;
+        bgObj.GetComponent<SpriteRenderer>().size =
+            new Vector2(GameManager.boardWidth + 0.8f, GameManager.boardHeight);
         bgObj.transform.position = new Vector3( GameManager.boardWidth / 2.0f -0.5f ,
             GameManager.boardHeight / 2.0f ,15);
     }
