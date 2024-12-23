@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   status:
-    maxHp: 50
+    maxHp: 3
     hp: 0
     atk: 5
     def: 10

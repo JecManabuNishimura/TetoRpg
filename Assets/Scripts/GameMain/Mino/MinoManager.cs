@@ -135,9 +135,11 @@ public class MinoManager : MonoBehaviour
         fallTime -= GameManager.player.BelongingsMinoEffect["DownSpeedUp"] * 0.2f;
         fallTime += GameManager.player.BelongingsMinoEffect["DownSpeedDown"]* 0.2f;
         // ホールド対応
-        holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+        //holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+        holdObj.SetActive(true);
         // 予測ブロック対応
-        clMinoObj.SetActive(GameManager.player.BelongingsMinoEffect["PredictionBlock"] != 0);
+        //clMinoObj.SetActive(GameManager.player.BelongingsMinoEffect["PredictionBlock"] != 0);
+        clMinoObj.SetActive(true);
         if (!SelectMino || GameManager.menuFlag) return;
 
 

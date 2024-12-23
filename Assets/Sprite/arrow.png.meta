@@ -100,10 +100,10 @@ TextureImporter:
       name: arrow_0
       rect:
         serializedVersion: 2
-        x: 178
-        y: 1938
-        width: 542
-        height: 359
+        x: 103
+        y: 1117
+        width: 311
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -122,10 +122,10 @@ TextureImporter:
       name: arrow_1
       rect:
         serializedVersion: 2
-        x: 934
-        y: 1944
-        width: 672
-        height: 348
+        x: 538
+        y: 1121
+        width: 386
+        height: 198
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,35 +141,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: arrow_2
-      rect:
-        serializedVersion: 2
-        x: 1818
-        y: 1944
-        width: 693
-        height: 348
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1262f05b8b9caa54c9c72d81009e1634
-      internalID: -1185941335
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: arrow_6
       rect:
         serializedVersion: 2
-        x: 2713
-        y: 1938
-        width: 529
-        height: 359
+        x: 1566
+        y: 1117
+        width: 300
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -188,10 +166,10 @@ TextureImporter:
       name: arrow_7
       rect:
         serializedVersion: 2
-        x: 69
-        y: 1397
-        width: 713
-        height: 360
+        x: 41
+        y: 806
+        width: 408
+        height: 205
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -210,10 +188,10 @@ TextureImporter:
       name: arrow_8
       rect:
         serializedVersion: 2
-        x: 922
-        y: 1397
-        width: 713
-        height: 360
+        x: 532
+        y: 806
+        width: 409
+        height: 205
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -232,10 +210,10 @@ TextureImporter:
       name: arrow_9
       rect:
         serializedVersion: 2
-        x: 2011
-        y: 1402
-        width: 376
-        height: 350
+        x: 1159
+        y: 809
+        width: 215
+        height: 199
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -254,10 +232,10 @@ TextureImporter:
       name: arrow_10
       rect:
         serializedVersion: 2
-        x: 2710
-        y: 1422
-        width: 425
-        height: 302
+        x: 1562
+        y: 819
+        width: 243
+        height: 174
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -276,10 +254,10 @@ TextureImporter:
       name: arrow_11
       rect:
         serializedVersion: 2
-        x: 208
-        y: 748
-        width: 436
-        height: 437
+        x: 120
+        y: 432
+        width: 250
+        height: 250
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -298,10 +276,10 @@ TextureImporter:
       name: arrow_12
       rect:
         serializedVersion: 2
-        x: 1061
-        y: 748
-        width: 436
-        height: 437
+        x: 611
+        y: 432
+        width: 250
+        height: 250
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -320,10 +298,10 @@ TextureImporter:
       name: arrow_13
       rect:
         serializedVersion: 2
-        x: 1941
-        y: 748
-        width: 437
-        height: 437
+        x: 1119
+        y: 432
+        width: 250
+        height: 250
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -342,10 +320,10 @@ TextureImporter:
       name: arrow_14
       rect:
         serializedVersion: 2
-        x: 2794
-        y: 748
-        width: 437
-        height: 437
+        x: 1610
+        y: 432
+        width: 250
+        height: 250
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -364,10 +342,10 @@ TextureImporter:
       name: arrow_15
       rect:
         serializedVersion: 2
-        x: 155
-        y: 393
-        width: 964
-        height: 244
+        x: 90
+        y: 227
+        width: 554
+        height: 139
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -386,10 +364,10 @@ TextureImporter:
       name: arrow_16
       rect:
         serializedVersion: 2
-        x: 1305
-        y: 193
-        width: 343
-        height: 343
+        x: 753
+        y: 112
+        width: 196
+        height: 196
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -408,10 +386,10 @@ TextureImporter:
       name: arrow_17
       rect:
         serializedVersion: 2
-        x: 1906
-        y: 108
-        width: 219
-        height: 539
+        x: 1098
+        y: 63
+        width: 125
+        height: 309
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -430,10 +408,10 @@ TextureImporter:
       name: arrow_18
       rect:
         serializedVersion: 2
-        x: 2425
-        y: 66
-        width: 806
-        height: 589
+        x: 1398
+        y: 259
+        width: 462
+        height: 118
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -452,10 +430,10 @@ TextureImporter:
       name: arrow_20
       rect:
         serializedVersion: 2
-        x: 152
-        y: 56
-        width: 967
-        height: 244
+        x: 88
+        y: 33
+        width: 556
+        height: 139
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -466,6 +444,50 @@ TextureImporter:
       bones: []
       spriteID: fb20dc1b0d6df86449aefc60c6618a32
       internalID: 1632735131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arrow_4
+      rect:
+        serializedVersion: 2
+        x: 1045
+        y: 1121
+        width: 397
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 767c9d03d313a5844bc898b11ed70c04
+      internalID: -2046465532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arrow_27
+      rect:
+        serializedVersion: 2
+        x: 1398
+        y: 39
+        width: 462
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 126e567e0881fa64c8e0bb9e85fa52bc
+      internalID: 1949356303
       vertices: []
       indices: 
       edges: []

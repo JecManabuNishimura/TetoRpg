@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
                 }
                 if (EnemyDown)
                 {
-                    EnemyDown = false;
+                    //EnemyDown = false;
                     BoardManager.Instance.ClearBoard();
                     ClearBlock?.Invoke();
                     enemy.EnemyDeath();

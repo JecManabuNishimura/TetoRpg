@@ -34,7 +34,7 @@ public class AttackData : MonoBehaviour
     //***********************************************
     private static List<Vector2Int> OneRowLineRandom()
     {
-        int y = Random.Range(3, 6);
+        int y = Random.Range(10, GameManager.boardHeight -1);
         List<Vector2Int> pos = new();
         for (int i = 0; i < GameManager.boardWidth; i++)
         {

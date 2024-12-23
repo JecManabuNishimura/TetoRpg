@@ -34,14 +34,15 @@ public class NextUpGauge : MonoBehaviour
     public void CreateGauge(int count)
     {
         var obj = Instantiate(nextObj);
-        obj.GetComponent<SpriteRenderer>().size = new Vector2(GameManager.boardWidth + 0.8f, 1.65f);
+        obj.GetComponent<SpriteRenderer>().size = new Vector2(GameManager.boardWidth + 0.3f, 1.35f);
         obj.transform.position = new Vector3(GameManager.boardWidth / 2.0f - 0.5f, -1.7f, 0);
         for (int i = 0; i < GameManager.boardWidth; i++)
         {
             var back = Instantiate(blockBackObj, obj.transform);
-            back.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), -0.1f, 0);
+            back.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 0f, 0);
+            //　矢印オブジェ
             var arrow = Instantiate(arrowObj, obj.transform);
-            arrow.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 0.77f, 0);
+            arrow.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 1.2f, 0);
         }
         gauge = obj;
     }
@@ -59,7 +60,7 @@ public class NextUpGauge : MonoBehaviour
     public void CountUp()
     {
         var obj = Instantiate(blockObj, gauge.transform);
-        obj.transform.localPosition = new Vector3(gaugeList.Count - (GameManager.boardWidth / 2.0f - 0.5f), -0.1f, 0);
+        obj.transform.localPosition = new Vector3(gaugeList.Count - (GameManager.boardWidth / 2.0f - 0.5f), 0f, 0);
         gaugeList.Add(obj);
     }
     

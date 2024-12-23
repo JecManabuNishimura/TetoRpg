@@ -8,6 +8,7 @@ using UnityEngine;
 public class testBlock : MonoBehaviour
 {
     [SerializeField] private GameObject backGround;
+    [SerializeField] private GameObject backGroundFream;
     public GameObject block;
     public GameObject checkBlock;
     private GameObject checkParent;
@@ -15,6 +16,7 @@ public class testBlock : MonoBehaviour
     
     private List<GameObject> blockList = new();
     private GameObject bgObj;
+    private GameObject bgfObj;
     
     public int distance = 1;
     void Start()
@@ -39,6 +41,7 @@ public class testBlock : MonoBehaviour
     {
         parent.transform.ChildClear();
         Destroy(bgObj);
+        Destroy(bgfObj);
     }
     private async Task CreateBlock()
     {
@@ -66,9 +69,14 @@ public class testBlock : MonoBehaviour
 
         bgObj = Instantiate(backGround);
         bgObj.GetComponent<SpriteRenderer>().size =
-            new Vector2(GameManager.boardWidth + 0.8f, GameManager.boardHeight);
+            new Vector2(GameManager.boardWidth + 0.8f, GameManager.boardHeight-0.1f);
         bgObj.transform.position = new Vector3( GameManager.boardWidth / 2.0f -0.5f ,
             GameManager.boardHeight / 2.0f ,15);
+        bgfObj = Instantiate(backGroundFream);
+        bgfObj.GetComponent<SpriteRenderer>().size =
+            new Vector2(GameManager.boardWidth + 1f, GameManager.boardHeight);
+        bgfObj.transform.position = new Vector3(GameManager.boardWidth / 2.0f - 0.5f,
+            GameManager.boardHeight / 2.0f, 15);
     }
 
     private void Update()
@@ -104,8 +112,6 @@ public class testBlock : MonoBehaviour
                     objlist[i].transform.localPosition = pos;
                     endflag = false;
                 }
-
-                
             }
             await Task.Delay(50);
 

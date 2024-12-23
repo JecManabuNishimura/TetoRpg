@@ -920,6 +920,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backGround: {fileID: 105792773920900668, guid: 1ca3e6d7fbbb6594bb7de49e94566f0d, type: 3}
+  backGroundFream: {fileID: 3974686643554238572, guid: 932c442dc9de03543b52ac4fe458feef, type: 3}
   block: {fileID: 4476787805349554323, guid: 3de678f6418a89c46a25d48026ccb1d2, type: 3}
   checkBlock: {fileID: 4476787805349554323, guid: 402e10f28a55c884394d29c0046089c2, type: 3}
   parent: {fileID: 873209793}
