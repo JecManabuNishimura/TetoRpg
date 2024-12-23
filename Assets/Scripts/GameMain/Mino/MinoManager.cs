@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using MyMethods;
 using UI;
 using UnityEngine;
@@ -25,6 +26,7 @@ public class MinoManager : MonoBehaviour
     private GameObject SelectMino;
     private GameObject clMinoObj;
     private GameObject[,] minoDataTable;
+    private GameObject[,] minoDataTableCopy;
     private List<Treasure> treasuresTable = new();
     private GameObject minoListObj;
 
@@ -70,6 +72,8 @@ public class MinoManager : MonoBehaviour
         BoardManager.Instance.ResetTable += ResetDataTable;
         BoardManager.Instance.CheckTreasure += CheckTreasure;
         BoardManager.Instance.ClearTable += ClearTable;
+        BoardManager.Instance.AlignmentMino += MoveMinoAlignment;
+        BoardManager.Instance.GetTreasurePos += GetTreasurePos;
         
         inputHandler = new InputHandler
         {
@@ -94,6 +98,7 @@ public class MinoManager : MonoBehaviour
     {
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
         minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
+        minoDataTableCopy = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         NextUpGauge.Instance.CreateGauge(gaugeNum);
         //await NextUpGauge.Instance.Play();
         CreateNewMino();
@@ -129,7 +134,7 @@ public class MinoManager : MonoBehaviour
         }
         treasuresTable.Clear();
     }
-    private void Update()
+    private async void Update()
     {
         // 落下速度
         fallTime -= GameManager.player.BelongingsMinoEffect["DownSpeedUp"] * 0.2f;
@@ -158,6 +163,13 @@ public class MinoManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             fallTimer = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            minoListObj.transform.position = new Vector3(0, 7, 0);
+            await BoardManager.Instance.Alignment();
+            AlignmentEnd();
         }
     }
 
@@ -628,7 +640,7 @@ public class MinoManager : MonoBehaviour
         //--------------------------------------------------------------------------
         if (GameManager.stageData.TresureDropRate != 0)
         {
-            treasureFlag = Random.Range(0, GameManager.stageData.TresureDropRate) == 0 ? true : false;    
+            treasureFlag = Random.Range(0, GameManager.stageData.TresureDropRate) == 0 ;    
         }
         
         rotNum = 0;
@@ -1004,6 +1016,7 @@ public class MinoManager : MonoBehaviour
             {
                 Treasure t = new Treasure();
                 t.spriteObj = treasureSpriteObj;
+                treasureSpriteObj.transform.parent = minoListObj.transform;
                 t.number = table.GetComponent<MinoBlock>().TreasureNumber;
                 treasureSpriteObj = null;
                 treasuresTable.Add(t);
@@ -1073,6 +1086,65 @@ public class MinoManager : MonoBehaviour
                 minoDataTable[1, i].transform.parent = minoListObj.transform;
             }
         }
+    }
+
+    List<Vector2Int> GetTreasurePos((int x,int y) selectPos)
+    {
+        List<Vector2Int> pos = new();
+        int num = minoDataTable[selectPos.y, selectPos.x].GetComponent<MinoBlock>().TreasureNumber;
+        for (int y = 0; y < GameManager.boardHeight; y++)
+        {
+            for (int x = 0; x < GameManager.boardWidth; x++)
+            {
+                if (minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber == num)
+                {
+                    pos.Add(new Vector2Int(x,y));
+                }
+            }
+        }
+
+        return pos; 
+    }
+
+    void AlignmentEnd()
+    {
+        Array.Copy(minoDataTableCopy,minoDataTable,minoDataTable.Length);
+        
+        for (int y = 0; y < GameManager.boardHeight; y++)
+        {
+            for (int x = 0; x < GameManager.boardWidth; x++)
+            {
+                minoDataTableCopy[y,x] = null;
+            }
+        }
+        
+    }
+    async UniTask MoveMinoAlignment(Vector2Int targetPos,Vector2Int movePos)
+    {
+        minoDataTableCopy[movePos.y, movePos.x] = minoDataTable[targetPos.y, targetPos.x]; 
+        Vector3 start = minoDataTable[targetPos.y, targetPos.x].transform.position; 
+        Vector3 end = new Vector3(movePos.x,movePos.y,0);
+        await MoveObj(minoDataTable[targetPos.y, targetPos.x], start, end);
+    }
+    
+    private async UniTask MoveObj(GameObject obj, Vector3 start, Vector3 end)
+    {
+        float elapsedTime = 0f;
+        float endTime = 0.05f;
+        if (end.y >= 3)
+        {
+            endTime = 0;
+        }
+        while (elapsedTime <= endTime)
+        {
+            // 時間に基づいて位置を補間
+            obj.transform.position = Vector3.Lerp(start, end, elapsedTime / 0.1f);
+            elapsedTime += Time.deltaTime;
+            await UniTask.Yield();
+        }
+
+        // 最後に目標位置にぴったり合わせる
+        obj.transform.position = end;
     }
 
     private class Treasure

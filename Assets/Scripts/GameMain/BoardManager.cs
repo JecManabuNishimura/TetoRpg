@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,6 +20,8 @@ public class BoardManager
     public event Func<int,int,bool> CheckTreasure;
     public event Action ResetTable;
     public event Action ClearTable;
+    public event Func<Vector2Int, Vector2Int,UniTask> AlignmentMino;
+    public event Func<(int, int), List<Vector2Int>> GetTreasurePos;
 
     public event Action SetTestBlock;
     private List<int> deleteLineRow = new();
@@ -381,5 +384,86 @@ public class BoardManager
         }
 
         return postList[Random.Range(0, postList.Count)];
+    }
+
+    public async UniTask Alignment()
+    {
+        int[,] newBoard = new int[GameManager.boardHeight, GameManager.boardWidth];
+
+        int yCount = 1;
+        int xCount = 0;
+        List<(int x, int y)> trePos = new();
+        for (int y = 0; y < board.GetLength(0) ; y++)
+        {
+            for (int x = 0; x < board.GetLength(1); x++)
+            {
+                // 宝箱以外を移動させる
+                if (board[y, x] != 2 && board[y,x] != 0)
+                {
+                    newBoard[yCount, xCount] = board[y,x];
+                    
+                    if(AlignmentMino != null)
+                    {
+                        await AlignmentMino.Invoke(new Vector2Int(x,y),new Vector2Int(xCount, yCount));
+                    }
+                    xCount++;
+                    if (xCount >= GameManager.boardWidth - 1)
+                    {
+                        yCount++;
+                        xCount = 0;
+                    }
+                }
+                else if (board[y, x] == 2)
+                {
+                    trePos.Add((x,y));
+                }
+            }
+        }
+        // 宝箱の移動
+        while (trePos.Count > 0)
+        {
+            int maxPosX = 0;
+            var pos = GetTreasurePos(trePos[0]);
+            
+            // すでに登録されているかチェック
+            if (newBoard[yCount, xCount] == 0)          
+            {
+                foreach (var p in pos)
+                {
+                    maxPosX = maxPosX < p.x - pos[0].x ? p.x - pos[0].x : maxPosX;
+                }
+
+                if (maxPosX + 1 + xCount >= GameManager.boardWidth - 1)
+                {
+                    yCount++;
+                    xCount = 0;
+                }
+
+                foreach (var p in pos)
+                {
+                    newBoard[yCount + p.y - pos[0].y, xCount + p.x - pos[0].x] = board[p.y, p.x];
+                }
+
+                xCount += maxPosX + 1; // 0を考慮して一個先を見る
+                if (xCount >= GameManager.boardWidth - 1)
+                {
+                    yCount++;
+                    xCount = 0;
+                }
+                trePos.RemoveAt(0);
+            }
+            else
+            {
+                xCount++;
+                if (xCount >= GameManager.boardWidth - 1)
+                {
+                    yCount++;
+                    xCount = 0;
+                }
+            }
+        }
+        
+
+        board = newBoard;
     }
 }
