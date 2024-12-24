@@ -1127,6 +1127,7 @@ MonoBehaviour:
   blockObj: {fileID: 3700300457683365237, guid: 5365aed3246edd74d99b6c001ae714d4, type: 3}
   blockBackObj: {fileID: 3197444615043315966, guid: 38f859f65fa5bca4f8501c5f69e99772, type: 3}
   arrowObj: {fileID: 6801510884496208938, guid: 158bda30f2a0c584b9583949c5cf3b05, type: 3}
+  chainAnim: {fileID: 3712757651039326958, guid: 8a120c7a76058504ab6de4b248f330d1, type: 3}
 --- !u!4 &719998697
 Transform:
   m_ObjectHideFlags: 0
