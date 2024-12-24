@@ -1067,7 +1067,9 @@ public class MinoManager : MonoBehaviour
             minoDataTable[y - 1, x].transform.position += Vector3.up;
             if(t != null && minoDataTable[y - 1, x].GetComponent<MinoBlock>().TreimagePos != Vector3.zero)
             {
-                t.spriteObj.transform.position = minoDataTable[y - 1, x].transform.position + minoDataTable[y - 1, x].GetComponent<MinoBlock>().TreimagePos;
+                t.spriteObj.transform.position =
+                    minoDataTable[y - 1, x].transform.position + 
+                    minoDataTable[y - 1, x].GetComponent<MinoBlock>().TreimagePos;
             }
         }
         minoDataTable[y, x] = minoDataTable[y - 1, x];
@@ -1135,6 +1137,8 @@ public class MinoManager : MonoBehaviour
         {
             num = minoDataTable[tar.y, tar.x].GetComponent<MinoBlock>().TreasureNumber;
             minoDataTableCopy[movePos[0].y, movePos[0].x] = minoDataTable[tar.y, tar.x];
+            minoDataTableCopy[movePos[0].y, movePos[0].x].transform.position =
+                new Vector3(movePos[0].x, movePos[0].y, 0);
             // 画像位置を保存しているものを探す
             if(minoDataTable[tar.y, tar.x].GetComponent<MinoBlock>().TreimagePos != Vector3.zero)
             {
