@@ -14,9 +14,13 @@ public class NextUpGauge : MonoBehaviour
     [SerializeField] private GameObject blockObj;
     [SerializeField] private GameObject blockBackObj;
     [SerializeField] private GameObject arrowObj;
+    [SerializeField] private GameObject chainAnim;
     
     private List<GameObject> gaugeList = new ();
     private GameObject gauge;
+    private GameObject chain;
+    
+    
     public int GetCount => gaugeList.Count;
 
     private void Awake()
@@ -40,7 +44,7 @@ public class NextUpGauge : MonoBehaviour
         {
             var back = Instantiate(blockBackObj, obj.transform);
             back.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 0f, 0);
-            //Å@ñÓàÛÉIÉuÉWÉF
+            //ÔøΩ@ÔøΩÔøΩÔøΩIÔøΩuÔøΩWÔøΩF
             var arrow = Instantiate(arrowObj, obj.transform);
             arrow.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 1.2f, 0);
         }
@@ -54,6 +58,18 @@ public class NextUpGauge : MonoBehaviour
             Destroy(list);
         }
         gaugeList.Clear();
+    }
+
+    public async void StopCount()
+    {
+        chain = Instantiate(chainAnim);
+        chain.transform.position = gauge.transform.position - Vector3.forward;
+        await chain.GetComponent<ChainAnim>().onChain();
+    }
+    public async void ReCount()
+    {
+        await chain.GetComponent<ChainAnim>().offChain();
+        Destroy(chain);
     }
     
 

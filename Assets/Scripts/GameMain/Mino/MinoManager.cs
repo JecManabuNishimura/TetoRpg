@@ -52,7 +52,7 @@ public class MinoManager : MonoBehaviour
 
     private List<HoldMinoData> holdMino = new();
     private Vector2Int delPos;
-
+    private int NotGaugeUpCount = 3;
 
     private void Start()
     {
@@ -170,10 +170,21 @@ public class MinoManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
+            //await RandomMove();
            // minoListObj.transform.position = new Vector3(0, 7, 0);
             await BoardManager.Instance.Alignment();
             AlignmentEnd();
         }
+
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            NextUpGauge.Instance.StopCount();
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            NextUpGauge.Instance.ReCount();
+        }
+        
     }
 
     private void Instance_ChangeColor(int x,int y)
@@ -933,6 +944,11 @@ public class MinoManager : MonoBehaviour
 
     async Task ChangeFallCount()
     {
+        if (NotGaugeUpCount != 0)
+        {
+            NotGaugeUpCount--;
+            return;
+        }
         NextUpGauge.Instance.CountUp();
         if (NextUpGauge.Instance.GetCount == GameManager.boardWidth)
         {
@@ -1142,7 +1158,7 @@ public class MinoManager : MonoBehaviour
             // 画像位置を保存しているものを探す
             if(minoDataTable[tar.y, tar.x].GetComponent<MinoBlock>().TreimagePos != Vector3.zero)
             {
-                minoDataTableCopy[movePos[0].y, movePos[0].x].GetComponent<MinoBlock>().TreimagePos = new Vector3(movePos[0].x - trePos.x, movePos[0].y - trePos.y);
+                minoDataTableCopy[movePos[0].y, movePos[0].x].GetComponent<MinoBlock>().TreimagePos = new Vector3(trePos.x - movePos[0].x, trePos.y - movePos[0].y);
             }
             
             movePos.RemoveAt(0);
@@ -1165,6 +1181,18 @@ public class MinoManager : MonoBehaviour
         Vector3 end = new Vector3(movePos.x,movePos.y,0);
         await MoveObj(minoDataTable[targetPos.y, targetPos.x], start, end);
     }
+
+    async UniTask RandomMove()
+    {
+        for (int i = 0; i < minoListObj.transform.childCount; i++)
+        {
+            float x = Random.Range(-10.0f, 20.0f);
+            float y = Random.Range(-5.0f, 20.0f);
+            Vector3 start = minoListObj.transform.position;
+            MoveObj(minoListObj.transform.GetChild(i).gameObject, start, new Vector3(x, y, 0));
+
+        }
+    }
     
     private async UniTask MoveObj(GameObject obj, Vector3 start, Vector3 end)
     {
@@ -1177,7 +1205,7 @@ public class MinoManager : MonoBehaviour
         while (elapsedTime <= endTime)
         {
             // 時間に基づいて位置を補間
-            obj.transform.position = Vector3.Lerp(start, end, elapsedTime / 0.1f);
+            obj.transform.position = Vector3.Lerp(start, end, elapsedTime / 0.05f);
             elapsedTime += Time.deltaTime;
             await UniTask.Yield();
         }
