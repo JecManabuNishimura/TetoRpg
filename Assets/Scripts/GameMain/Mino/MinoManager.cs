@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using MyMethods;
 using UI;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class MinoManager : MonoBehaviour 
@@ -45,7 +47,7 @@ public class MinoManager : MonoBehaviour
     private float fallTime = 1;
 
     private bool treasureFlag = false;
-    private int treasureNumber = 0;
+    private int treasureNumber = 1;
     private bool holFlag = false;
 
     private List<HoldMinoData> holdMino = new();
@@ -74,6 +76,7 @@ public class MinoManager : MonoBehaviour
         BoardManager.Instance.ClearTable += ClearTable;
         BoardManager.Instance.AlignmentMino += MoveMinoAlignment;
         BoardManager.Instance.GetTreasurePos += GetTreasurePos;
+        BoardManager.Instance.MoveTreasurePos += MoveTreasurePos;
         
         inputHandler = new InputHandler
         {
@@ -167,7 +170,7 @@ public class MinoManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            minoListObj.transform.position = new Vector3(0, 7, 0);
+           // minoListObj.transform.position = new Vector3(0, 7, 0);
             await BoardManager.Instance.Alignment();
             AlignmentEnd();
         }
@@ -763,6 +766,7 @@ public class MinoManager : MonoBehaviour
                         }
                     }
                     MinoType type;
+                    int treNum = -1;
                     if (!treasureFlag)
                     {
                         // 回転軸用のマイナスもあるので、ABSをつける
@@ -771,8 +775,9 @@ public class MinoManager : MonoBehaviour
                     else
                     {
                         type = MinoType.Treasure;
+                        treNum = treasureNumber;
                     }
-                    obj.GetComponent<MinoBlock>().SetMinoData(type, index,treasureNumber);
+                    obj.GetComponent<MinoBlock>().SetMinoData(type, index, treNum);
 
                     GameObject clearObj = Instantiate(ClearMino, clMinoObj.transform, true);
                     obj.transform.position = new Vector3(x, -y, 0);
@@ -1096,9 +1101,12 @@ public class MinoManager : MonoBehaviour
         {
             for (int x = 0; x < GameManager.boardWidth; x++)
             {
-                if (minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber == num)
+                if(minoDataTable[y, x] != null)
                 {
-                    pos.Add(new Vector2Int(x,y));
+                    if (minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber == num)
+                    {
+                        pos.Add(new Vector2Int(x, y));
+                    }
                 }
             }
         }
@@ -1118,6 +1126,33 @@ public class MinoManager : MonoBehaviour
             }
         }
         
+    }
+
+    void MoveTreasurePos(List<Vector2Int> target,List<Vector2Int> movePos ,  Vector2 trePos)
+    {
+        int num = 0;
+        foreach (var tar in target)
+        {
+            num = minoDataTable[tar.y, tar.x].GetComponent<MinoBlock>().TreasureNumber;
+            minoDataTableCopy[movePos[0].y, movePos[0].x] = minoDataTable[tar.y, tar.x];
+            // 画像位置を保存しているものを探す
+            if(minoDataTable[tar.y, tar.x].GetComponent<MinoBlock>().TreimagePos != Vector3.zero)
+            {
+                minoDataTableCopy[movePos[0].y, movePos[0].x].GetComponent<MinoBlock>().TreimagePos = new Vector3(movePos[0].x - trePos.x, movePos[0].y - trePos.y);
+            }
+            
+            movePos.RemoveAt(0);
+            
+        }
+        
+        foreach (var d in treasuresTable)
+        {
+            if(d.number == num)
+            {
+                d.spriteObj.transform.position = trePos;
+                break;
+            }
+        }
     }
     async UniTask MoveMinoAlignment(Vector2Int targetPos,Vector2Int movePos)
     {

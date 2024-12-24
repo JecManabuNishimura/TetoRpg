@@ -22,6 +22,7 @@ public class BoardManager
     public event Action ClearTable;
     public event Func<Vector2Int, Vector2Int,UniTask> AlignmentMino;
     public event Func<(int, int), List<Vector2Int>> GetTreasurePos;
+    public event Action<List<Vector2Int>,List<Vector2Int>,Vector2> MoveTreasurePos;
 
     public event Action SetTestBlock;
     private List<int> deleteLineRow = new();
@@ -392,7 +393,7 @@ public class BoardManager
 
         int yCount = 1;
         int xCount = 0;
-        List<(int x, int y)> trePos = new();
+        List<Vector2Int > trePos = new();
         for (int y = 0; y < board.GetLength(0) ; y++)
         {
             for (int x = 0; x < board.GetLength(1); x++)
@@ -415,7 +416,7 @@ public class BoardManager
                 }
                 else if (board[y, x] == 2)
                 {
-                    trePos.Add((x,y));
+                    trePos.Add(new Vector2Int(x,y));
                 }
             }
         }
@@ -423,14 +424,20 @@ public class BoardManager
         while (trePos.Count > 0)
         {
             int maxPosX = 0;
-            var pos = GetTreasurePos(trePos[0]);
+            int maxPosY = 0;
+            Vector2Int target = trePos[0];
+            var pos = GetTreasurePos?.Invoke((target.x, target.y));
+            trePos = trePos.Except(pos).ToList();
+            Vector2 movePos = Vector2.zero;
+            List<Vector2Int> targetPos = new List<Vector2Int>();
             
             // すでに登録されているかチェック
             if (newBoard[yCount, xCount] == 0)          
             {
                 foreach (var p in pos)
                 {
-                    maxPosX = maxPosX < p.x - pos[0].x ? p.x - pos[0].x : maxPosX;
+                    maxPosX = maxPosX < MathF.Abs(p.x - target.x) ? (int)MathF.Abs(p.x - target.x) : maxPosX;
+                    maxPosY = maxPosY < MathF.Abs(p.y - target.y) ? (int)MathF.Abs(p.y - target.y) : maxPosY;
                 }
 
                 if (maxPosX + 1 + xCount >= GameManager.boardWidth - 1)
@@ -441,16 +448,25 @@ public class BoardManager
 
                 foreach (var p in pos)
                 {
-                    newBoard[yCount + p.y - pos[0].y, xCount + p.x - pos[0].x] = board[p.y, p.x];
+                    Vector2Int absData = new Vector2Int((int)MathF.Abs(p.x - target.x), (int)MathF.Abs(p.y - target.y));
+                    newBoard[yCount + absData.y, xCount + absData.x] = board[p.y, p.x];
+                    targetPos.Add(new Vector2Int(xCount + absData.x, yCount + absData.y));
                 }
+                movePos.x = xCount + (maxPosX / 2.0f);
+                movePos.y = yCount + (maxPosY / 2.0f);
+                MoveTreasurePos.Invoke(pos, targetPos,movePos);
 
                 xCount += maxPosX + 1; // 0を考慮して一個先を見る
-                if (xCount >= GameManager.boardWidth - 1)
+                if (xCount > GameManager.boardWidth - 1)
                 {
                     yCount++;
                     xCount = 0;
                 }
-                trePos.RemoveAt(0);
+                if(trePos.Count>0)
+                {
+                    trePos.RemoveAt(0);
+                }
+                
             }
             else
             {
