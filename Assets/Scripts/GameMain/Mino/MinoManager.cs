@@ -53,6 +53,7 @@ public class MinoManager : MonoBehaviour
     private List<HoldMinoData> holdMino = new();
     private Vector2Int delPos;
     private int NotGaugeUpCount = 3;
+    private bool obstacleFlag = false;
 
     private void Start()
     {
@@ -77,6 +78,8 @@ public class MinoManager : MonoBehaviour
         BoardManager.Instance.AlignmentMino += MoveMinoAlignment;
         BoardManager.Instance.GetTreasurePos += GetTreasurePos;
         BoardManager.Instance.MoveTreasurePos += MoveTreasurePos;
+        BoardManager.Instance.CreateObstacleBlock += CreateSkillObstacleBLock;
+        
         
         inputHandler = new InputHandler
         {
@@ -508,6 +511,9 @@ public class MinoManager : MonoBehaviour
                         minoDataTable[y, x] = null;
                         BoardManager.Instance.DeleteStripes(x,y);
                         break;
+                    case MinoType.Obstacle:
+                        BoardManager.Instance.ObstacleSkillFlag = true;
+                        break;
                     case MinoType.Treasure:
                         TreDelete();
                         break;
@@ -649,6 +655,7 @@ public class MinoManager : MonoBehaviour
     //========================================================================
     private void CreateNewMino()
     {
+        obstacleFlag = false;
         //--------------------------------------------------------------------------
         //  宝箱出現率調節
         //--------------------------------------------------------------------------
@@ -768,12 +775,21 @@ public class MinoManager : MonoBehaviour
                             minos[y, x] *= 3;
                         }
                         //-----------------------------------------------------------------
-                        // 縞々の確率
+                        // クロスの確率
                         //-----------------------------------------------------------------
                         else if ((GameManager.stageData.StripesDropRate != 0) &&
                                  (Random.Range(0, GameManager.stageData.StripesDropRate) == 0))
                         {
                             minos[y, x] *= 4;
+                        }
+                        //-----------------------------------------------------------------
+                        // 邪魔ブロックの確率
+                        //  暫定で30から引いた確立
+                        //-----------------------------------------------------------------
+                        else if ((GameManager.player.BelongingsMinoEffect["ObstacleBlock"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["ObstacleBlock"]) == 0))
+                        {
+                            minos[y, x] *= 5;
                         }
                     }
                     MinoType type;
@@ -817,6 +833,7 @@ public class MinoManager : MonoBehaviour
             2 => MinoType.Life,
             3 => MinoType.Bomb,
             4 => MinoType.Stripes,
+            5 => MinoType.Obstacle,
         };
     }
     void CheckUnder()
@@ -1094,6 +1111,8 @@ public class MinoManager : MonoBehaviour
             minoDataTable[y - 1, x] = null;
         }
     }
+
+    //　石ブロック生成
     async Task CreateObstacleBlock()
     {
         int rand = Random.Range(0, 10);
@@ -1110,6 +1129,26 @@ public class MinoManager : MonoBehaviour
             }
         }
     }
+    void AlignmentEnd()
+    {
+        Array.Copy(minoDataTableCopy, minoDataTable, minoDataTable.Length);
+
+        for (int y = 0; y < GameManager.boardHeight; y++)
+        {
+            for (int x = 0; x < GameManager.boardWidth; x++)
+            {
+                minoDataTableCopy[y, x] = null;
+            }
+        }
+    }
+
+    void CreateSkillObstacleBLock(int x,int y)
+    {
+        minoDataTable[y, x] = Instantiate(obstacleMino, new Vector3(x, y, 0), Quaternion.identity);
+        minoDataTable[y, x].transform.parent = minoListObj.transform;
+    }
+
+    // 宝箱整列用
 
     List<Vector2Int> GetTreasurePos((int x,int y) selectPos)
     {
@@ -1132,19 +1171,6 @@ public class MinoManager : MonoBehaviour
         return pos; 
     }
 
-    void AlignmentEnd()
-    {
-        Array.Copy(minoDataTableCopy,minoDataTable,minoDataTable.Length);
-        
-        for (int y = 0; y < GameManager.boardHeight; y++)
-        {
-            for (int x = 0; x < GameManager.boardWidth; x++)
-            {
-                minoDataTableCopy[y,x] = null;
-            }
-        }
-        
-    }
 
     void MoveTreasurePos(List<Vector2Int> target,List<Vector2Int> movePos ,  Vector2 trePos)
     {
@@ -1174,6 +1200,8 @@ public class MinoManager : MonoBehaviour
             }
         }
     }
+
+    // 整列用
     async UniTask MoveMinoAlignment(Vector2Int targetPos,Vector2Int movePos)
     {
         minoDataTableCopy[movePos.y, movePos.x] = minoDataTable[targetPos.y, targetPos.x]; 
@@ -1182,17 +1210,6 @@ public class MinoManager : MonoBehaviour
         await MoveObj(minoDataTable[targetPos.y, targetPos.x], start, end);
     }
 
-    async UniTask RandomMove()
-    {
-        for (int i = 0; i < minoListObj.transform.childCount; i++)
-        {
-            float x = Random.Range(-10.0f, 20.0f);
-            float y = Random.Range(-5.0f, 20.0f);
-            Vector3 start = minoListObj.transform.position;
-            MoveObj(minoListObj.transform.GetChild(i).gameObject, start, new Vector3(x, y, 0));
-
-        }
-    }
     
     private async UniTask MoveObj(GameObject obj, Vector3 start, Vector3 end)
     {

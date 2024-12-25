@@ -11,4 +11,5 @@ public class ImageDatabase : ScriptableObject
 
     public Sprite bombImage;
     public Sprite stripesImage;
+    public Sprite ObstacleImage;
 }

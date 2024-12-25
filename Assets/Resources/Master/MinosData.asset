@@ -19,8 +19,8 @@ MonoBehaviour:
     selectedGroupOptions:
     - id: 0
       effects:
-      - effect: PredictionBlock
-        value: 0
+      - effect: ObstacleBlock
+        value: 20
     - id: 1
       effects:
       - effect: DownSpeedUp

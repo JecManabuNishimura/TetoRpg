@@ -30,3 +30,4 @@ MonoBehaviour:
   - DownSpeedDown
   - FieldUp
   - FieldDown
+  - ObstacleBlock

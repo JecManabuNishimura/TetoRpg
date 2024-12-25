@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 using Random = UnityEngine.Random;
 
 public class BoardManager 
@@ -23,10 +24,12 @@ public class BoardManager
     public event Func<Vector2Int, Vector2Int,UniTask> AlignmentMino;
     public event Func<(int, int), List<Vector2Int>> GetTreasurePos;
     public event Action<List<Vector2Int>,List<Vector2Int>,Vector2> MoveTreasurePos;
+    public event Action<int,int> CreateObstacleBlock;
 
     public event Action SetTestBlock;
     private List<int> deleteLineRow = new();
     private List<Vector2Int> bombCol = new();
+    public bool ObstacleSkillFlag = false;
     public static BoardManager Instance
     {
         get
@@ -98,10 +101,16 @@ public class BoardManager
             // 一列全部そろっているか確認
             if (CheckIsRowFilledWithOnes(y))
             {
-                deleteLineRow.Add(y);
-                GameManager.DeleteLine++;
+                
                 DeleteLine(y);
                 ChangeColor?.Invoke(-1, y);
+                if (ObstacleSkillFlag)
+                {
+                    ObstacleSkillFlag = false;
+                    continue;
+                }
+                deleteLineRow.Add(y);
+                GameManager.DeleteLine++;
                 GameManager.DownFlag = true;
             }
         }
@@ -319,10 +328,26 @@ public class BoardManager
     {
         for (int i = 0; i < board.GetLength(1); i++)
         {
-            DeleteMino?.Invoke(i,row,false);  
+            DeleteMino?.Invoke(i,row,false);
             board[row, i] = 0;
         }
+        if(ObstacleSkillFlag)
+        {
+            CreateObstacle(row);
+        }
         SetTestBlock?.Invoke();
+    }
+
+    void CreateObstacle(int row)
+    {
+        for(int i=0; i< board.GetLength(1); i++)
+        {
+            if (Random.Range(0, 5) != 0)
+            {
+                CreateObstacleBlock.Invoke(i, row);
+                board[row, i] = 1;
+            }
+        }
     }
 
     void DownLine(int row)

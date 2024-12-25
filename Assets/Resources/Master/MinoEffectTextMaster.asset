@@ -31,6 +31,7 @@ MonoBehaviour:
     - DownSpeedDown
     - FieldUp
     - FieldDown
+    - ObstacleBlock
     values:
     - Text: 
       Negative: 0
@@ -66,3 +67,5 @@ MonoBehaviour:
       Negative: 1
     - Text: "\u30D5\u30A3\u30FC\u30EB\u30C9\u5E45\u6E1B"
       Negative: 0
+    - Text: "\u304A\u90AA\u9B54\u30D6\u30EB\u30C3\u30AF\u751F\u6210"
+      Negative: 1
