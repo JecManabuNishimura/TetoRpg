@@ -494,72 +494,6 @@ public class MinoManager : MonoBehaviour
     {
         if (minoDataTable[y, x] != null)
         {
-            /*
-            // トレジャーデータ削除
-            Action TreDelete = () =>
-            {
-                var list = new List<MinoBlock>();
-                for (int yy = 0; yy < GameManager.boardHeight; yy++)
-                {
-                    for (int xx = 0; xx < GameManager.boardWidth; xx++)
-                    {
-                        if(minoDataTable[yy, xx] != null)
-                        {
-                            if (minoDataTable[yy, xx].GetComponent<MinoBlock>().TreasureNumber == minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber)
-                            {
-                                list.Add(minoDataTable[yy, xx].GetComponent<MinoBlock>());
-                            }
-                        }
-                    }
-                }
-
-                list.ForEach(block => block.deleteFlag = true);
-                // 宝箱の削除
-                foreach (var treasure in treasuresTable.ToList())
-                {
-                    if (treasure.number == minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber)
-                    {
-                        if (!AttackFlag)
-                        {
-                            var unique = GameManager.stageLoader.GetDropData().GetItemDataId();
-                            if (int.TryParse(unique.WeaponId, out int result))
-                            {
-                                // ミノだった場合
-                                var obj = CreateMiniMino(MinoData.Entity.GetMinoData(result));
-                                obj.transform.parent = treasure.spriteObj.transform.GetChild(0).transform.transform;
-                                obj.transform.localPosition = new Vector3(0, 0.5f, -1);
-                                treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
-                                treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                if(GameManager.player.AcquisitionMino(unique))
-                                {
-                                    var text = Instantiate(newTextObj, obj.transform);
-                                    text.transform.localPosition = new Vector3(0, 3f, -1);
-                                }
-                            }
-                            else
-                            {
-                                // 装備品だった場合
-                                treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite
-                                    = EquipmentDatabase.Entity.GetEquipmentSpriteData(unique.WeaponId)
-                                        .sprite;
-                                treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                if (GameManager.player.AcquisitionItem(unique))
-                                {
-                                    var text = Instantiate(newTextObj, treasure.spriteObj.transform.GetChild(0).transform);
-                                    text.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                                    text.transform.localPosition = new Vector3(0, 1f, -1);
-                                    
-                                }
-                            }
-                            
-                        }
-                        Destroy(treasure.spriteObj, 2f); // アニメーション終了まで
-                        treasuresTable.Remove(treasure);
-                    }
-                }
-            };
-            */
-
             if (!AttackFlag && !skillCancel)
             {
                 //============================================
@@ -1062,14 +996,14 @@ public class MinoManager : MonoBehaviour
                     }
                     
                     GameManager.playerPut = true;
-                    
+                    await ChangeFallCount();
                     await GameManager.PlayerMove();
                     // 敵死亡時　何もしない
                     if(GameManager.EnemyDown)
                     {
                         return;
                     }
-                    await ChangeFallCount();
+                    
                     CreateNewMino();
                     
                     return;
