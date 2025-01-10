@@ -32,6 +32,10 @@ public class MinoBlock : MonoBehaviour
                 MinoType.Bomb => imgDB.bombImage.texture,
                 MinoType.Stripes => imgDB.stripesImage.texture,
                 MinoType.Obstacle => imgDB.ObstacleImage.texture,
+                MinoType.SkillCancel => imgDB.SkillCancelImage.texture,
+                MinoType.ObstacleStop => imgDB.ObstacleStopImage.texture,
+                MinoType.ShapeFix => imgDB.ShapeFixImage.texture,
+                MinoType.DeleteCancel => imgDB.DeleteCancelImage.texture,
             };
     }
 
@@ -50,4 +54,9 @@ public enum MinoType
     Stripes,
     Treasure,
     Obstacle,
+    SkillCancel,
+    ObstacleStop,
+    ShapeFix,
+    DeleteCancel,
+    
 }

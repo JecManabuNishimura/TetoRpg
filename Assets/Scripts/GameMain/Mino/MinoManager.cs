@@ -52,9 +52,19 @@ public class MinoManager : MonoBehaviour
 
     private List<HoldMinoData> holdMino = new();
     private Vector2Int delPos;
-    private int NotGaugeUpCount = 3;
+    private int NotGaugeUpCount = 0;
     private bool obstacleFlag = false;
 
+    private int shapeFixCount = 0;
+    private int shapeIndex;
+
+    private List<MinoEffectStock> minoEffectList = new ();
+
+    private class MinoEffectStock
+    {
+        public MinoType Type;
+        public Vector2Int pos;
+    }
     private void Start()
     {
         GameManager.StartBattle += StartBattle;
@@ -79,7 +89,7 @@ public class MinoManager : MonoBehaviour
         BoardManager.Instance.GetTreasurePos += GetTreasurePos;
         BoardManager.Instance.MoveTreasurePos += MoveTreasurePos;
         BoardManager.Instance.CreateObstacleBlock += CreateSkillObstacleBLock;
-        
+        BoardManager.Instance.CheckBlockType += CheckBlockType;
         
         inputHandler = new InputHandler
         {
@@ -178,22 +188,22 @@ public class MinoManager : MonoBehaviour
             await BoardManager.Instance.Alignment();
             AlignmentEnd();
         }
-
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            NextUpGauge.Instance.StopCount();
-        }
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            NextUpGauge.Instance.ReCount();
-        }
         
     }
 
     private void Instance_ChangeColor(int x,int y)
     {
         delPos = new Vector2Int(x, y);
-        StartCoroutine(ChangeColor(x, y));
+        try
+        {
+            StartCoroutine(ChangeColor(x, y));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
     }
 
     Vector2Int[,] moveDirection = new Vector2Int[,]
@@ -419,10 +429,72 @@ public class MinoManager : MonoBehaviour
         CheckUnder();
     }
 
-    void DeleteMino(int x, int y, bool AttackFlag)
+    void TreasureDelete(int x, int y,bool AttackFlag)
+    {
+        var list = new List<MinoBlock>();
+                for (int yy = 0; yy < GameManager.boardHeight; yy++)
+                {
+                    for (int xx = 0; xx < GameManager.boardWidth; xx++)
+                    {
+                        if(minoDataTable[yy, xx] != null)
+                        {
+                            if (minoDataTable[yy, xx].GetComponent<MinoBlock>().TreasureNumber == minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber)
+                            {
+                                list.Add(minoDataTable[yy, xx].GetComponent<MinoBlock>());
+                            }
+                        }
+                    }
+                }
+
+                list.ForEach(block => block.deleteFlag = true);
+                // 宝箱の削除
+                foreach (var treasure in treasuresTable.ToList())
+                {
+                    if (treasure.number == minoDataTable[y, x].GetComponent<MinoBlock>().TreasureNumber)
+                    {
+                        if (!AttackFlag)
+                        {
+                            var unique = GameManager.stageLoader.GetDropData().GetItemDataId();
+                            if (int.TryParse(unique.WeaponId, out int result))
+                            {
+                                // ミノだった場合
+                                var obj = CreateMiniMino(MinoData.Entity.GetMinoData(result));
+                                obj.transform.parent = treasure.spriteObj.transform.GetChild(0).transform.transform;
+                                obj.transform.localPosition = new Vector3(0, 0.5f, -1);
+                                treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+                                treasure.spriteObj.GetComponent<PlayableDirector>().Play();
+                                if(GameManager.player.AcquisitionMino(unique))
+                                {
+                                    var text = Instantiate(newTextObj, obj.transform);
+                                    text.transform.localPosition = new Vector3(0, 3f, -1);
+                                }
+                            }
+                            else
+                            {
+                                // 装備品だった場合
+                                treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite
+                                    = EquipmentDatabase.Entity.GetEquipmentSpriteData(unique.WeaponId)
+                                        .sprite;
+                                treasure.spriteObj.GetComponent<PlayableDirector>().Play();
+                                if (GameManager.player.AcquisitionItem(unique))
+                                {
+                                    var text = Instantiate(newTextObj, treasure.spriteObj.transform.GetChild(0).transform);
+                                    text.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                                    text.transform.localPosition = new Vector3(0, 1f, -1);
+                                    
+                                }
+                            }
+                        }
+                        Destroy(treasure.spriteObj, 2f); // アニメーション終了まで
+                        treasuresTable.Remove(treasure);
+                    }
+                }
+    }
+    void DeleteMino(int x, int y, bool AttackFlag,bool skillCancel = false)
     {
         if (minoDataTable[y, x] != null)
         {
+            /*
             // トレジャーデータ削除
             Action TreDelete = () =>
             {
@@ -486,8 +558,9 @@ public class MinoManager : MonoBehaviour
                     }
                 }
             };
+            */
 
-            if (!AttackFlag)
+            if (!AttackFlag && !skillCancel)
             {
                 //============================================
                 // 各種ブロック効果
@@ -513,21 +586,44 @@ public class MinoManager : MonoBehaviour
                         break;
                     case MinoType.Obstacle:
                         BoardManager.Instance.ObstacleSkillFlag = true;
+                        minoDataTable[y, x].GetComponent<MinoBlock>().minoType = MinoType.Normal;
+                        BoardManager.Instance.SetBoardData(x,y,false);
+                        return;
                         break;
                     case MinoType.Treasure:
-                        TreDelete();
+                        TreasureDelete(x, y, AttackFlag);
                         break;
+                    case MinoType.SkillCancel:
+                        break;
+                    case MinoType.ObstacleStop:
+                        if (NotGaugeUpCount == 0)
+                        {
+                            NextUpGauge.Instance.StopCount();    
+                        }
+                        NotGaugeUpCount += 5;
+                        break;
+                    case MinoType.ShapeFix:
+                        if (shapeFixCount == 0)
+                        {
+                            shapeFixCount += 5;
+                            shapeIndex = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();    
+                        }
+                        break;
+                    case MinoType.DeleteCancel:
+                        break;  
                 }
+                
             }
             else if(minoDataTable[y, x].GetComponent<MinoBlock>().minoType == MinoType.Treasure)
             {
-                TreDelete();
+                TreasureDelete(x, y, AttackFlag);
             }
 
             Destroy(minoDataTable[y, x]);
             minoDataTable[y, x] = null;
         }
     }
+
 
     bool CheckTreasure(int x,int y)
     {
@@ -656,24 +752,34 @@ public class MinoManager : MonoBehaviour
     private void CreateNewMino()
     {
         obstacleFlag = false;
-        //--------------------------------------------------------------------------
-        //  宝箱出現率調節
-        //--------------------------------------------------------------------------
-        if (GameManager.stageData.TresureDropRate != 0)
+        // 形固定
+        if (shapeFixCount == 0)
         {
-            treasureFlag = Random.Range(0, GameManager.stageData.TresureDropRate) == 0 ;    
-        }
-        
-        rotNum = 0;
-        if(treasureFlag)
-        {
-            index = 0;
+            //--------------------------------------------------------------------------
+            //  宝箱出現率調節
+            //--------------------------------------------------------------------------
+            if (GameManager.stageData.TresureDropRate != 0)
+            {
+                treasureFlag = Random.Range(0, GameManager.stageData.TresureDropRate) == 0;
+            }
+
+            rotNum = 0;
+            if (treasureFlag)
+            {
+                index = 0;
+            }
+            else
+            {
+                // 所持数最大7に固定（現在）
+                index = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();
+            }
         }
         else
         {
-            // 所持数最大7に固定（現在）
-            index = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();
+            shapeFixCount--;
+            index = shapeIndex;
         }
+
         clMinoObj.transform.position = Vector3.zero;       
         nowMinos = MinoFactory.GetMinoData(index, treasureFlag);
         CreatePiece(nowMinos,true);
@@ -791,6 +897,38 @@ public class MinoManager : MonoBehaviour
                         {
                             minos[y, x] *= 5;
                         }
+                        //-----------------------------------------------------------------
+                        // ミノ効果取り消し
+                        //-----------------------------------------------------------------
+                        else if ((GameManager.player.BelongingsMinoEffect["SkillCancel"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["SkillCancel"]) == 0))
+                        {
+                            minos[y, x] *= 6;
+                        }
+                        //-----------------------------------------------------------------
+                        // 邪魔ブロック上昇禁止
+                        //-----------------------------------------------------------------
+                        else if ((GameManager.player.BelongingsMinoEffect["ObstacleStop"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["ObstacleStop"]) == 0))
+                        {
+                            minos[y, x] *= 7;
+                        }
+                        //-----------------------------------------------------------------
+                        // 邪魔ブロック上昇禁止
+                        //-----------------------------------------------------------------
+                        else if ((GameManager.player.BelongingsMinoEffect["ShapeFix"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["ShapeFix"]) == 0))
+                        {
+                            minos[y, x] *= 8;
+                        }
+                        //-----------------------------------------------------------------
+                        // 削除キャンセルブロック
+                        //-----------------------------------------------------------------
+                        else if ((GameManager.player.BelongingsMinoEffect["DeleteCancel"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["DeleteCancel"]) == 0))
+                        {
+                            minos[y, x] *= 9;
+                        }
                     }
                     MinoType type;
                     int treNum = -1;
@@ -834,6 +972,10 @@ public class MinoManager : MonoBehaviour
             3 => MinoType.Bomb,
             4 => MinoType.Stripes,
             5 => MinoType.Obstacle,
+            6 => MinoType.SkillCancel,
+            7 =>MinoType.ObstacleStop, 
+            8 =>MinoType.ShapeFix, 
+            9 =>MinoType.DeleteCancel, 
         };
     }
     void CheckUnder()
@@ -870,6 +1012,32 @@ public class MinoManager : MonoBehaviour
         clMinoObj.transform.position =
             new Vector3(SelectMino.transform.position.x, maxPos - chilPos, clMinoObj.transform.position.z);
     }
+
+    private bool CheckBlockType(MinoType checkType, int x, int y)
+    {
+        if(minoDataTable[y, x] != null)
+        {
+            if (minoDataTable[y, x].GetComponent<MinoBlock>().minoType == checkType)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    /*
+    private bool CheckSkillCancelBlock(int x,int y)
+    {
+        if(minoDataTable[y, x] != null)
+        {
+            if (minoDataTable[y, x].GetComponent<MinoBlock>().minoType == MinoType.SkillCancel)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }*/
     private async void Fall()
     {
         while (true)
@@ -892,11 +1060,8 @@ public class MinoManager : MonoBehaviour
                     {
                         Destroy(clMinoObj.transform.GetChild(i).gameObject);
                     }
-
-
                     
                     GameManager.playerPut = true;
-                    
                     
                     await GameManager.PlayerMove();
                     // 敵死亡時　何もしない
@@ -964,6 +1129,10 @@ public class MinoManager : MonoBehaviour
         if (NotGaugeUpCount != 0)
         {
             NotGaugeUpCount--;
+            if (NotGaugeUpCount == 0)
+            {
+                NextUpGauge.Instance.ReCount();
+            }
             return;
         }
         NextUpGauge.Instance.CountUp();
@@ -1066,7 +1235,8 @@ public class MinoManager : MonoBehaviour
         // そろっているかチェック
         GameManager.DeleteLine = 0;     //　いったん初期化
         GameManager.DeleteMino = 0;
-        BoardManager.Instance.CheckLine(0);
+        await BoardManager.Instance.CheckLine(0);
+        
         // ダメージテキスト表示
         if (GameManager.playerDamage != 0)
         {

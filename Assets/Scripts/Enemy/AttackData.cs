@@ -22,6 +22,9 @@ public class AttackData : MonoBehaviour
         {
             SpecialAttackName.LastAddLine => LastAddLine(),
             SpecialAttackName.Attack4to4 => Attack4To4(),
+            SpecialAttackName.NextUpBoost => NextUpBoost(),
+            SpecialAttackName.AttackBlockSpawn => AttackBlockSpawn(),
+            
         };
     }
 
@@ -171,6 +174,15 @@ public class AttackData : MonoBehaviour
         return null;
     }
 
+    //***********************************************
+    //　お邪魔ブロックゲージ加速
+    //***********************************************
+    private static List<Vector2Int> NextUpBoost()
+    {
+        GameManager.NextUpCountAmount++;
+        return null;
+    }
+
     private static List<Vector2Int> Attack4To4()
     {
         var posX = BoardManager.Instance.GetRandomMinoPos().x;
@@ -185,6 +197,33 @@ public class AttackData : MonoBehaviour
         }
 
         return pos;
+    }
+
+    private static List<Vector2Int> AttackBlockSpawn ()
+    {
+        List<Vector2Int> attackPoint = new List<Vector2Int>();
+        for (int y = 3; y < 8; y++) // 縦方向 (y)
+        {
+            for (int x = 0; x < BoardManager.Instance.board.GetLength(1); x++) // 横方向 (x)
+            {
+                if (BoardManager.Instance.board[y, x] != 0)
+                {
+                    attackPoint.Add(new Vector2Int(x, y));
+                }
+            }
+        }
+
+        if (attackPoint.Count != 0)
+        {
+            List<Vector2Int> selectAttack = new();
+            selectAttack.Add(attackPoint[Random.Range(0, attackPoint.Count)]);
+
+            return selectAttack;
+        }
+        else
+        {
+            return null;
+        }
 
     }
 }
@@ -199,10 +238,13 @@ public enum AttackName
     Cross5to5Random,
     BombAttack,
     BombMultiAttack,
+    
 }
 
 public enum SpecialAttackName
 {
     LastAddLine,
     Attack4to4,
+    NextUpBoost,
+    AttackBlockSpawn,
 }

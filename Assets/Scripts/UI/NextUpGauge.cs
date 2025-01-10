@@ -15,11 +15,14 @@ public class NextUpGauge : MonoBehaviour
     [SerializeField] private GameObject blockBackObj;
     [SerializeField] private GameObject arrowObj;
     [SerializeField] private GameObject chainAnim;
+
+    [SerializeField] private GameObject UICanvas;
+    [SerializeField] private GameObject ObstacleCount;
     
     private List<GameObject> gaugeList = new ();
     private GameObject gauge;
     private GameObject chain;
-    
+    private GameObject obstacleCount;
     
     public int GetCount => gaugeList.Count;
 
@@ -38,6 +41,7 @@ public class NextUpGauge : MonoBehaviour
     public void CreateGauge(int count)
     {
         var obj = Instantiate(nextObj);
+        obstacleCount = Instantiate(ObstacleCount, UICanvas.transform);
         obj.GetComponent<SpriteRenderer>().size = new Vector2(GameManager.boardWidth + 0.3f, 1.35f);
         obj.transform.position = new Vector3(GameManager.boardWidth / 2.0f - 0.5f, -1.7f, 0);
         for (int i = 0; i < GameManager.boardWidth; i++)
@@ -72,12 +76,18 @@ public class NextUpGauge : MonoBehaviour
         Destroy(chain);
     }
     
-
     public void CountUp()
     {
-        var obj = Instantiate(blockObj, gauge.transform);
-        obj.transform.localPosition = new Vector3(gaugeList.Count - (GameManager.boardWidth / 2.0f - 0.5f), 0f, 0);
-        gaugeList.Add(obj);
+        for (int i = 0; i < GameManager.NextUpCountAmount; i++)
+        {
+            if (gaugeList.Count < GameManager.boardWidth)
+            {
+                var obj = Instantiate(blockObj, gauge.transform);
+                obj.transform.localPosition =
+                    new Vector3(gaugeList.Count - (GameManager.boardWidth / 2.0f - 0.5f), 0f, 0);
+                gaugeList.Add(obj);
+            }
+        }
     }
     
     public void Clear()
@@ -88,5 +98,6 @@ public class NextUpGauge : MonoBehaviour
         }
         gaugeList.Clear();
         Destroy(gauge);
+        Destroy(obstacleCount);
     }
 }

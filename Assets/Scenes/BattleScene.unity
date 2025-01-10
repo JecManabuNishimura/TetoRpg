@@ -1128,6 +1128,8 @@ MonoBehaviour:
   blockBackObj: {fileID: 3197444615043315966, guid: 38f859f65fa5bca4f8501c5f69e99772, type: 3}
   arrowObj: {fileID: 6801510884496208938, guid: 158bda30f2a0c584b9583949c5cf3b05, type: 3}
   chainAnim: {fileID: 3712757651039326958, guid: 8a120c7a76058504ab6de4b248f330d1, type: 3}
+  UICanvas: {fileID: 1859248431}
+  ObstacleCount: {fileID: 7854827909473774611, guid: b4c6e3e5860304a4f911ee2586580dca, type: 3}
 --- !u!4 &719998697
 Transform:
   m_ObjectHideFlags: 0
@@ -3002,7 +3004,6 @@ SceneRoots:
   - {fileID: 963194228}
   - {fileID: 705507995}
   - {fileID: 667771775}
-  - {fileID: 873209794}
   - {fileID: 562533847}
   - {fileID: 840107149}
   - {fileID: 1859248435}
@@ -3012,3 +3013,4 @@ SceneRoots:
   - {fileID: 88767309}
   - {fileID: 2063105672}
   - {fileID: 719998697}
+  - {fileID: 873209794}

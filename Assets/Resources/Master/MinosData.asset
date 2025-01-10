@@ -19,11 +19,11 @@ MonoBehaviour:
     selectedGroupOptions:
     - id: 0
       effects:
-      - effect: ObstacleBlock
+      - effect: DeleteCancel
         value: 20
     - id: 1
       effects:
-      - effect: DownSpeedUp
+      - effect: None
         value: 1
     - id: 2
       effects:

@@ -16,6 +16,7 @@ namespace Enemy
     public class Charactor : CharactorData,ICharactor
     {
         [SerializeField] private GameObject attackArea;
+        [SerializeField] private GameObject attackBlock;
         [SerializeField] private int AttackInterval = 3;
         [SerializeField] private ParticleSystem particle;
         [SerializeField] private float duration = 1.0f;
@@ -33,6 +34,7 @@ namespace Enemy
         
         private List<ParticleSystem> parts = new List<ParticleSystem>();
         private List<GameObject> area = new ();
+        private List<GameObject> attackBlockList = new(); 
         private GameObject attackObjPare;
         private float timer = 0;
         private float attackTime;
@@ -47,6 +49,7 @@ namespace Enemy
         private int orderNumber = 0;
 
         private bool SpecialAttackFlag = false;
+        private bool regularAttackFlag = false;
         
         private void Awake()
         {
@@ -119,9 +122,17 @@ namespace Enemy
                         var data = AttackData.GetSpecialAttack(spAttackSettings[pattern].name);
                         foreach (var d in data)
                         {
-                            GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0), Quaternion.identity);
-                            area.Add(aObj);
-                            aObj.transform.parent = attackObjPare.transform;
+                            if (spAttackSettings[pattern].name == SpecialAttackName.AttackBlockSpawn)
+                            {
+                                attackBlockList.Add(Instantiate(attackBlock,new Vector3(d.x,d.y,0),Quaternion.identity));
+                                BoardManager.Instance.SetEnemyAttackBlock(d.x,d.y);
+                            }
+                            else
+                            {
+                                GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0), Quaternion.identity);
+                                area.Add(aObj);
+                                aObj.transform.parent = attackObjPare.transform;    
+                            }
                         }
                         break;
                     }

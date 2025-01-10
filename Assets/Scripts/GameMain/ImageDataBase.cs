@@ -12,4 +12,9 @@ public class ImageDatabase : ScriptableObject
     public Sprite bombImage;
     public Sprite stripesImage;
     public Sprite ObstacleImage;
+    public Sprite SkillCancelImage;
+    public Sprite ObstacleStopImage;
+    public Sprite ShapeFixImage;
+    public Sprite DeleteCancelImage;
+    
 }

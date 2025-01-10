@@ -14,7 +14,7 @@ public class BoardManager
     public int[,] board; // ボードの状態を管理する配列
 
     public event Action<int,int> ChangeColor;
-    public event Action<int,int,bool> DeleteMino;
+    public event Action<int,int,bool,bool> DeleteMino;
     public event Action<int,int> DownMino;
     public event Action<int,int> UpMino;
     public event Action<int,int> TableNullMino;
@@ -25,11 +25,14 @@ public class BoardManager
     public event Func<(int, int), List<Vector2Int>> GetTreasurePos;
     public event Action<List<Vector2Int>,List<Vector2Int>,Vector2> MoveTreasurePos;
     public event Action<int,int> CreateObstacleBlock;
+    public event Action MinoEffectStart;
+    public event Func<MinoType, int, int, bool> CheckBlockType;
 
     public event Action SetTestBlock;
     private List<int> deleteLineRow = new();
     private List<Vector2Int> bombCol = new();
     public bool ObstacleSkillFlag = false;
+    private bool stripeFlag = false;
     public static BoardManager Instance
     {
         get
@@ -93,20 +96,37 @@ public class BoardManager
         // 衝突なし
     }
 
-    public void CheckLine(int row)
+    public async UniTask CheckLine(int row)
     {
         deleteLineRow.Clear();
+        List<int> obstacleSkillLine = new();
         for (int y = row; y < board.GetLength(0); y++)
         {
             // 一列全部そろっているか確認
             if (CheckIsRowFilledWithOnes(y))
             {
-                
+                bool deleteCancelFlag = false;
+                for (int x = 0; x < board.GetLength(1); x++)
+                {
+                    deleteCancelFlag = CheckBlockType.Invoke(MinoType.DeleteCancel,x, y);
+                    if (deleteCancelFlag)
+                    {
+                        DeleteMino?.Invoke(x,y,false,false);
+                        board[y, x] = 0;
+                        break;
+                    }
+                }
+                if (deleteCancelFlag)
+                {
+                    continue;
+                }
                 DeleteLine(y);
                 ChangeColor?.Invoke(-1, y);
+
                 if (ObstacleSkillFlag)
                 {
                     ObstacleSkillFlag = false;
+                    obstacleSkillLine.Add(y);
                     continue;
                 }
                 deleteLineRow.Add(y);
@@ -115,10 +135,91 @@ public class BoardManager
             }
         }
         CheckTreasureData();
+        for (int y = 1; y < board.GetLength(0); y++)
+        {
+            CheckDeleteLine(y);    
+        }
+        
+        // 邪魔ブロックを生成（スキル）
+        foreach (var ob in obstacleSkillLine)
+        {
+            await CreateObstacle(ob);
+        }
+        
         CheckMaxPutPos();
         SetTestBlock?.Invoke();
     }
+    
+    async UniTask CreateObstacle(int row)
+    {
+        List<int> blockX = new List<int>();
+        // スキルブロックを検索
+        for (int i = 0; i < board.GetLength(1); i++)
+        {
+            if (board[row, i] != 0)
+            {
+                blockX.Add(i);
+                DeleteMino?.Invoke(i, row,false,false);
+            }
+        }
+        await CreateObstaclesFromMultipleCenters(row, blockX, GameManager.boardWidth);
+    }
 
+ 
+    async UniTask CreateObstaclesFromMultipleCenters(int row, List<int> centerPoints, int maxColumns)
+    {
+        List<(int left,int right)> dir = new();
+        List<int> num = new ();
+        for (int i = 0; i < GameManager.boardWidth; i++)
+        {
+            num.Add(i);
+        }
+        foreach (var center in centerPoints)
+        {
+            dir.Add((center,center));
+            CreateObstacleBlock?.Invoke(center, row);
+            num.Remove(center);
+            board[row, center] = 1;
+        }
+
+        while (true)
+        {
+            for (int i = 0; i < dir.Count; i++)
+            {
+                var valueTuple = dir[i];
+                valueTuple.left--;
+                if (valueTuple.left > 0 && num.Contains(valueTuple.left))
+                {
+                    num.Remove(valueTuple.left);
+                    if (Random.Range(0, 5) != 0)
+                    {
+                        CreateObstacleBlock?.Invoke(valueTuple.left, row);
+                        board[row, valueTuple.left] = 1;
+                    }
+                }
+
+                valueTuple.right++;
+                if (valueTuple.right < GameManager.boardWidth && num.Contains(valueTuple.right))
+                {
+                    num.Remove(valueTuple.right);
+                    if (Random.Range(0, 5) != 0)
+                    {
+                        CreateObstacleBlock?.Invoke(valueTuple.right, row);
+                        board[row, valueTuple.right] = 1;
+                    }
+                }
+
+                dir[i] = valueTuple;
+                
+            }
+
+            await UniTask.Delay(100);
+            if (num.Count == 0)
+            {
+                break;
+            }
+        }
+    }
     public void CheckMaxPutPos()
     {
         int startX = GameManager.boardWidth / 2 - 1;
@@ -142,7 +243,7 @@ public class BoardManager
     public async Task EnemyAttack(int x,int y)
     {
         board[y, x] = 0;
-        DeleteMino?.Invoke(x, y,true);
+        DeleteMino?.Invoke(x, y,true,false);
         
         await Task.Delay(200);
         //CheckMaxPutPos();
@@ -208,13 +309,19 @@ public class BoardManager
         SetTestBlock?.Invoke();
     }
 
+    // 敵定期攻撃用
+    public void SetEnemyAttackBlock(int x, int y)
+    {
+        board[y, x] = -1;
+    }
+
     public void UpLine()
     {
         // 一番上を削除
         for (int x = 0; x < board.GetLength(1); x++)
         {
             board[board.GetLength(0) - 1, x] = 0;
-            DeleteMino?.Invoke(x,board.GetLength(0) - 1,false);  
+            DeleteMino?.Invoke(x,board.GetLength(0) - 1,false,false);  
         }
         for (int y = board.GetLength(0) - 1; y > 1; y--)
         {
@@ -232,6 +339,22 @@ public class BoardManager
 
     public void DeleteBomb(int posX,int posY)
     {
+        bool skillCheck = false;
+        for (int y = -1; y < 2; y++)
+        {
+            for (int x = -1; x < 2; x++)
+            {
+                if (x + posX > 0 && x + posX < GameManager.boardWidth)
+                {
+                    if (y + posY > 0 && y + posY < GameManager.boardHeight)
+                    {
+                        skillCheck = CheckBlockType.Invoke(MinoType.SkillCancel, x, y);
+                        if (skillCheck) break;
+                    }
+                }
+            }
+        }
+
         for (int y = -1; y < 2; y++)
         {
             for (int x = -1; x < 2; x++)
@@ -243,7 +366,7 @@ public class BoardManager
                         bombCol.Add(new Vector2Int(x+posX,y+posY));
                         GameManager.DeleteMino++;
                         board[y+ posY, x+ posX] = 0;
-                        DeleteMino?.Invoke(x+ posX, y + posY,false);
+                        DeleteMino?.Invoke(x+ posX, y + posY,false,skillCheck);
                     }
                 }
             }
@@ -252,23 +375,31 @@ public class BoardManager
 
     public void DeleteStripes(int posX, int posY)
     {
+        bool skillCheck = false;
+        stripeFlag = true;
+        for (int y = 0; y < GameManager.boardHeight - 1; y++)
+        {
+            skillCheck = CheckBlockType.Invoke(MinoType.SkillCancel,posX, y);
+            if (skillCheck) break;
+        }
         for (int y = 0; y < GameManager.boardHeight - 1; y++)
         {
             board[y, posX] = 0;
-            DeleteMino?.Invoke(posX, y,false);
+            DeleteMino?.Invoke(posX, y,false,skillCheck);
+        }
 
+        for (int x = 0; x < GameManager.boardWidth; x++)
+        {
+            skillCheck = CheckBlockType.Invoke(MinoType.SkillCancel,x, posY);
+            if (skillCheck) break;
         }
         for (int x = 0; x < GameManager.boardWidth; x++)
         {
-            board[posY, x] = 0;
-            DeleteMino?.Invoke(x, posY,false);
-
-        }
-
-        if (!deleteLineRow.Contains(posY))
-        {
-            deleteLineRow.Add(posY);
-            GameManager.DeleteLine++;    
+            if (board[posY, x] != 0)
+            {
+                board[posY, x] = 0;
+                DeleteMino?.Invoke(x, posY, false,skillCheck);
+            }
         }
     }
 
@@ -321,34 +452,44 @@ public class BoardManager
             await Task.Delay(100);
         }
 
-        CheckLine(0);
+        await CheckLine(0);
     }
 
     void DeleteLine(int row)
     {
+        bool skillCheck = false;
+        bool deleteCancelFlag = false;
         for (int i = 0; i < board.GetLength(1); i++)
         {
-            DeleteMino?.Invoke(i,row,false);
-            board[row, i] = 0;
+            skillCheck = CheckBlockType.Invoke(MinoType.SkillCancel,i, row);
+            deleteCancelFlag = CheckBlockType.Invoke(MinoType.DeleteCancel,i, row);
+            if (deleteCancelFlag)
+            {
+                DeleteMino?.Invoke(i,row,false,false);
+                break;
+            }
+            if (skillCheck ) break;
         }
+
+        if (!deleteCancelFlag)
+        {
+            for (int i = 0; i < board.GetLength(1); i++)
+            {
+                board[row, i] = 0;
+                DeleteMino?.Invoke(i,row,false,skillCheck);
+            }    
+        }
+        
+        /*
         if(ObstacleSkillFlag)
         {
             CreateObstacle(row);
         }
+        */
         SetTestBlock?.Invoke();
     }
 
-    void CreateObstacle(int row)
-    {
-        for(int i=0; i< board.GetLength(1); i++)
-        {
-            if (Random.Range(0, 5) != 0)
-            {
-                CreateObstacleBlock.Invoke(i, row);
-                board[row, i] = 1;
-            }
-        }
-    }
+
 
     void DownLine(int row)
     {

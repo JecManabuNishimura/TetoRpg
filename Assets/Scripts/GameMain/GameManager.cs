@@ -47,8 +47,9 @@ public class GameManager : MonoBehaviour
     public static StageData stageData;
 
     public static CameraMove cameraMove;
-
     public static Transform enemyPos;
+
+    public static int NextUpCountAmount = 3;
     public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
 
     private void Update()

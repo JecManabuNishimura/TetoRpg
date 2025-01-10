@@ -31,3 +31,7 @@ MonoBehaviour:
   - FieldUp
   - FieldDown
   - ObstacleBlock
+  - SkillCancel
+  - ObstacleStop
+  - ShapeFix
+  - DeleteCancel

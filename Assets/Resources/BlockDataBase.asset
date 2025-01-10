@@ -37,3 +37,7 @@ MonoBehaviour:
   bombImage: {fileID: 21300000, guid: e8f874713ba3ef243ad650ba6489c018, type: 3}
   stripesImage: {fileID: 21300000, guid: bf01137e22486ae4ea7bc10197c7ede7, type: 3}
   ObstacleImage: {fileID: 21300000, guid: 9bae7abca7c09b64c9dbf6f34d816af9, type: 3}
+  SkillCancelImage: {fileID: 21300000, guid: 145564e83154bf342bff74afdae40c00, type: 3}
+  ObstacleStopImage: {fileID: 21300000, guid: df9326e9f00b61043a37ac41717172a1, type: 3}
+  ShapeFixImage: {fileID: 21300000, guid: c430f75636aca6442ae7ced8622eea48, type: 3}
+  DeleteCancelImage: {fileID: 21300000, guid: 73be31b43671a48419b4262ad1d3a869, type: 3}
