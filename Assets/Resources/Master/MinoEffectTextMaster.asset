@@ -36,6 +36,7 @@ MonoBehaviour:
     - ObstacleStop
     - ShapeFix
     - DeleteCancel
+    - HpScan
     values:
     - Text: 
       Negative: 0
@@ -81,3 +82,5 @@ MonoBehaviour:
       Negative: 1
     - Text: "\u524A\u9664\u7121\u52B9"
       Negative: 1
+    - Text: "\u6575HP\u8868\u793A"
+      Negative: 0

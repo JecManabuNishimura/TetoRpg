@@ -19,7 +19,7 @@ public class EnemyHpView : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.enemy != null)
+        if (GameManager.enemy != null && GameManager.EnemyHpVisibleFlag)
         {
             hpTextObj.SetActive(true);
             nowHp.text = GameManager.enemy.status.hp.ToString();

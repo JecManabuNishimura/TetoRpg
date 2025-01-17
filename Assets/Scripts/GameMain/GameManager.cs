@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     public static bool LineCreateFlag;
     public static bool menuFlag;
     public static bool cameraFlag;
+    public static bool EnemyHpVisibleFlag;
     public static bool EnemyDown;
 
     public static StageLoader stageLoader;
