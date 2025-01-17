@@ -16,7 +16,6 @@ namespace Enemy
     public class Charactor : CharactorData,ICharactor
     {
         [SerializeField] private GameObject attackArea;
-        [SerializeField] private GameObject attackBlock;
         [SerializeField] private int AttackInterval = 3;
         [SerializeField] private ParticleSystem particle;
         [SerializeField] private float duration = 1.0f;
@@ -73,71 +72,98 @@ namespace Enemy
         private void ReadyAttack()
         {
             attackTime += Time.deltaTime;
-            if((attackTime >= AttackInterval || GameManager.maxPutposFlag) && !GameManager.EnemyAttackFlag) 
+            if ((attackTime >= AttackInterval || GameManager.maxPutposFlag) && !GameManager.EnemyAttackFlag)
             {
                 foreach (var val in area)
                 {
                     Destroy(val);
                 }
+
                 area.Clear();
                 int pattern = 0;
                 // 攻撃の種類
-                switch (attackOrders[orderNumber])
+                if (GameManager.maxPutposFlag)
                 {
-                    case AttackOrder.Normal:
+                    var data = AttackData.GetAttack(AttackName.OneRowLineRandom);
+                    foreach (var d in data)
                     {
-                        pattern = SelectAttackPattern(false);
-                        if (pattern == -1)
-                        {
-                            Debug.LogError("攻撃パターンが設定されていません");
-                        }
-                        attackPattern = pattern;
-                        switch (attackSettings[pattern].name)
-                        {
-                            // ボムの場合は落下までエリアを出さない（危険表示は出す予定）
-                            case AttackName.BombAttack:
-                            case AttackName.BombMultiAttack:
-                                GameManager.EnemyAttackFlag = true;
-                                return;
-                        }
-
-                        var data = AttackData.GetAttack(attackSettings[pattern].name);
-                        foreach (var d in data)
-                        {
-                            GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0), Quaternion.identity);
-                            area.Add(aObj);
-                            aObj.transform.parent = attackObjPare.transform;
-                        }
-
-                        break;
+                        GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0),
+                            Quaternion.identity);
+                        area.Add(aObj);
+                        aObj.transform.parent = attackObjPare.transform;
                     }
-                    case AttackOrder.Special:
+                }
+                else
+                {
+                    switch (attackOrders[orderNumber])
                     {
-                        pattern = SelectAttackPattern(true);
-                        if (pattern == -1)
+                        case AttackOrder.Normal:
                         {
-                            Debug.LogError("攻撃パターンが設定されていません");
-                        }
-                        attackPattern = pattern;
-                        var data = AttackData.GetSpecialAttack(spAttackSettings[pattern].name);
-                        foreach (var d in data)
-                        {
-                            if (spAttackSettings[pattern].name == SpecialAttackName.AttackBlockSpawn)
+                            pattern = SelectAttackPattern(false);
+                            if (pattern == -1)
                             {
-                                attackBlockList.Add(Instantiate(attackBlock,new Vector3(d.x,d.y,0),Quaternion.identity));
-                                BoardManager.Instance.SetEnemyAttackBlock(d.x,d.y);
+                                Debug.LogError("攻撃パターンが設定されていません");
+                            }
+
+                            attackPattern = pattern;
+                            switch (attackSettings[pattern].name)
+                            {
+                                // ボムの場合は落下までエリアを出さない（危険表示は出す予定）
+                                case AttackName.BombAttack:
+                                case AttackName.BombMultiAttack:
+                                    GameManager.EnemyAttackFlag = true;
+                                    return;
+                            }
+
+                            var data = AttackData.GetAttack(attackSettings[pattern].name);
+                            foreach (var d in data)
+                            {
+                                GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0),
+                                    Quaternion.identity);
+                                area.Add(aObj);
+                                aObj.transform.parent = attackObjPare.transform;
+                            }
+
+                            break;
+                        }
+                        case AttackOrder.Special:
+                        {
+                            pattern = SelectAttackPattern(true);
+                            if (pattern == -1)
+                            {
+                                Debug.LogError("攻撃パターンが設定されていません");
+                            }
+
+                            attackPattern = pattern;
+                            var data = AttackData.GetSpecialAttack(spAttackSettings[pattern].name);
+                            if (data != null)
+                            {
+                                foreach (var d in data)
+                                {
+                                    if (spAttackSettings[pattern].name == SpecialAttackName.AttackBlockSpawn)
+                                    {
+                                        //attackBlockList.Add(Instantiate(attackBlock,new Vector3(d.x,d.y,0),Quaternion.identity));
+                                        BoardManager.Instance.SetEnemyAttackBlock(d.x, d.y);
+                                    }
+                                    else
+                                    {
+                                        GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0),
+                                            Quaternion.identity);
+                                        area.Add(aObj);
+                                        aObj.transform.parent = attackObjPare.transform;
+                                    }
+                                }
                             }
                             else
                             {
-                                GameObject aObj = Instantiate(attackArea, new Vector3(d.x, d.y, 0), Quaternion.identity);
-                                area.Add(aObj);
-                                aObj.transform.parent = attackObjPare.transform;    
+                                Initialize();
+                                return;
                             }
+
+                            break;
                         }
-                        break;
                     }
                 }
-                Debug.Log("抽選");
                 GameManager.EnemyAttackFlag = true;
             }
         }
@@ -205,7 +231,6 @@ namespace Enemy
                 shakeFlag = false;
             }
             
-
             if(attackCount <= 0)
             {
                 ReadyAttack();
@@ -224,7 +249,6 @@ namespace Enemy
         
         async UniTask Play()
         {
-            Debug.Log("攻撃" );
             // 座標を保存するリスト
             var positions = new List<Vector3>();
             foreach (var obj in area)
@@ -275,7 +299,6 @@ namespace Enemy
                         default:
                         {
                             CreateAttackParticle(positions);
-                            Debug.Log("開始");
                             await Task.Delay(50);
                             var count = await StartAttack(positions) * status.atk;
 
@@ -306,7 +329,6 @@ namespace Enemy
                     break;
                 }
             }
-            
             Initialize();
         }
 

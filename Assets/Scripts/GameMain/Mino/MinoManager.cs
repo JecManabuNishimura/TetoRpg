@@ -24,6 +24,7 @@ public class MinoManager : MonoBehaviour
     //[SerializeField] private NextUpGauge nextUpGauge;
     [SerializeField] private GameObject damgeText;
     [SerializeField] private GameObject newTextObj;
+    [SerializeField] private GameObject AttackBlockObj;
     
     private GameObject SelectMino;
     private GameObject clMinoObj;
@@ -59,6 +60,7 @@ public class MinoManager : MonoBehaviour
     private int shapeIndex;
 
     private List<MinoEffectStock> minoEffectList = new ();
+    private GameObject[,] AttackBlock;
 
     private class MinoEffectStock
     {
@@ -68,6 +70,7 @@ public class MinoManager : MonoBehaviour
     private void Start()
     {
         GameManager.StartBattle += StartBattle;
+        GameManager.ChangeFallCount += ChangeFallCount;
         
         clMinoObj = new GameObject
         {
@@ -90,6 +93,7 @@ public class MinoManager : MonoBehaviour
         BoardManager.Instance.MoveTreasurePos += MoveTreasurePos;
         BoardManager.Instance.CreateObstacleBlock += CreateSkillObstacleBLock;
         BoardManager.Instance.CheckBlockType += CheckBlockType;
+        BoardManager.Instance.SetAttackBlock += SetAttackBlock;
         
         inputHandler = new InputHandler
         {
@@ -115,6 +119,7 @@ public class MinoManager : MonoBehaviour
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
         minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         minoDataTableCopy = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
+        AttackBlock = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         NextUpGauge.Instance.CreateGauge(gaugeNum);
         //await NextUpGauge.Instance.Play();
         CreateNewMino();
@@ -552,13 +557,16 @@ public class MinoManager : MonoBehaviour
             {
                 TreasureDelete(x, y, AttackFlag);
             }
-
+            
+            if(AttackBlock[y,x] != null)
+            {
+                Destroy(AttackBlock[y,x]);
+            }
             Destroy(minoDataTable[y, x]);
             minoDataTable[y, x] = null;
         }
     }
-
-
+    
     bool CheckTreasure(int x,int y)
     {
         if (minoDataTable[y, x].GetComponent<MinoBlock>().deleteFlag)
@@ -642,6 +650,13 @@ public class MinoManager : MonoBehaviour
         {
             var t = GetTreasureData(x, y + 1);
             minoDataTable[y + 1, x].transform.position += Vector3.down;
+            if(AttackBlock[y + 1, x] != null)
+            {
+                AttackBlock[y + 1, x].transform.position += Vector3.down;
+                AttackBlock[y, x] = AttackBlock[y + 1, x];
+                AttackBlock[y + 1, x] = null;
+            }
+            
             if(t != null && minoDataTable[y + 1, x].GetComponent<MinoBlock>().TreimagePos != Vector3.zero)
             {
                 t.spriteObj.transform.position = minoDataTable[y + 1, x].transform.position + minoDataTable[y + 1, x].GetComponent<MinoBlock>().TreimagePos;
@@ -996,7 +1011,7 @@ public class MinoManager : MonoBehaviour
                     }
                     
                     GameManager.playerPut = true;
-                    await ChangeFallCount();
+                    //await ChangeFallCount();
                     await GameManager.PlayerMove();
                     // 敵死亡時　何もしない
                     if(GameManager.EnemyDown)
@@ -1051,7 +1066,7 @@ public class MinoManager : MonoBehaviour
             {
                 return;
             }
-            await ChangeFallCount();
+            //await ChangeFallCount();
             CreateNewMino();
         }
 
@@ -1208,6 +1223,12 @@ public class MinoManager : MonoBehaviour
                     minoDataTable[y - 1, x].transform.position + 
                     minoDataTable[y - 1, x].GetComponent<MinoBlock>().TreimagePos;
             }
+            if(AttackBlock[y - 1, x] != null)
+            {
+                AttackBlock[y - 1, x].transform.position += Vector3.up;
+                AttackBlock[y, x] = AttackBlock[y - 1, x];
+                AttackBlock[y - 1, x] = null;
+            }
         }
         minoDataTable[y, x] = minoDataTable[y - 1, x];
         if (minoDataTable[y - 1, x] != null)
@@ -1253,7 +1274,6 @@ public class MinoManager : MonoBehaviour
     }
 
     // 宝箱整列用
-
     List<Vector2Int> GetTreasurePos((int x,int y) selectPos)
     {
         List<Vector2Int> pos = new();
@@ -1333,6 +1353,12 @@ public class MinoManager : MonoBehaviour
 
         // 最後に目標位置にぴったり合わせる
         obj.transform.position = end;
+    }
+
+    private void SetAttackBlock(int x, int y)
+    {
+        AttackBlock[y,x] = Instantiate(AttackBlockObj, minoListObj.transform);
+        AttackBlock[y, x].transform.position = new Vector3(x, y, -3);
     }
 
     private class Treasure

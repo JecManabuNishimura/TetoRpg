@@ -16,5 +16,5 @@ public class ImageDatabase : ScriptableObject
     public Sprite ObstacleStopImage;
     public Sprite ShapeFixImage;
     public Sprite DeleteCancelImage;
-    
+
 }

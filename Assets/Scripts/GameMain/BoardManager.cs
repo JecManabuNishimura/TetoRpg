@@ -27,6 +27,7 @@ public class BoardManager
     public event Action<int,int> CreateObstacleBlock;
     public event Action MinoEffectStart;
     public event Func<MinoType, int, int, bool> CheckBlockType;
+    public event Action<int, int> SetAttackBlock;
 
     public event Action SetTestBlock;
     private List<int> deleteLineRow = new();
@@ -313,6 +314,7 @@ public class BoardManager
     public void SetEnemyAttackBlock(int x, int y)
     {
         board[y, x] = -1;
+        SetAttackBlock?.Invoke(x,y);
     }
 
     public void UpLine()

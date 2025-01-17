@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public static event Func<Task> CreateBlock;
     public static event Action ClearBlock;
     public static event Func<int,Task> StartBattle;
+    public static event Func<Task> ChangeFallCount;
 
     public static int healingPoint = 5;
     public static int DeleteLine;
@@ -49,7 +50,7 @@ public class GameManager : MonoBehaviour
     public static CameraMove cameraMove;
     public static Transform enemyPos;
 
-    public static int NextUpCountAmount = 3;
+    public static int NextUpCountAmount = 1;
     public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
 
     private void Update()
@@ -127,6 +128,11 @@ public class GameManager : MonoBehaviour
             if (!EnemyAttackFlag && !maxPutposFlag &&
                 !DownFlag && !LineCreateFlag)
             {
+                await ChangeFallCount?.Invoke();
+                if (maxPutposFlag)
+                {
+                    continue;
+                }
                 playerPut = false;
                 break;
             }

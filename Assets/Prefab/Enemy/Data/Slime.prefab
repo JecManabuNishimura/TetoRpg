@@ -109,7 +109,6 @@ MonoBehaviour:
     def: 10
     critical: 0
   attackArea: {fileID: 2642718665519370728, guid: e3d6a8e77945f7c47b9e395b0fa5e81f, type: 3}
-  attackBlock: {fileID: 0}
   AttackInterval: 0
   particle: {fileID: 6510843813997957063, guid: eaedb5f49117d4247be2806408e9d0f8, type: 3}
   duration: 0.5
@@ -121,7 +120,7 @@ MonoBehaviour:
   - name: 1
     <weight>k__BackingField: 50
   spAttackSettings: []
-  attackTarnCount: 3
+  attackTarnCount: 15
   attackTarn: {fileID: 1799986551340116770, guid: 3f525500304f2a64c9b40be96166c8a8, type: 3}
   attackTarnSpoonPoint: {fileID: 8017468128887097154}
   bombAttack: {fileID: 0}

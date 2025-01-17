@@ -19,8 +19,8 @@ MonoBehaviour:
     selectedGroupOptions:
     - id: 0
       effects:
-      - effect: DeleteCancel
-        value: 20
+      - effect: None
+        value: 0
     - id: 1
       effects:
       - effect: None
