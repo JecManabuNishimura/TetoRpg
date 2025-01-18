@@ -2,6 +2,7 @@ using MyMethods;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 
@@ -17,7 +18,7 @@ public class testBlock : MonoBehaviour
     private List<GameObject> blockList = new();
     private GameObject bgObj;
     private GameObject bgfObj;
-    
+    private Tween emissionTween;
     public int distance = 1;
     void Start()
     {
@@ -43,6 +44,8 @@ public class testBlock : MonoBehaviour
         Destroy(bgObj);
         Destroy(bgfObj);
     }
+
+    private Material material;
     private async Task CreateBlock()
     {
         
@@ -68,6 +71,10 @@ public class testBlock : MonoBehaviour
         */
 
         bgObj = Instantiate(backGround);
+        material = bgObj.GetComponent<SpriteRenderer>().material;
+        
+        
+        
         bgObj.GetComponent<SpriteRenderer>().size =
             new Vector2(GameManager.boardWidth + 0.8f, GameManager.boardHeight-0.1f);
         bgObj.transform.position = new Vector3( GameManager.boardWidth / 2.0f -0.5f ,
@@ -78,12 +85,30 @@ public class testBlock : MonoBehaviour
         bgfObj.transform.position = new Vector3(GameManager.boardWidth / 2.0f - 0.5f,
             GameManager.boardHeight / 2.0f, 15);
     }
-
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Y))
         {
             GameManager.LineCreateFlag = true;
+        }
+    }
+
+    void BackGroundEmission_Start()
+    {
+        emissionTween = DOTween.To(
+                () => material.GetColor("_EmissionColor"), // 現在のエミッションカラーを取得
+                x => material.SetColor("_EmissionColor", x), // エミッションカラーをセット
+                Color.red* 100, // 最終目標の色（強度10倍）
+                1f // アニメーションの時間（1秒）
+            ).SetLoops(-1, LoopType.Yoyo) // 繰り返し（往復）
+            .SetEase(Ease.Linear); // イージングを線形に設定（一定速度）
+    }
+    void BackGroundEmission_Stop()
+    {
+        if(emissionTween != null)
+        {
+            emissionTween.Kill();
         }
     }
 

@@ -129,7 +129,11 @@ public class GameManager : MonoBehaviour
             if (!EnemyAttackFlag && !maxPutposFlag &&
                 !DownFlag && !LineCreateFlag)
             {
-                await ChangeFallCount?.Invoke();
+                if (enemy != null)
+                {
+                    await ChangeFallCount?.Invoke();    
+                }
+                
                 if (maxPutposFlag)
                 {
                     continue;

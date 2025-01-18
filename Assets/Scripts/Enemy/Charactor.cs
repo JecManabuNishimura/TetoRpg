@@ -30,6 +30,7 @@ namespace Enemy
         [SerializeField] private Transform attackTarnSpoonPoint;
 
         [SerializeField] private BombAttack bombAttack;
+        [SerializeField] private GameObject hitEffect;
         
         private List<ParticleSystem> parts = new List<ParticleSystem>();
         private List<GameObject> area = new ();
@@ -428,7 +429,7 @@ namespace Enemy
                     newDamage = 0;
                 }
                 status.hp -= newDamage;
-                
+                Instantiate(hitEffect,transform.position,Quaternion.identity);
                 
                 if(status.hp <= 0)
                 {
