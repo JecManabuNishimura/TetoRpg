@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 using Random = UnityEngine.Random;
@@ -225,11 +226,38 @@ public class BoardManager
     {
         int startX = GameManager.boardWidth / 2 - 1;
         int startY = GameManager.boardHeight - 2;
+        Func<bool> pinch = () =>
+        {
+            for (int y = startY - 2; y < GameManager.boardHeight; y++)
+            {
+                for (int x = 0; x < GameManager.boardWidth; x++)
+                {
+                    if (board[y, x] != 0)
+                    {
+                        
+                        return true;
+                    }
+                }
+
+            }
+            return false;
+        };
+
+        if(pinch())
+        {
+            GameManager.BackGroundEmmision_Start?.Invoke();
+        }
+        else
+        {
+            GameManager.BackGroundEmmision_Stop?.Invoke();
+        }
+        
 
         for (int y = startY; y <= startY + 1; y++)
         {
             for (int x = startX; x <= startX + 1; x++)
             {
+
                 if (board[y, x] != 0)
                 {
                     GameManager.maxPutposFlag = true;
@@ -455,6 +483,7 @@ public class BoardManager
         }
 
         await CheckLine(0);
+        
     }
 
     void DeleteLine(int row)
@@ -518,6 +547,7 @@ public class BoardManager
         deleteLineRow.Clear();
 
         GameManager.DownFlag = false;
+        CheckMaxPutPos();
     }
     
     bool CheckIsRowFilledWithOnes(int row)

@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     public static event Func<int,Task> StartBattle;
     public static event Func<Task> ChangeFallCount;
 
+    public static Action BackGroundEmmision_Start;
+    public static Action BackGroundEmmision_Stop;
+
     public static int healingPoint = 5;
     public static int DeleteLine;
     public static int DeleteMino;

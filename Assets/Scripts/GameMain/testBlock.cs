@@ -26,6 +26,8 @@ public class testBlock : MonoBehaviour
         GameManager.CreateLineBlock += CreateLineBlock;
         GameManager.CreateBlock += CreateBlock;
         GameManager.ClearBlock += ClearBlock;
+        GameManager.BackGroundEmmision_Start += BackGroundEmission_Start;
+        GameManager.BackGroundEmmision_Stop += BackGroundEmission_Stop;
         checkParent = new GameObject(){name = "check"};
         //BoardManager.Instance.SetTestBlock += SetTestBlock;
     }
@@ -46,6 +48,7 @@ public class testBlock : MonoBehaviour
     }
 
     private Material material;
+    private Color initColor;
     private async Task CreateBlock()
     {
         
@@ -72,9 +75,10 @@ public class testBlock : MonoBehaviour
 
         bgObj = Instantiate(backGround);
         material = bgObj.GetComponent<SpriteRenderer>().material;
-        
-        
-        
+        initColor = material.GetColor("_EmissionColor");
+
+
+
         bgObj.GetComponent<SpriteRenderer>().size =
             new Vector2(GameManager.boardWidth + 0.8f, GameManager.boardHeight-0.1f);
         bgObj.transform.position = new Vector3( GameManager.boardWidth / 2.0f -0.5f ,
@@ -96,19 +100,31 @@ public class testBlock : MonoBehaviour
 
     void BackGroundEmission_Start()
     {
-        emissionTween = DOTween.To(
-                () => material.GetColor("_EmissionColor"), // 現在のエミッションカラーを取得
+        if (emissionTween == null)
+        {
+            emissionTween = DOTween.To(
+                () => initColor, // 現在のエミッションカラーを取得
                 x => material.SetColor("_EmissionColor", x), // エミッションカラーをセット
-                Color.red* 100, // 最終目標の色（強度10倍）
+                Color.red * 100, // 最終目標の色（強度10倍）
                 1f // アニメーションの時間（1秒）
             ).SetLoops(-1, LoopType.Yoyo) // 繰り返し（往復）
             .SetEase(Ease.Linear); // イージングを線形に設定（一定速度）
+        }
     }
     void BackGroundEmission_Stop()
     {
         if(emissionTween != null)
         {
+
+            //material.SetColor("_EmissionColor", initColor);
+            DOTween.To(
+                () => Color.red * 100, // 現在のエミッションカラーを取得
+                x => material.SetColor("_EmissionColor", x), // エミッションカラーをセット
+                initColor, // 最終目標の色（強度10倍）
+                1f // アニメーションの時間（1秒）
+            ).SetEase(Ease.Linear);
             emissionTween.Kill();
+            emissionTween = null;
         }
     }
 
