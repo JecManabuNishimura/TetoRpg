@@ -41,10 +41,8 @@ MonoBehaviour:
     groupData:
       id: 2
       effects:
-      - effect: 7
-        value: 1
       - effect: 3
-        value: 5
+        value: 1
     deleteFlag: 0
     useStage:
     - Stage1
@@ -58,8 +56,6 @@ MonoBehaviour:
       - effect: 7
         value: 1
       - effect: 3
-        value: 5
-      - effect: 6
         value: 1
     deleteFlag: 0
     useStage:
@@ -112,7 +108,8 @@ MonoBehaviour:
       - effect: 6
         value: 1
     deleteFlag: 0
-    useStage: []
+    useStage:
+    - Stage1
   - weaponId: We01
     groupData:
       id: 8

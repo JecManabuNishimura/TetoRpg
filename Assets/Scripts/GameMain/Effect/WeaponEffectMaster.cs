@@ -162,7 +162,17 @@ public class WeaponEffectMasterEditor : Editor
             using (new EditorGUILayout.HorizontalScope())
             {
                 EditorGUILayout.TextField(weaponData.weaponId + "  " + weaponData.groupData.id, GUILayout.Width(60));
-                if (GUILayout.Button("Add",GUILayout.Width(50)))
+                if (GUILayout.Button("Delete", GUILayout.Width(100)))
+                {
+                    weaponEffectMaster.WeaponDatas.Remove(weaponData);
+                    return;
+                }
+
+                
+            }
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("Add", GUILayout.Width(50)))
                 {
                     for (int s = 0; s < selectNumber.Count; s++)
                     {
@@ -173,23 +183,32 @@ public class WeaponEffectMasterEditor : Editor
                                 id = weaponData.weaponId,
                                 groupId = weaponData.groupData.id,
                                 dropRarity = Rarity.D,
-                            });    
+                            });
                         }
-                            
                     }
-                    
                 }
-                if (GUILayout.Button("Delete",GUILayout.Width(100)))
+                if (GUILayout.Button("Remove", GUILayout.Width(50)))
                 {
-                    weaponEffectMaster.WeaponDatas.Remove(weaponData);
-                    return;
-                }
+                    for (int s = 0; s < selectNumber.Count; s++)
+                    {
+                        if (selectNumber[s])
+                        {
+                            var item = drops[s].itemDropData
+                              .Select((data, index) => new { data, index }) // インデックスも一緒に取得
+                              .FirstOrDefault(x => x.data.id == weaponData.weaponId && x.data.groupId == weaponData.groupData.id);
 
-                foreach(var s in weaponData.useStage)
+                            drops[s].itemDropData.RemoveAt(item.index);
+                        }
+                    }
+                }
+                foreach (var s in weaponData.useStage)
                 {
                     EditorGUILayout.TextArea(s, GUILayout.Width(50));
                 }
             }
+
+
+
 
             EditorGUI.indentLevel++;
             int count = 0;

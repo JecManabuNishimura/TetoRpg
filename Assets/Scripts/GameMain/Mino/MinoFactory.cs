@@ -83,7 +83,8 @@ public class MinoFactory
         if (isTreasure)
         {
             var minoData = treasureMinoes;
-
+            // 今はパターンが一つしかないので、仮に0にする
+            index = 0;
             if (index < 0 || minoData.GetLength(0) <=index)
             {
                 return null;

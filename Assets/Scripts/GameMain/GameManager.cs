@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     public static Action BackGroundEmmision_Start;
     public static Action BackGroundEmmision_Stop;
 
-    public static int healingPoint = 5;
+    public static int healingPoint = 1;
     public static int DeleteLine;
     public static int DeleteMino;
 

@@ -20,10 +20,12 @@ public class MinoManager : MonoBehaviour
     [SerializeField] private GameObject obstacleMino;
     [SerializeField] private GameObject TreasureObj;
     [SerializeField] private GameObject holdObj;
+    [SerializeField] private GameObject nextWindowObj;
     //[SerializeField] private NextUpGauge nextUpGauge;
     [SerializeField] private GameObject damgeText;
     [SerializeField] private GameObject newTextObj;
     [SerializeField] private GameObject AttackBlockObj;
+    [SerializeField] private Transform[] nextMinoPos;
     
     private GameObject SelectMino;
     private GameObject clMinoObj;
@@ -31,6 +33,9 @@ public class MinoManager : MonoBehaviour
     private GameObject[,] minoDataTableCopy;
     private List<Treasure> treasuresTable = new();
     private GameObject minoListObj;
+
+    private Queue<int> nextMinoNumber = new();
+    private List<GameObject> nextMinoObjList = new List<GameObject>();
 
     private GameObject treasureSpriteObj;
 
@@ -112,9 +117,34 @@ public class MinoManager : MonoBehaviour
         };
         
     }
+    private void CreateaNextMino()
+    {
+        int num = SelectNextMino();
+        nextMinoNumber.Enqueue(num);
+        GameObject obj = null;
+        if (num < 0)
+        {
+            obj = Instantiate(TreasureObj);
+        }
+        else
+        {
+            obj = CreateMiniMino(MinoFactory.GetMinoData(num, false), num);
+        }
+        nextMinoObjList.Add(obj);
+        for (int i = 0; i < nextMinoObjList.Count; i++)
+        {
+            nextMinoObjList[i].transform.position = nextMinoPos[i].position;
+        }
 
+
+    }
     private async Task StartBattle(int gaugeNum)
     {
+        // 仮で5個予測追加
+        for(int i=0; i< nextMinoPos.Length; i++)
+        {
+            CreateaNextMino();
+        }
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
         minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         minoDataTableCopy = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
@@ -692,33 +722,50 @@ public class MinoManager : MonoBehaviour
         downColPos = (int)SelectMino.transform.position.x;
         CheckUnder();
     }
-
+    private int SelectNextMino()
+    {
+        int number = 0;
+        //--------------------------------------------------------------------------
+        //  宝箱出現率調節
+        //--------------------------------------------------------------------------
+        if (GameManager.stageData.TresureDropRate != 0)
+        {
+            number = Random.Range(0, GameManager.stageData.TresureDropRate) == 0 ? -1 :0 ;
+        }
+        if(number == 0)
+        {
+            // 所持数最大7に固定（現在）
+            number = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();
+        }
+        return number;
+    }
     //========================================================================
     // 　新しいミノを生成する
     //========================================================================
     private void CreateNewMino()
     {
         obstacleFlag = false;
+        treasureFlag = false;
         // 形固定
         if (shapeFixCount == 0)
         {
-            //--------------------------------------------------------------------------
-            //  宝箱出現率調節
-            //--------------------------------------------------------------------------
-            if (GameManager.stageData.TresureDropRate != 0)
-            {
-                treasureFlag = Random.Range(0, GameManager.stageData.TresureDropRate) == 0;
-            }
+            // Nextミノ削除
+            Destroy(nextMinoObjList[0]);
+            nextMinoObjList.RemoveAt(0);
+
+            // 次のミノ取り出し
+            int num = nextMinoNumber.Dequeue();
+            CreateaNextMino();
 
             rotNum = 0;
-            if (treasureFlag)
+            if (num < 0)
             {
+                treasureFlag = true;
                 index = 0;
             }
             else
             {
-                // 所持数最大7に固定（現在）
-                index = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();
+                index = num;
             }
         }
         else
@@ -734,10 +781,14 @@ public class MinoManager : MonoBehaviour
         CheckUnder();
     }
 
-    GameObject CreateMiniMino(int[,] minos)
+    GameObject CreateMiniMino(int[,] minos,int minoNum = 99)
     {
+        if(minoNum == 99)
+        {
+            minoNum = index;
+        }
         GameObject parent = new GameObject();
-        parent.name = index + "mino";
+        parent.name = minoNum + "mino";
         float centerX = 0;
         float centerY = 0;
         // 0以外の位置をリストアップ
@@ -779,7 +830,7 @@ public class MinoManager : MonoBehaviour
                     GameObject obj = Instantiate(minoObj, parent.transform, true);
                     // 回転軸用のマイナスもあるので、ABSをつける
                     type = GetType(Mathf.Abs(minos[y, x]));
-                    obj.GetComponent<MinoBlock>().SetMinoData(type, index);
+                    obj.GetComponent<MinoBlock>().SetMinoData(type, minoNum);
                     obj.transform.localPosition = new Vector3((x) - (centerX), -((y) -(centerY )), 0);
                 }
             }

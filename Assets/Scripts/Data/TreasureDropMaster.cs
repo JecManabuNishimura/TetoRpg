@@ -99,6 +99,8 @@ public class TreasureDropMasterEditor : Editor
             equipmentIds.Add("0"); // デフォルト値
         }
 
+        master.itemDropData = master.itemDropData.OrderBy(x => x.id).ToList();
+
         // itemDropDataのReorderableList設定
         itemDropList = CreateReorderableList("Item Drop Data", master.itemDropData, true);
 
