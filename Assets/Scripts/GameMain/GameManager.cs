@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public static event Func<Task> CreateLineBlock;
     public static event Func<Task> CreateBlock;
     public static event Action ClearBlock;
-    public static event Func<int,Task> StartBattle;
+    public static event Func<Task> StartBattle;
     public static event Func<Task> ChangeFallCount;
 
     public static Action BackGroundEmmision_Start;
@@ -55,7 +55,9 @@ public class GameManager : MonoBehaviour
     public static Transform enemyPos;
 
     public static int NextUpCountAmount = 1;
-    public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
+
+    private static bool StageClearFlag = false;
+    //public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
 
     private void Update()
     {
@@ -100,9 +102,16 @@ public class GameManager : MonoBehaviour
                     ClearBlock?.Invoke();
                     enemy.EnemyDeath();
                     enemy = null;
-                    MapManager.Instance.EndBattle();
-                    nowStage = GetNextEnumValue(nowStage);
-                    stageLoader.SetStageStatus();
+                    if (MapManager.Instance.EndBattle())
+                    {
+                        StageClearFlag = true;
+                    }
+                    else
+                    {
+                        nowStage = GetNextEnumValue(nowStage);
+                        stageLoader.SetStageStatus();    
+                    }
+                    
                 }
                 else
                 {
@@ -193,7 +202,7 @@ public class GameManager : MonoBehaviour
         
         await CreateBlock?.Invoke();
         
-        await StartBattle?.Invoke(NowNextCount);
+        await StartBattle?.Invoke();
     }
  
     // 非同期でシーンを追加するコルーチン

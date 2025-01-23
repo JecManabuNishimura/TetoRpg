@@ -38,7 +38,7 @@ public class NextUpGauge : MonoBehaviour
         }
     }
 
-    public void CreateGauge(int count)
+    public void CreateGauge()
     {
         var obj = Instantiate(nextObj);
         obstacleCount = Instantiate(ObstacleCount, UICanvas.transform);

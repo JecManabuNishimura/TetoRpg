@@ -59,9 +59,9 @@ MonoBehaviour:
     - Text: "\u30AF\u30ED\u30B9\u30DC\u30E0\u51FA\u73FE\u7981\u6B62"
       Negative: 1
     - Text: "\u77F3\u51FA\u73FE\u30B2\u30FC\u30B8\u4E0A\u6607"
-      Negative: 0
-    - Text: "\u77F3\u51FA\u73FE\u30B2\u30FC\u30B8\u6E1B\u5C11"
       Negative: 1
+    - Text: "\u77F3\u51FA\u73FE\u30B2\u30FC\u30B8\u6E1B\u5C11"
+      Negative: 0
     - Text: "\u56DE\u8EE2\u7121\u52B9"
       Negative: 1
     - Text: "\u843D\u4E0B\u901F\u5EA6\u4E0A\u6607"

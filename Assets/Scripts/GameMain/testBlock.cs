@@ -42,6 +42,19 @@ public class testBlock : MonoBehaviour
     }
     private void ClearBlock()
     {
+        if(emissionTween != null)
+        {
+
+            //material.SetColor("_EmissionColor", initColor);
+            DOTween.To(
+                () => Color.red * 100, // 現在のエミッションカラーを取得
+                x => material.SetColor("_EmissionColor", x), // エミッションカラーをセット
+                initColor, // 最終目標の色（強度10倍）
+                1f // アニメーションの時間（1秒）
+            ).SetEase(Ease.Linear);
+            emissionTween.Kill();
+            emissionTween = null;
+        }
         parent.transform.ChildClear();
         Destroy(bgObj);
         Destroy(bgfObj);

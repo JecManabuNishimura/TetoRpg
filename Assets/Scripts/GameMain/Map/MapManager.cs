@@ -30,9 +30,11 @@ public class MapManager : MonoBehaviour
         }
     }
     public GameObject GetEnemyObj => encountEnemy.GetEnemyData().GetComponent<EncountEnemy>().GetEnemyObj;
-    public void EndBattle()
+    public bool EndBattle()
     {
         encountEnemy.DeleteEnemy();
         GameManager.cameraFlag = true;
+        return encountEnemy.GetEnemyData() == null;
+        
     }
 }

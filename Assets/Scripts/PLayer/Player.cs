@@ -117,6 +117,13 @@ public class Player : CharactorData, ICharactor
                 BelongingsMinoEffect[d.effect] += d.value;
             }
         }
+
+        SetMinoEffect();
+    }
+
+    void SetMinoEffect()
+    {
+        GameManager.NextUpCountAmount = Mathf.Max(1,GameManager.NextUpCountAmount + BelongingsMinoEffect["NextGaugeUp"] - BelongingsMinoEffect["NextGaugeDown"]);
     }
     
     public void SetEquipment(EqupmentPart part,EquipmentUniqueData data)

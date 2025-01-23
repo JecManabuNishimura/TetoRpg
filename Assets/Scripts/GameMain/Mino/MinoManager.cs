@@ -138,7 +138,7 @@ public class MinoManager : MonoBehaviour
 
 
     }
-    private async Task StartBattle(int gaugeNum)
+    private async Task StartBattle()
     {
         // 仮で5個予測追加
         for(int i=0; i< nextMinoPos.Length; i++)
@@ -146,10 +146,11 @@ public class MinoManager : MonoBehaviour
             CreateaNextMino();
         }
         holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+        nextWindowObj.SetActive(true);
         minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         minoDataTableCopy = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
         AttackBlock = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
-        NextUpGauge.Instance.CreateGauge(gaugeNum);
+        NextUpGauge.Instance.CreateGauge();
         //await NextUpGauge.Instance.Play();
         CreateNewMino();
         downColPos = (int)SelectMino.transform.position.x;
@@ -183,6 +184,12 @@ public class MinoManager : MonoBehaviour
             Destroy(treasure.spriteObj);
         }
         treasuresTable.Clear();
+        foreach (var obj in nextMinoObjList)
+        {
+            Destroy(obj);
+        }
+        nextMinoObjList.Clear();
+        nextWindowObj.SetActive(false);
     }
     private async void Update()
     {
@@ -281,7 +288,7 @@ public class MinoManager : MonoBehaviour
                                 if (maxYindex > 0 && maxYindex < GameManager.boardHeight)
                                 {
                                     //飛び出している場合
-                                    if (mindex > GameManager.boardWidth)
+                                    if (mindex > GameManager.boardWidth && newVec.y < GameManager.boardHeight)
                                     {
                                         // 飛び出た分だけ戻して確認する
                                         // 調整
