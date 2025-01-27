@@ -674,7 +674,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 41.38, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &492286156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2559,6 +2559,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 178c1a794f3641846a86ffb0a8fee109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cinemachine: {fileID: 492286151}
+  stages:
+  - {fileID: 1031779443}
+  - {fileID: 2087839968}
 --- !u!1001 &2033022977
 PrefabInstance:
   m_ObjectHideFlags: 0

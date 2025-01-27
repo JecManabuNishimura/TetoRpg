@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.SubsystemsImplementation;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -25,6 +26,9 @@ public class GameManager : MonoBehaviour
     public static event Action ClearBlock;
     public static event Func<Task> StartBattle;
     public static event Func<Task> ChangeFallCount;
+    public static event Action StageFlomSelectStage;
+    public static Action StageClearAnim;
+    
 
     public static Action BackGroundEmmision_Start;
     public static Action BackGroundEmmision_Stop;
@@ -54,12 +58,16 @@ public class GameManager : MonoBehaviour
     public static CameraMove cameraMove;
     public static Transform enemyPos;
 
+    public static GameObject trantision;
+
     public static int NextUpCountAmount = 1;
+
+    public static List<GameObject> dontdestoryObj = new List<GameObject>();
 
     private static bool StageClearFlag = false;
     //public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
 
-    private void Update()
+    private async void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -71,6 +79,12 @@ public class GameManager : MonoBehaviour
             nowStage = GetNextEnumValue(nowStage);
             stageLoader.SetStageStatus();
         }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            await StageClear();
+        }
+
     }
 
     public static async Task PlayerMove()
@@ -186,6 +200,50 @@ public class GameManager : MonoBehaviour
         stageLoader.SetStageStatus();
         cameraFlag = true;
         cameraMove.MoveCamera();
+    }
+
+    public static async UniTask StageClear()
+    {
+        StageClearAnim?.Invoke();
+        trantision.GetComponent<Transition>().StartTran();
+        while (true)
+        {
+            if (trantision.GetComponent<PlayableDirector>().state == PlayState.Paused)
+            {
+                AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("StageSelect");
+
+                while (asyncOperation.isDone)
+                {
+                    await UniTask.Yield();
+                }
+                UnLoad();
+                await UniTask.WaitForSeconds(1.5f);
+
+                await EndTransition();
+                break;
+            }
+            await UniTask.Yield();
+        }
+    }
+
+    public static async UniTask EndTransition ()
+    {
+        trantision.GetComponent<Transition>().EndTran();
+        while (trantision.GetComponent<PlayableDirector>().state == PlayState.Playing)
+        {
+            await UniTask.Yield();
+        }
+        foreach (var obj in dontdestoryObj)
+        {
+            Destroy(obj);
+        }
+        dontdestoryObj.Clear();
+        Destroy(trantision);
+    }
+
+    public static void UnLoad()
+    {
+        cameraMove = null;
     }
 
     public static async void Battle()

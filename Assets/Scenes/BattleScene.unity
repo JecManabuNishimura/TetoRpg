@@ -1248,6 +1248,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backGround: {fileID: 105792773920900668, guid: 1ca3e6d7fbbb6594bb7de49e94566f0d, type: 3}
   backGroundFream: {fileID: 3974686643554238572, guid: 932c442dc9de03543b52ac4fe458feef, type: 3}
+  UiCanvas: {fileID: 1859248431}
+  TranObject: {fileID: 4725991845159171383, guid: e697d7e54e28f024d92bf49c36437082, type: 3}
   block: {fileID: 4476787805349554323, guid: 3de678f6418a89c46a25d48026ccb1d2, type: 3}
   checkBlock: {fileID: 4476787805349554323, guid: 402e10f28a55c884394d29c0046089c2, type: 3}
   parent: {fileID: 873209793}
@@ -2821,7 +2823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1784022873
 MonoBehaviour:
   m_ObjectHideFlags: 0

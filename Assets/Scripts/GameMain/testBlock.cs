@@ -10,6 +10,8 @@ public class testBlock : MonoBehaviour
 {
     [SerializeField] private GameObject backGround;
     [SerializeField] private GameObject backGroundFream;
+    [SerializeField] private GameObject UiCanvas;
+    [SerializeField] private GameObject TranObject;
     public GameObject block;
     public GameObject checkBlock;
     private GameObject checkParent;
@@ -28,6 +30,7 @@ public class testBlock : MonoBehaviour
         GameManager.ClearBlock += ClearBlock;
         GameManager.BackGroundEmmision_Start += BackGroundEmission_Start;
         GameManager.BackGroundEmmision_Stop += BackGroundEmission_Stop;
+        GameManager.StageClearAnim += StageClearAnim;
         checkParent = new GameObject(){name = "check"};
         //BoardManager.Instance.SetTestBlock += SetTestBlock;
     }
@@ -102,6 +105,12 @@ public class testBlock : MonoBehaviour
         bgfObj.transform.position = new Vector3(GameManager.boardWidth / 2.0f - 0.5f,
             GameManager.boardHeight / 2.0f, 15);
     }
+
+    private void StageClearAnim()
+    {
+        UiCanvas.SetActive(false);
+        DontDestroyOnLoad(GameManager.trantision = Instantiate(TranObject));
+    }
     
     private void Update()
     {
@@ -109,6 +118,7 @@ public class testBlock : MonoBehaviour
         {
             GameManager.LineCreateFlag = true;
         }
+
     }
 
     void BackGroundEmission_Start()
