@@ -22,7 +22,7 @@ public class MinoCreater : MonoBehaviour
     {
         equipmentData = data;
         /*
-        if (GameManager.player.belongingsMino.Contains(id))
+        if (GameManager.Instance.player.belongingsMino.Contains(id))
         {
             //GetComponent<Image>().color = Color.green;
         }*/

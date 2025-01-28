@@ -57,10 +57,10 @@ namespace Enemy
             {
                 name = "AttackArea"
             };
-            GameManager.EnemyAttack += Play;
+            GameManager.Instance.EnemyAttack += Play;
             initPosition = transform.position;
 
-            GameManager.enemy = this;
+            GameManager.Instance.enemy = this;
         }
 
         private void Start()
@@ -73,7 +73,7 @@ namespace Enemy
         private void ReadyAttack()
         {
             attackTime += Time.deltaTime;
-            if ((attackTime >= AttackInterval || GameManager.maxPutposFlag) && !GameManager.EnemyAttackFlag)
+            if ((attackTime >= AttackInterval || GameManager.Instance.maxPutposFlag) && !GameManager.Instance.EnemyAttackFlag)
             {
                 foreach (var val in area)
                 {
@@ -83,7 +83,7 @@ namespace Enemy
                 area.Clear();
                 int pattern = 0;
                 // 攻撃の種類
-                if (GameManager.maxPutposFlag)
+                if (GameManager.Instance.maxPutposFlag)
                 {
                     var data = AttackData.GetAttack(AttackName.OneRowLineRandom);
                     foreach (var d in data)
@@ -112,7 +112,7 @@ namespace Enemy
                                 // ボムの場合は落下までエリアを出さない（危険表示は出す予定）
                                 case AttackName.BombAttack:
                                 case AttackName.BombMultiAttack:
-                                    GameManager.EnemyAttackFlag = true;
+                                    GameManager.Instance.EnemyAttackFlag = true;
                                     return;
                             }
 
@@ -165,16 +165,16 @@ namespace Enemy
                         }
                     }
                 }
-                GameManager.EnemyAttackFlag = true;
+                GameManager.Instance.EnemyAttackFlag = true;
             }
         }
 
         public void CheckputPos()
         {
             //　一番上まで積まれたら攻撃開始
-            if (GameManager.maxPutposFlag)
+            if (GameManager.Instance.maxPutposFlag)
             {
-                //GameManager.EnemyAttackFlag = true;
+                //GameManager.Instance.EnemyAttackFlag = true;
                 attackCount = 0;
             }
         }
@@ -224,7 +224,7 @@ namespace Enemy
 
         private void Update()
         {
-            if (GameManager.menuFlag) return;
+            if (GameManager.Instance.menuFlag) return;
             
             if (shakeFlag)
             {
@@ -283,7 +283,7 @@ namespace Enemy
                                 var count = await StartAttack(positions) * status.atk;
 
                                 // ダメージ処理
-                                GameManager.player.Damage(count);
+                                GameManager.Instance.player.Damage(count);
                                 foreach (var val in positions)
                                 {
                                     BoardManager.Instance.CheckDeleteLine((int)val.y);
@@ -304,7 +304,7 @@ namespace Enemy
                             var count = await StartAttack(positions) * status.atk;
 
                             // ダメージ処理
-                            GameManager.player.Damage(count);
+                            GameManager.Instance.player.Damage(count);
                             foreach (var val in positions)
                             {
                                 BoardManager.Instance.CheckDeleteLine((int)val.y);
@@ -322,7 +322,7 @@ namespace Enemy
                     var count = (await StartAttack(positions) * status.atk) * 1.5f;
 
                     // ダメージ処理
-                    GameManager.player.Damage((int)count);
+                    GameManager.Instance.player.Damage((int)count);
                     foreach (var val in positions)
                     {
                         BoardManager.Instance.CheckDeleteLine((int)val.y);
@@ -349,23 +349,23 @@ namespace Enemy
             }
 
             area.Clear();
-            GameManager.EnemyAttackFlag = false;
+            GameManager.Instance.EnemyAttackFlag = false;
             attackTime = 0;
             attackCount = attackTarnCount;
         }
 
         private async Task AttackBomb()
         {
-            BombAttackPosX = Random.Range(0, GameManager.boardWidth);
+            BombAttackPosX = Random.Range(0, GameManager.Instance.boardWidth);
             await bombAttack.CreateBomb(BombAttackPosX);
             Vector2Int hitPos = bombAttack.hitPos;
             for (int y = hitPos.y + 1; y >= hitPos.y - 1; y--)
             {
                 for (int x = hitPos.x - 1; x <= hitPos.x + 1; x++)
                 {
-                    if (y > 0 && y < GameManager.boardHeight - 1)
+                    if (y > 0 && y < GameManager.Instance.boardHeight - 1)
                     {
-                        if (x >= 0 && x < GameManager.boardWidth)
+                        if (x >= 0 && x < GameManager.Instance.boardWidth)
                         {
                             GameObject aObj = Instantiate(attackArea, new Vector3(x, y, 0),
                                 Quaternion.identity);
@@ -408,7 +408,9 @@ namespace Enemy
                     {
                         parts.Add(Instantiate(particle, new Vector3(position.x, position.y, 0), Quaternion.identity));
                         parts[^1].Play();
-                        parts[^1].GetComponent<Bullet>().target = GameManager.player.gameObject;
+                        // 今は無理やりプレイヤーのオブジェクトを取得
+                        // 今後攻撃方法変更する
+                        parts[^1].GetComponent<Bullet>().target = GameManager.Instance.player.ui.gameObject;
                     }
                 }
             }
@@ -439,14 +441,14 @@ namespace Enemy
                     gameObject.GetComponent<Animator>().enabled = false;
                     SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
                     await sr.DOFade(0, 1).AsyncWaitForCompletion();
-                    GameManager.EnemyDown = true;
+                    GameManager.Instance.EnemyDown = true;
                 }
             }
         }
 
         public void EnemyDeath()
         {
-            GameManager.EnemyAttack -= Play;
+            GameManager.Instance.EnemyAttack -= Play;
             Initialize();
             Destroy(attackObjPare);
             Destroy(this.gameObject);

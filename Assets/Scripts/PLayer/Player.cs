@@ -1,23 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
+
 
 
 public class Player : CharactorData, ICharactor
 {
-    [SerializeField] private TextMeshProUGUI hpText;
-    [SerializeField] private ParticleSystem healingEffect;
-    [SerializeField] private TextMeshPro damageText;
-    [SerializeField] private Slider slider;
-
     //[SerializeField] private MinoCreater[] minoCreaters;
     public Status totalStatus;
-    public BelongingsEquipment belongingsEquipment = new ();
-    
+    public BelongingsEquipment belongingsEquipment = new()
+    {
+        weapon = new EquipmentUniqueData("We01",0),
+        shield = new EquipmentUniqueData("Sh01",0),
+        helmet = new EquipmentUniqueData("He01",0),
+        armor = new EquipmentUniqueData("Ar01",0),
+    };
+    public PlayerUi ui;   
     // 装備しているMino
     public List<EquipmentUniqueData> belongingsMino = new()
     {
@@ -65,40 +64,22 @@ public class Player : CharactorData, ICharactor
 
     public Dictionary<string,int > BelongingsMinoEffect = new ();
 
-    void Awake()
-    {
-        GameManager.player = this;
-        damageText.enabled = false;
-    }
 
 
     public void Initialize()
     {
-        slider.value = 1;
-        
         foreach (var state in MinoEffectStatusMaster.Entity.MinoEffectStatus)
         {
             BelongingsMinoEffect.Add(state,0);    
-        }
-        
+        }        
         UpdateStatus();
         SetBelongingsMinoEffect();
         totalStatus.hp = totalStatus.maxHp;
-        hpText.text = totalStatus.hp.ToString();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            GameManager.menuFlag = true;
-            MenuManager.Instance.OpenMenu();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            MenuManager.Instance.CloseMenu();
-        }
+        
     }
 
     public void SetBelongingsMinoEffect()
@@ -123,7 +104,7 @@ public class Player : CharactorData, ICharactor
 
     void SetMinoEffect()
     {
-        GameManager.NextUpCountAmount = Mathf.Max(1,GameManager.NextUpCountAmount + BelongingsMinoEffect["NextGaugeUp"] - BelongingsMinoEffect["NextGaugeDown"]);
+        GameManager.Instance.NextUpCountAmount = Mathf.Max(1,GameManager.Instance.NextUpCountAmount + BelongingsMinoEffect["NextGaugeUp"] - BelongingsMinoEffect["NextGaugeDown"]);
     }
     
     public void SetEquipment(EqupmentPart part,EquipmentUniqueData data)
@@ -184,7 +165,7 @@ public class Player : CharactorData, ICharactor
     
     public void UpdateHp()
     {
-        hpText.text = totalStatus.hp.ToString();
+        ui.hpText.text = totalStatus.hp.ToString();
     }
 
     public bool AcquisitionMino(EquipmentUniqueData data)
@@ -247,15 +228,15 @@ public class Player : CharactorData, ICharactor
     
     public void Healing()
     {
-        totalStatus.hp += GameManager.healingPoint;
+        totalStatus.hp += GameManager.Instance.healingPoint;
         if (totalStatus.hp >= totalStatus.maxHp)
         {
             totalStatus.hp = totalStatus.maxHp;
         }
-        var part = Instantiate(healingEffect);
-        part.transform.position = transform.position;
+        var part = Instantiate(ui.healingEffect);
+        part.transform.position = ui.transform.position;
         UpdateHp();
-        slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
+        ui.slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
     }
 
     public async Task Damage(int damage)
@@ -265,12 +246,12 @@ public class Player : CharactorData, ICharactor
         {
             newDamage = 0;
         }
-        damageText.enabled = true;
-        damageText.text = newDamage.ToString();
-        damageText.transform.GetComponent<Animator>().Play("DamageText",0,0);
+        ui.damageText.enabled = true;
+        ui.damageText.text = newDamage.ToString();
+        ui.damageText.transform.GetComponent<Animator>().Play("DamageText",0,0);
         totalStatus.hp -= newDamage;
         UpdateHp();
-        slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
+        ui.slider.value = (float)totalStatus.hp / (float)totalStatus.maxHp;
         await Task.Yield();
     }
 

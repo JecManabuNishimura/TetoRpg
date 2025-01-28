@@ -6,6 +6,6 @@ public class EnemyPoint : MonoBehaviour
 
     private void Start()
     {
-        GameManager.enemyPos = transform;
+        GameManager.Instance.enemyPos = transform;
     }
 }

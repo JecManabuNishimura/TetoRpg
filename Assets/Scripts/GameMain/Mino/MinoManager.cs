@@ -73,8 +73,8 @@ public class MinoManager : MonoBehaviour
     }
     private void Start()
     {
-        GameManager.StartBattle += StartBattle;
-        GameManager.ChangeFallCount += ChangeFallCount;
+        GameManager.Instance.StartBattle += StartBattle;
+        GameManager.Instance.ChangeFallCount += ChangeFallCount;
         
         clMinoObj = new GameObject
         {
@@ -114,8 +114,27 @@ public class MinoManager : MonoBehaviour
         minoListObj = new GameObject
         {
             name = "minoListObj"
-        };
-        
+        };   
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.StartBattle -= StartBattle;
+        GameManager.Instance.ChangeFallCount -= ChangeFallCount;
+        BoardManager.Instance.ChangeColor -= Instance_ChangeColor;
+        BoardManager.Instance.DeleteMino -= DeleteMino;
+        BoardManager.Instance.DownMino -= DownMino;
+        BoardManager.Instance.UpMino -= UpMino;
+        BoardManager.Instance.TableNullMino -= SetMinoTableNull;
+        BoardManager.Instance.ResetTable -= ResetDataTable;
+        BoardManager.Instance.CheckTreasure -= CheckTreasure;
+        BoardManager.Instance.ClearTable -= ClearTable;
+        BoardManager.Instance.AlignmentMino -= MoveMinoAlignment;
+        BoardManager.Instance.GetTreasurePos -= GetTreasurePos;
+        BoardManager.Instance.MoveTreasurePos -= MoveTreasurePos;
+        BoardManager.Instance.CreateObstacleBlock -= CreateSkillObstacleBLock;
+        BoardManager.Instance.CheckBlockType -= CheckBlockType;
+        BoardManager.Instance.SetAttackBlock -= SetAttackBlock;
     }
     private void CreateaNextMino()
     {
@@ -145,11 +164,11 @@ public class MinoManager : MonoBehaviour
         {
             CreateaNextMino();
         }
-        holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+        holdObj.SetActive(GameManager.Instance.player.BelongingsMinoEffect["HoldBlock"] != 0);
         nextWindowObj.SetActive(true);
-        minoDataTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
-        minoDataTableCopy = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
-        AttackBlock = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
+        minoDataTable = new GameObject[GameManager.Instance.boardHeight, GameManager.Instance.boardWidth];
+        minoDataTableCopy = new GameObject[GameManager.Instance.boardHeight, GameManager.Instance.boardWidth];
+        AttackBlock = new GameObject[GameManager.Instance.boardHeight, GameManager.Instance.boardWidth];
         NextUpGauge.Instance.CreateGauge();
         //await NextUpGauge.Instance.Play();
         CreateNewMino();
@@ -158,7 +177,7 @@ public class MinoManager : MonoBehaviour
 
     private void ResetDataTable()
     {
-        var newTable = new GameObject[GameManager.boardHeight, GameManager.boardWidth];
+        var newTable = new GameObject[GameManager.Instance.boardHeight, GameManager.Instance.boardWidth];
         for (int y = 0; y < minoDataTable.GetLength(0); y++)
         {
             for (int x = 0; x < minoDataTable.GetLength(1); x++)
@@ -194,14 +213,14 @@ public class MinoManager : MonoBehaviour
     private async void Update()
     {
         // 落下速度
-        fallTime -= GameManager.player.BelongingsMinoEffect["DownSpeedUp"] * 0.2f;
-        fallTime += GameManager.player.BelongingsMinoEffect["DownSpeedDown"]* 0.2f;
+        fallTime -= GameManager.Instance.player.BelongingsMinoEffect["DownSpeedUp"] * 0.2f;
+        fallTime += GameManager.Instance.player.BelongingsMinoEffect["DownSpeedDown"]* 0.2f;
         // ホールド対応
-        holdObj.SetActive(GameManager.player.BelongingsMinoEffect["HoldBlock"] != 0);
+        holdObj.SetActive(GameManager.Instance.player.BelongingsMinoEffect["HoldBlock"] != 0);
         // 予測ブロック対応
-        //clMinoObj.SetActive(GameManager.player.BelongingsMinoEffect["PredictionBlock"] != 0);
+        //clMinoObj.SetActive(GameManager.Instance.player.BelongingsMinoEffect["PredictionBlock"] != 0);
         clMinoObj.SetActive(true);
-        if (!SelectMino || GameManager.menuFlag) return;
+        if (!SelectMino || GameManager.Instance.menuFlag) return;
 
 
         inputHandler.HandleInput();
@@ -285,14 +304,14 @@ public class MinoManager : MonoBehaviour
                                 int mindex = newVec.x + GetMaxIndexCol(mino);
                                 int minIndex = newVec.x + GetMinIndexCol(mino);
                                 int maxYindex = newVec.y - GetMaxIndexRow(mino);
-                                if (maxYindex > 0 && maxYindex < GameManager.boardHeight)
+                                if (maxYindex > 0 && maxYindex < GameManager.Instance.boardHeight)
                                 {
                                     //飛び出している場合
-                                    if (mindex > GameManager.boardWidth && newVec.y < GameManager.boardHeight)
+                                    if (mindex > GameManager.Instance.boardWidth && newVec.y < GameManager.Instance.boardHeight)
                                     {
                                         // 飛び出た分だけ戻して確認する
                                         // 調整
-                                        newVec.x += mindex - GameManager.boardWidth;
+                                        newVec.x += mindex - GameManager.Instance.boardWidth;
                                         if (!BoardManager.Instance.HitCheck(newVec.x, newVec.y))
                                         {
                                             return HitCheck(mino, vec, 7); 
@@ -314,13 +333,13 @@ public class MinoManager : MonoBehaviour
                             {
                                 int minIndex = newVec.x + GetMinIndexCol(mino);
                                 // Ｘ軸の確認　左端
-                                //if (newVec.y - y > 0 && newVec.y - y < GameManager.boardHeight)
+                                //if (newVec.y - y > 0 && newVec.y - y < GameManager.Instance.boardHeight)
                                 if (newVec.y - y > 0)
                                 {
                                     if (minIndex < 0)
                                     {
                                         newVec.x += 0 - minIndex;
-                                        if (newVec.y < GameManager.boardHeight)
+                                        if (newVec.y < GameManager.Instance.boardHeight)
                                         {
                                             if (!BoardManager.Instance.HitCheck(newVec.x, newVec.y))
                                             {
@@ -351,11 +370,11 @@ public class MinoManager : MonoBehaviour
                     }
                     newVec.x += x;
                     newVec.y -= y;
-                    if (newVec.x >= 0 && newVec.x < GameManager.boardWidth &&
+                    if (newVec.x >= 0 && newVec.x < GameManager.Instance.boardWidth &&
                         newVec.y > 0 )
                      {
                         // 一番上は無視
-                        if (newVec.y < GameManager.boardHeight)
+                        if (newVec.y < GameManager.Instance.boardHeight)
                         {
                             if (!BoardManager.Instance.HitCheck(newVec.x, newVec.y))
                             {
@@ -431,7 +450,7 @@ public class MinoManager : MonoBehaviour
     {
         if (SelectMino == null || treasureFlag) return;
         // 回転禁止
-        if (GameManager.player.BelongingsMinoEffect["RotBlockCancel"] != 0) return;
+        if (GameManager.Instance.player.BelongingsMinoEffect["RotBlockCancel"] != 0) return;
         var nowPos = SelectMino.transform.position;
         rotNum = (rotNum +1) % 4;
         int[,] minoRot = MinoFactory.RotatePiece(nowMinos, rotNum,index);
@@ -449,7 +468,7 @@ public class MinoManager : MonoBehaviour
             2 => (Vector2)moveDirection[rotNum, hitNum],
             3 => (Vector2)moveDirection[rotNum, hitNum],
             4 => (Vector2)moveDirection[rotNum, hitNum],
-            5 => -new Vector3(nowPos.x + GetMaxIndexCol(minoRot) - GameManager.boardWidth + 1, 0,0),
+            5 => -new Vector3(nowPos.x + GetMaxIndexCol(minoRot) - GameManager.Instance.boardWidth + 1, 0,0),
             6 => new Vector3(0 - (nowPos.x + GetMinIndexCol(minoRot)), 0,0),
             7 => new Vector3(0,(0 -(nowPos.y - GetMaxIndexRow(minoRot)) + 1),0),
         };
@@ -472,9 +491,9 @@ public class MinoManager : MonoBehaviour
     void TreasureDelete(int x, int y,bool AttackFlag)
     {
         var list = new List<MinoBlock>();
-                for (int yy = 0; yy < GameManager.boardHeight; yy++)
+                for (int yy = 0; yy < GameManager.Instance.boardHeight; yy++)
                 {
-                    for (int xx = 0; xx < GameManager.boardWidth; xx++)
+                    for (int xx = 0; xx < GameManager.Instance.boardWidth; xx++)
                     {
                         if(minoDataTable[yy, xx] != null)
                         {
@@ -494,7 +513,7 @@ public class MinoManager : MonoBehaviour
                     {
                         if (!AttackFlag)
                         {
-                            var unique = GameManager.stageLoader.GetDropData().GetItemDataId();
+                            var unique = GameManager.Instance.stageLoader.GetDropData().GetItemDataId();
                             if (int.TryParse(unique.WeaponId, out int result))
                             {
                                 // ミノだった場合
@@ -503,7 +522,7 @@ public class MinoManager : MonoBehaviour
                                 obj.transform.localPosition = new Vector3(0, 0.5f, -1);
                                 treasure.spriteObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
                                 treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                if(GameManager.player.AcquisitionMino(unique))
+                                if(GameManager.Instance.player.AcquisitionMino(unique))
                                 {
                                     var text = Instantiate(newTextObj, obj.transform);
                                     text.transform.localPosition = new Vector3(0, 3f, -1);
@@ -516,7 +535,7 @@ public class MinoManager : MonoBehaviour
                                     = EquipmentDatabase.Entity.GetEquipmentSpriteData(unique.WeaponId)
                                         .sprite;
                                 treasure.spriteObj.GetComponent<PlayableDirector>().Play();
-                                if (GameManager.player.AcquisitionItem(unique))
+                                if (GameManager.Instance.player.AcquisitionItem(unique))
                                 {
                                     var text = Instantiate(newTextObj, treasure.spriteObj.transform.GetChild(0).transform);
                                     text.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -542,7 +561,7 @@ public class MinoManager : MonoBehaviour
                 switch (minoDataTable[y, x].GetComponent<MinoBlock>().minoType)
                 {
                     case MinoType.Life:
-                        GameManager.player.Healing();
+                        GameManager.Instance.player.Healing();
                         break;
                     case MinoType.Normal:
                         break;
@@ -551,7 +570,7 @@ public class MinoManager : MonoBehaviour
                         Destroy(minoDataTable[y, x]);
                         minoDataTable[y, x] = null;
                         BoardManager.Instance.DeleteBomb(x,y);
-                        GameManager.BombFlag = true;
+                        GameManager.Instance.BombFlag = true;
                         return;
                     case MinoType.Stripes:
                         Destroy(minoDataTable[y, x]);
@@ -580,7 +599,7 @@ public class MinoManager : MonoBehaviour
                         if (shapeFixCount == 0)
                         {
                             shapeFixCount += 5;
-                            shapeIndex = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();    
+                            shapeIndex = GameManager.Instance.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();    
                         }
                         break;
                     case MinoType.DeleteCancel:
@@ -638,7 +657,7 @@ public class MinoManager : MonoBehaviour
     //=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     void HoldMino()
     {
-        if (GameManager.player.BelongingsMinoEffect["HoldBlock"] == 0) return;
+        if (GameManager.Instance.player.BelongingsMinoEffect["HoldBlock"] == 0) return;
         if (SelectMino == null || treasureFlag || holFlag) return;
         holFlag = true;
         if(holdMino.Count == 0)
@@ -673,7 +692,7 @@ public class MinoManager : MonoBehaviour
             clMinoObj.transform.position = Vector3.zero;
             CreatePiece(holdMino[0].minoData);
             
-            SelectMino.transform.position = new Vector3(GameManager.boardWidth / 2-2,GameManager.boardHeight,0);
+            SelectMino.transform.position = new Vector3(GameManager.Instance.boardWidth / 2-2,GameManager.Instance.boardHeight,0);
             CheckUnder();
             Destroy(holdMino[0].minoObj);
             holdMino.RemoveAt(0);
@@ -709,7 +728,7 @@ public class MinoManager : MonoBehaviour
         foreach (Transform child in SelectMino.transform)
         {
             Vector3 newPosition = child.position + (isLeft ? -Vector3.right : Vector3.right);
-            if (newPosition.x >= GameManager.boardWidth || newPosition.x < 0)
+            if (newPosition.x >= GameManager.Instance.boardWidth || newPosition.x < 0)
             {
                 hitflag = true;
                 break;
@@ -735,14 +754,14 @@ public class MinoManager : MonoBehaviour
         //--------------------------------------------------------------------------
         //  宝箱出現率調節
         //--------------------------------------------------------------------------
-        if (GameManager.stageData.TresureDropRate != 0)
+        if (GameManager.Instance.stageData.TresureDropRate != 0)
         {
-            number = Random.Range(0, GameManager.stageData.TresureDropRate) == 0 ? -1 :0 ;
+            number = Random.Range(0, GameManager.Instance.stageData.TresureDropRate) == 0 ? -1 :0 ;
         }
         if(number == 0)
         {
             // 所持数最大7に固定（現在）
-            number = GameManager.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();
+            number = GameManager.Instance.player.GetBelongingsMino(Random.Range(0, 7)).WeaponId.toInt();
         }
         return number;
     }
@@ -784,7 +803,7 @@ public class MinoManager : MonoBehaviour
         clMinoObj.transform.position = Vector3.zero;       
         nowMinos = MinoFactory.GetMinoData(index, treasureFlag);
         CreatePiece(nowMinos,true);
-        SelectMino.transform.position = new Vector3(GameManager.boardWidth / 2-2,GameManager.boardHeight,0);
+        SelectMino.transform.position = new Vector3(GameManager.Instance.boardWidth / 2-2,GameManager.Instance.boardHeight,0);
         CheckUnder();
     }
 
@@ -869,10 +888,10 @@ public class MinoManager : MonoBehaviour
                         //-----------------------------------------------------------------
                         // ライフの確率
                         //-----------------------------------------------------------------
-                        if ((GameManager.stageData.HealDropRate != 0) &&
+                        if ((GameManager.Instance.stageData.HealDropRate != 0) &&
                             (Random.Range(0, 
-                            GameManager.stageData.HealDropRate -
-                            GameManager.player.BelongingsMinoEffect["HealRateUp"]) == 0))
+                            GameManager.Instance.stageData.HealDropRate -
+                            GameManager.Instance.player.BelongingsMinoEffect["HealRateUp"]) == 0))
                         {
                             minos[y, x] *= 2;
                         }
@@ -880,16 +899,16 @@ public class MinoManager : MonoBehaviour
                         //-----------------------------------------------------------------
                         // ボムの確率
                         //-----------------------------------------------------------------
-                        else if ((GameManager.stageData.BombDropRate != 0) &&
-                        (Random.Range(0, GameManager.stageData.BombDropRate) == 0))
+                        else if ((GameManager.Instance.stageData.BombDropRate != 0) &&
+                        (Random.Range(0, GameManager.Instance.stageData.BombDropRate) == 0))
                         {
                             minos[y, x] *= 3;
                         }
                         //-----------------------------------------------------------------
                         // クロスの確率
                         //-----------------------------------------------------------------
-                        else if ((GameManager.stageData.StripesDropRate != 0) &&
-                                 (Random.Range(0, GameManager.stageData.StripesDropRate) == 0))
+                        else if ((GameManager.Instance.stageData.StripesDropRate != 0) &&
+                                 (Random.Range(0, GameManager.Instance.stageData.StripesDropRate) == 0))
                         {
                             minos[y, x] *= 4;
                         }
@@ -897,40 +916,40 @@ public class MinoManager : MonoBehaviour
                         // 邪魔ブロックの確率
                         //  暫定で30から引いた確立
                         //-----------------------------------------------------------------
-                        else if ((GameManager.player.BelongingsMinoEffect["ObstacleBlock"] != 0) &&
-                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["ObstacleBlock"]) == 0))
+                        else if ((GameManager.Instance.player.BelongingsMinoEffect["ObstacleBlock"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.Instance.player.BelongingsMinoEffect["ObstacleBlock"]) == 0))
                         {
                             minos[y, x] *= 5;
                         }
                         //-----------------------------------------------------------------
                         // ミノ効果取り消し
                         //-----------------------------------------------------------------
-                        else if ((GameManager.player.BelongingsMinoEffect["SkillCancel"] != 0) &&
-                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["SkillCancel"]) == 0))
+                        else if ((GameManager.Instance.player.BelongingsMinoEffect["SkillCancel"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.Instance.player.BelongingsMinoEffect["SkillCancel"]) == 0))
                         {
                             minos[y, x] *= 6;
                         }
                         //-----------------------------------------------------------------
                         // 邪魔ブロック上昇禁止
                         //-----------------------------------------------------------------
-                        else if ((GameManager.player.BelongingsMinoEffect["ObstacleStop"] != 0) &&
-                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["ObstacleStop"]) == 0))
+                        else if ((GameManager.Instance.player.BelongingsMinoEffect["ObstacleStop"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.Instance.player.BelongingsMinoEffect["ObstacleStop"]) == 0))
                         {
                             minos[y, x] *= 7;
                         }
                         //-----------------------------------------------------------------
                         // 邪魔ブロック上昇禁止
                         //-----------------------------------------------------------------
-                        else if ((GameManager.player.BelongingsMinoEffect["ShapeFix"] != 0) &&
-                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["ShapeFix"]) == 0))
+                        else if ((GameManager.Instance.player.BelongingsMinoEffect["ShapeFix"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.Instance.player.BelongingsMinoEffect["ShapeFix"]) == 0))
                         {
                             minos[y, x] *= 8;
                         }
                         //-----------------------------------------------------------------
                         // 削除キャンセルブロック
                         //-----------------------------------------------------------------
-                        else if ((GameManager.player.BelongingsMinoEffect["DeleteCancel"] != 0) &&
-                                 (Random.Range(0, 30 - GameManager.player.BelongingsMinoEffect["DeleteCancel"]) == 0))
+                        else if ((GameManager.Instance.player.BelongingsMinoEffect["DeleteCancel"] != 0) &&
+                                 (Random.Range(0, 30 - GameManager.Instance.player.BelongingsMinoEffect["DeleteCancel"]) == 0))
                         {
                             minos[y, x] *= 9;
                         }
@@ -996,7 +1015,7 @@ public class MinoManager : MonoBehaviour
             if (posX != child.position.x) continue;
             while (true)
             {
-                if (posY < GameManager.boardHeight)
+                if (posY < GameManager.Instance.boardHeight)
                 {
                     if (posY <= 0 || BoardManager.Instance.board[posY, posX] != 0)
                     {
@@ -1066,11 +1085,11 @@ public class MinoManager : MonoBehaviour
                         Destroy(clMinoObj.transform.GetChild(i).gameObject);
                     }
                     
-                    GameManager.playerPut = true;
+                    GameManager.Instance.playerPut = true;
                     //await ChangeFallCount();
-                    await GameManager.PlayerMove();
+                    await GameManager.Instance.PlayerMove();
                     // 敵死亡時　何もしない
-                    if(GameManager.EnemyDown)
+                    if(GameManager.Instance.EnemyDown)
                     {
                         return;
                     }
@@ -1114,11 +1133,11 @@ public class MinoManager : MonoBehaviour
         else
         {
             
-            GameManager.playerPut = true;
+            GameManager.Instance.playerPut = true;
 
-            await GameManager.PlayerMove();
+            await GameManager.Instance.PlayerMove();
             // 敵死亡時　何もしない
-            if (GameManager.EnemyDown)
+            if (GameManager.Instance.EnemyDown)
             {
                 return;
             }
@@ -1141,7 +1160,7 @@ public class MinoManager : MonoBehaviour
             return;
         }
         NextUpGauge.Instance.CountUp();
-        if (NextUpGauge.Instance.GetCount == GameManager.boardWidth)
+        if (NextUpGauge.Instance.GetCount == GameManager.Instance.boardWidth)
         {
             await CreateObstacleBlock();
             NextUpGauge.Instance.ResetGauge();
@@ -1156,7 +1175,7 @@ public class MinoManager : MonoBehaviour
         {
             col = downColPos;
         }
-        for (int dis = 0; dis < GameManager.boardHeight; dis++)
+        for (int dis = 0; dis < GameManager.Instance.boardHeight; dis++)
         {
             for (int i = 0; i < 360; i++)
             {
@@ -1165,7 +1184,7 @@ public class MinoManager : MonoBehaviour
 
                 if (fX != preX || fY != preY)
                 {
-                    if (fX >= 0 && fY >= 0 && fX < GameManager.boardWidth && fY < GameManager.boardHeight)
+                    if (fX >= 0 && fY >= 0 && fX < GameManager.Instance.boardWidth && fY < GameManager.Instance.boardHeight)
                     {
                         if (minoDataTable[fY, fX] != null)
                             minoDataTable[fY, fX].GetComponent<GamingMaterial>().StartChangeColor();
@@ -1192,7 +1211,7 @@ public class MinoManager : MonoBehaviour
                 continue;
             }
             var type = child.GetComponent<MinoBlock>().minoType;
-            if (child.position.y >= GameManager.boardHeight)
+            if (child.position.y >= GameManager.Instance.boardHeight)
             {
                 continue;
             }
@@ -1238,23 +1257,23 @@ public class MinoManager : MonoBehaviour
 
         Destroy(SelectMino);
         // そろっているかチェック
-        GameManager.DeleteLine = 0;     //　いったん初期化
-        GameManager.DeleteMino = 0;
+        GameManager.Instance.DeleteLine = 0;     //　いったん初期化
+        GameManager.Instance.DeleteMino = 0;
         await BoardManager.Instance.CheckLine(0);
         
         // ダメージテキスト表示
-        if (GameManager.playerDamage != 0)
+        if (GameManager.Instance.playerDamage != 0)
         {
             var obj = Instantiate(damgeText, new Vector3(delPos.x,delPos.y , 0), Quaternion.identity);
             // クリティカル判定
-            if (Random.Range(0, 100) < GameManager.player.status.critical)
+            if (Random.Range(0, 100) < GameManager.Instance.player.status.critical)
             {
                 // クリティカル2倍
-                obj.GetComponent<Damage>().ChangeText((GameManager.playerDamage * 2).ToString());
+                obj.GetComponent<Damage>().ChangeText((GameManager.Instance.playerDamage * 2).ToString());
             }
             else
             {
-                var damage = GameManager.playerDamage / 2 - GameManager.enemy.status.def / 4;
+                var damage = GameManager.Instance.playerDamage / 2 - GameManager.Instance.enemy.status.def / 4;
                 if (damage < 0)
                 {
                     damage = 0;
@@ -1263,7 +1282,7 @@ public class MinoManager : MonoBehaviour
             }
         }
         
-        await GameManager.enemy.Damage(GameManager.playerDamage);
+        await GameManager.Instance.enemy.Damage(GameManager.Instance.playerDamage);
         holFlag = false;
     }
 
@@ -1300,7 +1319,7 @@ public class MinoManager : MonoBehaviour
         await Task.Delay(500);
         BoardManager.Instance.UpLine();
         
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             if (rand != i)
             {
@@ -1314,9 +1333,9 @@ public class MinoManager : MonoBehaviour
     {
         Array.Copy(minoDataTableCopy, minoDataTable, minoDataTable.Length);
 
-        for (int y = 0; y < GameManager.boardHeight; y++)
+        for (int y = 0; y < GameManager.Instance.boardHeight; y++)
         {
-            for (int x = 0; x < GameManager.boardWidth; x++)
+            for (int x = 0; x < GameManager.Instance.boardWidth; x++)
             {
                 minoDataTableCopy[y, x] = null;
             }
@@ -1334,9 +1353,9 @@ public class MinoManager : MonoBehaviour
     {
         List<Vector2Int> pos = new();
         int num = minoDataTable[selectPos.y, selectPos.x].GetComponent<MinoBlock>().TreasureNumber;
-        for (int y = 0; y < GameManager.boardHeight; y++)
+        for (int y = 0; y < GameManager.Instance.boardHeight; y++)
         {
-            for (int x = 0; x < GameManager.boardWidth; x++)
+            for (int x = 0; x < GameManager.Instance.boardWidth; x++)
             {
                 if(minoDataTable[y, x] != null)
                 {

@@ -8,12 +8,11 @@ public class CameraStackManager : MonoBehaviour
     public Camera mainCamera;
     public Camera[] overlayCameras;
 
-    void Start()
+    public void Initialize()
     {
         var mainCamData = mainCamera.GetUniversalAdditionalCameraData();
         mainCamData.cameraStack.Clear();
         mainCamData.cameraStack.Add(Camera.allCameras.First(_ => _.name == "Main Camera"));
-        
     }
 
 

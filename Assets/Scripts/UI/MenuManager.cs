@@ -71,9 +71,9 @@ public class MenuManager : MonoBehaviour
         if (openFlag) return;
         openFlag = true;
         equipmentObj.SetActive(true);
-        armorData.hpText.text = GameManager.player.status.hp.ToString();
-        armorData.atkText.text = GameManager.player.status.atk.ToString();
-        armorData.defText.text = GameManager.player.status.def.ToString();
+        armorData.hpText.text = GameManager.Instance.player.status.hp.ToString();
+        armorData.atkText.text = GameManager.Instance.player.status.atk.ToString();
+        armorData.defText.text = GameManager.Instance.player.status.def.ToString();
         minoObj.SetActive(true);
         uiController.ChangeMenu(SelectView.TabSelect);
     }

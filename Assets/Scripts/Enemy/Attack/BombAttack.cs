@@ -10,7 +10,7 @@ public class BombAttack : MonoBehaviour
     public async Task CreateBomb(int posX)
     {
          obj = Instantiate(bomb);
-         obj.transform.position = new Vector3(posX, GameManager.boardHeight - 1);
+         obj.transform.position = new Vector3(posX, GameManager.Instance.boardHeight - 1);
          await Move();
     }
 

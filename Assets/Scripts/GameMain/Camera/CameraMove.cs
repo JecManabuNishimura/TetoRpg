@@ -13,7 +13,7 @@ public class CameraMove : MonoBehaviour
 
     public void Awake()
     {
-        GameManager.cameraMove = this;
+        GameManager.Instance.cameraMove = this;
         dollyCart.CameraPosition = 0f;
     }
 
@@ -21,23 +21,24 @@ public class CameraMove : MonoBehaviour
     {
         while (true)
         {
-            if (!GameManager.cameraFlag)
+            if (!GameManager.Instance.cameraFlag)
             {
                 await Task.Yield();
-                
-                continue;
+
+                break;
             }
             dollyCart.CameraPosition += 0.1f;
             if (CheckEnemyEncount(MapManager.Instance.GetEnemyPos))
             {
-                GameManager.cameraFlag = false;
+                GameManager.Instance.cameraFlag = false;
                 // バトル開始
-                GameManager.Battle();
-                continue;
+                GameManager.Instance.Battle();
+                break;
             }
 
             if (spline.CalculateLength() <= dollyCart.CameraPosition)
             {
+                Debug.Log("syuuryou");
                 break;
             }
             await Task.Yield(); // 1フレーム待機
@@ -46,7 +47,16 @@ public class CameraMove : MonoBehaviour
 
     private bool CheckEnemyEncount(Vector3 pos)
     {
+        if(spline == null)
+        {
+            Debug.LogWarning("SplineContainerが破棄されています。");
+        }
         var nowPos = dollyCart.CameraPosition / spline.CalculateLength();
         return Vector3.Distance(spline.EvaluatePosition(nowPos), pos) <= 3f;
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(spline);
     }
 }

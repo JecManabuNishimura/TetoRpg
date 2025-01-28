@@ -42,15 +42,15 @@ public class NextUpGauge : MonoBehaviour
     {
         var obj = Instantiate(nextObj);
         obstacleCount = Instantiate(ObstacleCount, UICanvas.transform);
-        obj.GetComponent<SpriteRenderer>().size = new Vector2(GameManager.boardWidth + 0.3f, 1.35f);
-        obj.transform.position = new Vector3(GameManager.boardWidth / 2.0f - 0.5f, -1.7f, 0);
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        obj.GetComponent<SpriteRenderer>().size = new Vector2(GameManager.Instance.boardWidth + 0.3f, 1.35f);
+        obj.transform.position = new Vector3(GameManager.Instance.boardWidth / 2.0f - 0.5f, -1.7f, 0);
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             var back = Instantiate(blockBackObj, obj.transform);
-            back.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 0f, 0);
+            back.transform.localPosition = new Vector3(i - (GameManager.Instance.boardWidth / 2.0f - 0.5f), 0f, 0);
             //�@���I�u�W�F
             var arrow = Instantiate(arrowObj, obj.transform);
-            arrow.transform.localPosition = new Vector3(i - (GameManager.boardWidth / 2.0f - 0.5f), 1.2f, 0);
+            arrow.transform.localPosition = new Vector3(i - (GameManager.Instance.boardWidth / 2.0f - 0.5f), 1.2f, 0);
         }
         gauge = obj;
     }
@@ -78,13 +78,13 @@ public class NextUpGauge : MonoBehaviour
     
     public void CountUp()
     {
-        for (int i = 0; i < GameManager.NextUpCountAmount; i++)
+        for (int i = 0; i < GameManager.Instance.NextUpCountAmount; i++)
         {
-            if (gaugeList.Count < GameManager.boardWidth)
+            if (gaugeList.Count < GameManager.Instance.boardWidth)
             {
                 var obj = Instantiate(blockObj, gauge.transform);
                 obj.transform.localPosition =
-                    new Vector3(gaugeList.Count - (GameManager.boardWidth / 2.0f - 0.5f), 0f, 0);
+                    new Vector3(gaugeList.Count - (GameManager.Instance.boardWidth / 2.0f - 0.5f), 0f, 0);
                 gaugeList.Add(obj);
             }
         }

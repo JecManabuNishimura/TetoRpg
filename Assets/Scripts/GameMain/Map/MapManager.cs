@@ -33,7 +33,7 @@ public class MapManager : MonoBehaviour
     public bool EndBattle()
     {
         encountEnemy.DeleteEnemy();
-        GameManager.cameraFlag = true;
+        GameManager.Instance.cameraFlag = true;
         return encountEnemy.GetEnemyData() == null;
         
     }

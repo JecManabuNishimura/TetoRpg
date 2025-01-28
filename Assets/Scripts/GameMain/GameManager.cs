@@ -6,67 +6,75 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
-using UnityEngine.SubsystemsImplementation;
-using static UnityEngine.EventSystems.EventTrigger;
-using Object = System.Object;
 
-
-public class GameManager : MonoBehaviour
+public class GameManager 
 {
-    public static Player player;
-    public static Enemy.Charactor enemy;
-    public static int boardWidth = 8;
-    public static int boardHeight = 20;
+    private static GameManager instance;
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new GameManager(); // 初回アクセス時にインスタンスを作成
+            }
+            return instance;
+        }
+    }
+    public Player player;
+    public Enemy.Charactor enemy;
+    public int boardWidth = 8;
+    public int boardHeight = 20;
     
-    public static event Func<UniTask> EnemyAttack;
-    public static event Action DownMino;
-    public static event Func<Task> FallingMino;
-    public static event Func<Task> CreateLineBlock;
-    public static event Func<Task> CreateBlock;
-    public static event Action ClearBlock;
-    public static event Func<Task> StartBattle;
-    public static event Func<Task> ChangeFallCount;
-    public static event Action StageFlomSelectStage;
-    public static Action StageClearAnim;
+    public event Func<UniTask> EnemyAttack;
+    public event Action DownMino;
+    public event Func<Task> FallingMino;
+    public event Func<Task> CreateLineBlock;
+    public event Func<Task> CreateBlock;
+    public event Action ClearBlock;
+    public event Func<Task> StartBattle;
+    public event Func<Task> ChangeFallCount;
+    public event Action StageFlomSelectStage;
+    public Action StageClearAnim;
     
 
-    public static Action BackGroundEmmision_Start;
-    public static Action BackGroundEmmision_Stop;
+    public Action BackGroundEmmision_Start;
+    public Action BackGroundEmmision_Stop;
 
-    public static int healingPoint = 1;
-    public static int DeleteLine;
-    public static int DeleteMino;
+    public int healingPoint = 1;
+    public int DeleteLine;
+    public int DeleteMino;
 
-    public static int playerDamage => (DeleteLine +(DeleteMino / 8)) * player.totalStatus.atk;
+    public int playerDamage => (DeleteLine +(DeleteMino / 8)) * player.totalStatus.atk;
 
     // 操作用フラグ
-    public static bool playerPut;
-    public static bool DownFlag;
-    public static bool BombFlag;
-    public static bool maxPutposFlag;
-    public static bool EnemyAttackFlag;
-    public static bool LineCreateFlag;
-    public static bool menuFlag;
-    public static bool cameraFlag;
-    public static bool EnemyHpVisibleFlag;
-    public static bool EnemyDown;
+    public bool playerPut;
+    public bool DownFlag;
+    public bool BombFlag;
+    public bool maxPutposFlag;
+    public bool EnemyAttackFlag;
+    public bool LineCreateFlag;
+    public bool menuFlag;
+    public bool cameraFlag;
+    public bool EnemyHpVisibleFlag;
+    public bool EnemyDown;
 
-    public static StageLoader stageLoader;
-    public static Stage nowStage = Stage.None;
-    public static StageData stageData;
+    public StageLoader stageLoader;
+    public Stage nowStage = Stage.None;
+    public StageData stageData;
 
-    public static CameraMove cameraMove;
-    public static Transform enemyPos;
+    public CameraMove cameraMove;
+    public Transform enemyPos;
 
-    public static GameObject trantision;
+    public GameObject trantision;
 
-    public static int NextUpCountAmount = 1;
+    public int NextUpCountAmount = 1;
 
-    public static List<GameObject> dontdestoryObj = new List<GameObject>();
+    public List<GameObject> dontdestoryObj = new List<GameObject>();
 
-    private static bool StageClearFlag = false;
-    //public static int NowNextCount => stageLoader.NextCount + GameManager.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
-
+    private bool StageClearFlag = false;
+    //public static int NowNextCount => stageLoader.NextCount + GameManager.Instance.player.BelongingsMinoEffect["NextGaugeUp"] * 2 - GameManager.Instance.player.BelongingsMinoEffect["NextGaugeDown"] * 2;
+    
     private async void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -79,15 +87,9 @@ public class GameManager : MonoBehaviour
             nowStage = GetNextEnumValue(nowStage);
             stageLoader.SetStageStatus();
         }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            await StageClear();
-        }
-
     }
 
-    public static async Task PlayerMove()
+    public async Task PlayerMove()
     {
         while (true)
         {
@@ -122,10 +124,12 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
+                        cameraMove.MoveCamera();
                         nowStage = GetNextEnumValue(nowStage);
                         stageLoader.SetStageStatus();    
                     }
                     
+
                 }
                 else
                 {
@@ -171,30 +175,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-        EquipmentMaster.Entity.ReadCSV("EquipmentData");
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
-        
-        string uiName = "EquipmentUI";
-        string BattleName = "BattleScene";
-        if(!IsSceneLoaded(uiName))
-        {
-            StartCoroutine(LoadSceneAdditive(uiName));
-        }
-
-        if(!IsSceneLoaded(BattleName))
-        {
-            StartCoroutine(LoadSceneAdditive(BattleName));
-        }
-    }
-    private void Start()
-    {
-        player.Initialize();
-        StageStart(Stage.Stage1);
-    }
-    public static void StageStart(Stage stage)
+    public void StageStart(Stage stage)
     {
         nowStage = stage;
         stageLoader.SetStageStatus();
@@ -202,7 +183,7 @@ public class GameManager : MonoBehaviour
         cameraMove.MoveCamera();
     }
 
-    public static async UniTask StageClear()
+    public async UniTask StageClear()
     {
         StageClearAnim?.Invoke();
         trantision.GetComponent<Transition>().StartTran();
@@ -211,11 +192,12 @@ public class GameManager : MonoBehaviour
             if (trantision.GetComponent<PlayableDirector>().state == PlayState.Paused)
             {
                 AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("StageSelect");
-
+                
                 while (asyncOperation.isDone)
                 {
                     await UniTask.Yield();
                 }
+                
                 UnLoad();
                 await UniTask.WaitForSeconds(1.5f);
 
@@ -226,27 +208,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static async UniTask EndTransition ()
+    public async UniTask EndTransition ()
     {
         trantision.GetComponent<Transition>().EndTran();
+        trantision.transform.parent.rotation = Quaternion.Euler(40, 0, 0);
         while (trantision.GetComponent<PlayableDirector>().state == PlayState.Playing)
         {
             await UniTask.Yield();
         }
         foreach (var obj in dontdestoryObj)
         {
-            Destroy(obj);
+            GameObject.Destroy(obj);
         }
         dontdestoryObj.Clear();
-        Destroy(trantision);
+        GameObject.Destroy(trantision);
     }
 
-    public static void UnLoad()
+    public void UnLoad()
     {
         cameraMove = null;
+        BoardManager.Instance.DestroyInstance();
     }
 
-    public static async void Battle()
+    public async void Battle()
     {
         
         EnemyDown = false;
@@ -256,7 +240,7 @@ public class GameManager : MonoBehaviour
         // フィールドブロック増減
         boardWidth += player.BelongingsMinoEffect["FieldUp"];
         boardWidth -= player.BelongingsMinoEffect["FieldDown"];
-        enemy = Instantiate(MapManager.Instance.GetEnemyObj, enemyPos.position, Quaternion.identity).GetComponent<Enemy.Charactor>();
+        enemy = GameObject.Instantiate(MapManager.Instance.GetEnemyObj, enemyPos.position, Quaternion.identity).GetComponent<Enemy.Charactor>();
         
         await CreateBlock?.Invoke();
         
@@ -264,31 +248,7 @@ public class GameManager : MonoBehaviour
     }
  
     // 非同期でシーンを追加するコルーチン
-    private IEnumerator LoadSceneAdditive(string name)
-    {
-        // シーンの読み込みを非同期で行う
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(name, LoadSceneMode.Additive);
 
-        // シーンの読み込みが完了するまで待つ
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
-    }
-    // シーンがすでにロードされているかを確認するメソッド
-    private bool IsSceneLoaded(string sceneName)
-    {
-        // すべてのロードされているシーンを確認
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            Scene scene = SceneManager.GetSceneAt(i);
-            if (scene.name == sceneName)
-            {
-                return true; // シーンがロード済み
-            }
-        }
-        return false; // シーンがロードされていない
-    }
     static T GetNextEnumValue<T>(T current) where T : Enum
     {
         T[] values = (T[])Enum.GetValues(typeof(T));

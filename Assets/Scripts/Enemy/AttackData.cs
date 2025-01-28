@@ -37,9 +37,9 @@ public class AttackData : MonoBehaviour
     //***********************************************
     private static List<Vector2Int> OneRowLineRandom()
     {
-        int y = Random.Range(10, GameManager.boardHeight -1);
+        int y = Random.Range(10, GameManager.Instance.boardHeight -1);
         List<Vector2Int> pos = new();
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             pos.Add(new Vector2Int(i,y));
         }
@@ -51,9 +51,9 @@ public class AttackData : MonoBehaviour
     //***********************************************
     private static List<Vector2Int> OneColLineRandom()
     {
-        int x = Random.Range(0, GameManager.boardWidth);
+        int x = Random.Range(0, GameManager.Instance.boardWidth);
         List<Vector2Int> pos = new();
-        for (int i = 1; i < GameManager.boardHeight; i++)
+        for (int i = 1; i < GameManager.Instance.boardHeight; i++)
         {
             pos.Add(new Vector2Int(x,i));
         }
@@ -76,11 +76,11 @@ public class AttackData : MonoBehaviour
             }
         }
         List<Vector2Int> pos = new();
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             pos.Add(new Vector2Int(i,y));
         }
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             pos.Add(new Vector2Int(i,y2));
         }
@@ -103,11 +103,11 @@ public class AttackData : MonoBehaviour
             y2 = y - 1;
         }
         List<Vector2Int> pos = new();
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             pos.Add(new Vector2Int(i,y));
         }
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             pos.Add(new Vector2Int(i,y2));
         }
@@ -121,12 +121,12 @@ public class AttackData : MonoBehaviour
     {
         List<Vector2Int> pos = new();
         int y = Random.Range(2, 8);
-        int x = Random.Range(0, GameManager.boardWidth);
-        for (int i = 1; i < GameManager.boardHeight; i++)
+        int x = Random.Range(0, GameManager.Instance.boardWidth);
+        for (int i = 1; i < GameManager.Instance.boardHeight; i++)
         {
             pos.Add(new Vector2Int(x,i));
         }
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             if(!pos.Contains(new Vector2Int(i,y)))
             {
@@ -143,17 +143,17 @@ public class AttackData : MonoBehaviour
     {
         List<Vector2Int> pos = new();
         int y = Random.Range(2, 8);
-        int x = Random.Range(0, GameManager.boardWidth);
+        int x = Random.Range(0, GameManager.Instance.boardWidth);
         for (int i = 0; i < 5; i++)
         {
-            if((y - 2)+i < GameManager.boardHeight && (y - 2)+i > 0)
+            if((y - 2)+i < GameManager.Instance.boardHeight && (y - 2)+i > 0)
             {
                 pos.Add(new Vector2Int(x,(y - 2)+i));
             }
         }
         for (int i = 0; i < 5; i++)
         {
-            if((x - 2)+i < GameManager.boardWidth && (x - 2) + i >= 0)
+            if((x - 2)+i < GameManager.Instance.boardWidth && (x - 2) + i >= 0)
             {
                 if(!pos.Contains(new Vector2Int((x - 2)+i,y)))
                 {
@@ -170,7 +170,7 @@ public class AttackData : MonoBehaviour
     //============================================================
     private static List<Vector2Int> LastAddLine()
     {
-        GameManager.LineCreateFlag = true;
+        GameManager.Instance.LineCreateFlag = true;
         return null;
     }
 
@@ -179,7 +179,7 @@ public class AttackData : MonoBehaviour
     //***********************************************
     private static List<Vector2Int> NextUpBoost()
     {
-        GameManager.NextUpCountAmount++;
+        GameManager.Instance.NextUpCountAmount++;
         return null;
     }
 

@@ -1250,6 +1250,7 @@ MonoBehaviour:
   backGroundFream: {fileID: 3974686643554238572, guid: 932c442dc9de03543b52ac4fe458feef, type: 3}
   UiCanvas: {fileID: 1859248431}
   TranObject: {fileID: 4725991845159171383, guid: e697d7e54e28f024d92bf49c36437082, type: 3}
+  camera: {fileID: 963194225}
   block: {fileID: 4476787805349554323, guid: 3de678f6418a89c46a25d48026ccb1d2, type: 3}
   checkBlock: {fileID: 4476787805349554323, guid: 402e10f28a55c884394d29c0046089c2, type: 3}
   parent: {fileID: 873209793}
@@ -3275,6 +3276,7 @@ GameObject:
   - component: {fileID: 1953573332}
   - component: {fileID: 1953573331}
   - component: {fileID: 1953573333}
+  - component: {fileID: 1953573334}
   m_Layer: 0
   m_Name: player
   m_TagString: Untagged
@@ -3360,7 +3362,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1953573330}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1b7cd9df48a6f24798a90d1cb53249f, type: 3}
   m_Name: 
@@ -3371,10 +3373,6 @@ MonoBehaviour:
     atk: 5
     def: 3
     critical: 0
-  hpText: {fileID: 313593890}
-  healingEffect: {fileID: 2277261721029391378, guid: f8733f1a7afcea74bbefb23928552acd, type: 3}
-  damageText: {fileID: 1429471070}
-  slider: {fileID: 462763284}
   totalStatus:
     maxHp: 0
     hp: 0
@@ -3394,6 +3392,7 @@ MonoBehaviour:
     armor:
       WeaponId: Ar01
       groupID: 0
+  ui: {fileID: 0}
   belongingsMino:
   - WeaponId: 0
     groupID: 0
@@ -3438,6 +3437,22 @@ MonoBehaviour:
   haveArmorList:
   - WeaponId: Ar01
     groupID: 0
+--- !u!114 &1953573334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1953573330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f0553c6d570f54e807526b1432041b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpText: {fileID: 313593890}
+  healingEffect: {fileID: 2277261721029391378, guid: f8733f1a7afcea74bbefb23928552acd, type: 3}
+  damageText: {fileID: 1429471070}
+  slider: {fileID: 462763284}
 --- !u!1 &1954202755
 GameObject:
   m_ObjectHideFlags: 0

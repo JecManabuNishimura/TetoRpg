@@ -8,6 +8,6 @@ public class CountAmount : MonoBehaviour
 
     private void Update()
     {
-        text.text = GameManager.NextUpCountAmount.ToString();
+        text.text = GameManager.Instance.NextUpCountAmount.ToString();
     }
 }

@@ -8,21 +8,22 @@ public class StageLoader : MonoBehaviour
 {
     [SerializeField] private List<StageStatus> status;
     
-    public int NextCount => status.First(_ => _.stage == GameManager.nowStage).nextUpGauge;
+    public int NextCount => status.First(_ => _.stage == GameManager.Instance.nowStage).nextUpGauge;
     public TreasureDropMaster GetDropData()
     {
-        var data = status.First(_ => _.stage == GameManager.nowStage);
+        var data = status.First(_ => _.stage == GameManager.Instance.nowStage);
         return data.treasureDropMaster;
     }
     private void Awake()
     {
-        GameManager.stageLoader = this;
+        GameManager.Instance.stageLoader = this;
+        GameManager.Instance.StageStart(Stage.Stage1);
     }
 
     public void SetStageStatus()
     {
-        var data = status.First(_ => _.stage == GameManager.nowStage);
-        GameManager.stageData = data.parameter;
+        var data = status.First(_ => _.stage == GameManager.Instance.nowStage);
+        GameManager.Instance.stageData = data.parameter;
     }
 
     //public Vector3 EnemyPos => enemyPos.position;

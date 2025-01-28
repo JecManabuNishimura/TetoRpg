@@ -91,7 +91,7 @@ public class None : IMenu
     {
         MenuManager.Instance.equipmentObj.SetActive(false);
 
-        GameManager.menuFlag = false;
+        GameManager.Instance.menuFlag = false;
     }
 
     public void Update()
@@ -205,7 +205,7 @@ public class TabSelect : EquipmentDataCreate, IMenu
     void UpdateBelongingsMinoImage()
     {
         minoData.circleLayoutGroup.transform.ChildClear();;
-        foreach (var mino in GameManager.player.BelongingsMino)
+        foreach (var mino in GameManager.Instance.player.BelongingsMino)
         {
             var data = GameObject.Instantiate(minoData.itemObj, minoData.circleLayoutGroup.transform, true);
             data.GetComponent<MinoCreater>().UpdateId(mino);
@@ -215,7 +215,7 @@ public class TabSelect : EquipmentDataCreate, IMenu
     void OpenEquipmentMino()
     {
         minoData.gridLayoutGroup.transform.ChildClear();;
-        foreach (var mino in GameManager.player.HaveMinoList)
+        foreach (var mino in GameManager.Instance.player.HaveMinoList)
         {
             var data = GameObject.Instantiate( minoData.itemObj, minoData.haveContent.transform, true);
             data.GetComponent<MinoCreater>().UpdateId(mino);
@@ -271,7 +271,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     private void BelongingMinoExplanation()
     {
         MenuManager.Instance.minoData.belongingsEffectGroup.transform.ChildClear();
-        foreach (var mino in GameManager.player.BelongingsMino)
+        foreach (var mino in GameManager.Instance.player.BelongingsMino)
         {
             var val = MinoData.Entity.GetMinoEffect(mino);
             foreach (var data in val)
@@ -289,7 +289,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     private void HaveMinoExplanation()
     {
         MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
-        var id = GameManager.player.haveMinoList[currentIndex];
+        var id = GameManager.Instance.player.haveMinoList[currentIndex];
         var val = MinoData.Entity.GetMinoEffect(id);
         foreach (var data in val)
         {
@@ -315,20 +315,20 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
             
             EquipmentUniqueData minoNum = gridItems[currentIndex].GetComponent<MinoCreater>().GetMinoId();
             shakeInitPosition = gridItems[currentIndex].position;
-            if (!GameManager.player.belongingsMino.Contains(minoNum))
+            if (!GameManager.Instance.player.belongingsMino.Contains(minoNum))
             {
                 minoData.CursorObj.SetActive(false);
                 ChangeBelongingMino(MenuManager.Instance.minoData.circleLayoutGroup.GetIndex(), minoNum);
                 nowMode = NowMode.BelongingsSelect;
                 //ColorReset();
-                GameManager.player.SetBelongingsMinoEffect();
+                GameManager.Instance.player.SetBelongingsMinoEffect();
             }
             else
             {
                 StartShake(gridItems[currentIndex].gameObject,0.5f, 5.5f, 30, 90, false);
             }
             MenuManager.Instance.minoData.haveEffectGroup.transform.ChildClear();
-            //NextUpGauge.Instance.ReCount(GameManager.NowNextCount);
+            //NextUpGauge.Instance.ReCount(GameManager.Instance.NowNextCount);
         }
         
         BelongingMinoExplanation();
@@ -336,7 +336,7 @@ public class HaveMinoView:EquipmentDataCreate,IMenu
     void ChangeBelongingMino(int selectIndex, EquipmentUniqueData data)
     {
         // ミノ装備
-        GameManager.player.BelongingsMino[selectIndex] = data;
+        GameManager.Instance.player.BelongingsMino[selectIndex] = data;
         // 対象の親オブジェクト（Transform）を取得
         Transform parentTransform = 
             MenuManager.Instance.minoData.circleLayoutGroup.GetSelectObj();
@@ -580,13 +580,13 @@ public class ArmorView : EquipmentDataCreate, IMenu
             // 装備選択に進むとき
             (EqupmentPart,List<EquipmentUniqueData>) esData = cursorPos switch
             {
-                0 => (EqupmentPart.Weapon,GameManager.player.haveWeaponList),
-                1 => (EqupmentPart.Shield,GameManager.player.haveShieldList),
-                2 => (EqupmentPart.Helmet,GameManager.player.haveHelmetList),
-                3 => (EqupmentPart.Armor,GameManager.player.haveArmorList),
+                0 => (EqupmentPart.Weapon,GameManager.Instance.player.haveWeaponList),
+                1 => (EqupmentPart.Shield,GameManager.Instance.player.haveShieldList),
+                2 => (EqupmentPart.Helmet,GameManager.Instance.player.haveHelmetList),
+                3 => (EqupmentPart.Armor,GameManager.Instance.player.haveArmorList),
             };
 
-            GameManager.player.SetEquipment(esData.Item1,esData.Item2[haveCursorPos]);
+            GameManager.Instance.player.SetEquipment(esData.Item1,esData.Item2[haveCursorPos]);
             UpdateBelongingsWeaponSprite();
             OpenEquipmentEffectArmor();
             UpdateArmorData();
@@ -636,10 +636,10 @@ public class EquipmentDataCreate
     {
         return i switch
         {
-            0 => GameManager.player.belongingsEquipment?.weapon,
-            1 => GameManager.player.belongingsEquipment?.shield,
-            2 => GameManager.player.belongingsEquipment?.helmet,
-            3 => GameManager.player.belongingsEquipment?.armor,
+            0 => GameManager.Instance.player.belongingsEquipment?.weapon,
+            1 => GameManager.Instance.player.belongingsEquipment?.shield,
+            2 => GameManager.Instance.player.belongingsEquipment?.helmet,
+            3 => GameManager.Instance.player.belongingsEquipment?.armor,
         };
     };
 
@@ -647,10 +647,10 @@ public class EquipmentDataCreate
     {
         return i switch
         {
-            0 => GameManager.player.haveWeaponList,
-            1 => GameManager.player.haveShieldList,
-            2 => GameManager.player.haveHelmetList,
-            3 => GameManager.player.haveArmorList,
+            0 => GameManager.Instance.player.haveWeaponList,
+            1 => GameManager.Instance.player.haveShieldList,
+            2 => GameManager.Instance.player.haveHelmetList,
+            3 => GameManager.Instance.player.haveArmorList,
         };
     };
 
@@ -730,9 +730,9 @@ public class EquipmentDataCreate
     }
     protected void UpdateArmorData()
     {
-        armorData.hpText.text = GameManager.player.totalStatus.maxHp.ToString();
-        armorData.atkText.text = GameManager.player.totalStatus.atk.ToString();
-        armorData.defText.text = GameManager.player.totalStatus.def.ToString();
+        armorData.hpText.text = GameManager.Instance.player.totalStatus.maxHp.ToString();
+        armorData.atkText.text = GameManager.Instance.player.totalStatus.atk.ToString();
+        armorData.defText.text = GameManager.Instance.player.totalStatus.def.ToString();
     }
     protected RectTransform[] GetGroupChildData(Transform groupTransform)
     {

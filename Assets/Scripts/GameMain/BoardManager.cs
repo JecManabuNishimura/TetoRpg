@@ -46,17 +46,23 @@ public class BoardManager
             return instance;
         }
     }
+    public void DestroyInstance()
+    {
+        GameManager.Instance.DownMino -= AllDownLineMino;
+        GameManager.Instance.FallingMino -= FallingMino;
+        instance = null;  // インスタンスを削除（nullにする）
+    }
 
     public void Initialize()
     {
-        board = new int[GameManager.boardHeight, GameManager.boardWidth];
-        GameManager.DownMino += AllDownLineMino;
-        GameManager.FallingMino += FallingMino;
+        board = new int[GameManager.Instance.boardHeight, GameManager.Instance.boardWidth];
+        GameManager.Instance.DownMino += AllDownLineMino;
+        GameManager.Instance.FallingMino += FallingMino;
     }
 
     public void ResetBoard()
     {
-        var newBoard = new int[GameManager.boardHeight, GameManager.boardWidth];
+        var newBoard = new int[GameManager.Instance.boardHeight, GameManager.Instance.boardWidth];
         for (int y = 0; y < board.GetLength(0); y++)
         {
             for (int x = 0; x < board.GetLength(1); x++)
@@ -85,11 +91,11 @@ public class BoardManager
     {
         var boardX = (int)(position.x);
         var boardY = (int)(position.y);
-        if (boardY >= GameManager.boardHeight)
+        if (boardY >= GameManager.Instance.boardHeight)
         {
             return true;
         }
-        if (boardX < 0 || boardX >= GameManager.boardWidth || boardY <= 0)
+        if (boardX < 0 || boardX >= GameManager.Instance.boardWidth || boardY <= 0)
         {
             return false;
         }
@@ -132,8 +138,8 @@ public class BoardManager
                     continue;
                 }
                 deleteLineRow.Add(y);
-                GameManager.DeleteLine++;
-                GameManager.DownFlag = true;
+                GameManager.Instance.DeleteLine++;
+                GameManager.Instance.DownFlag = true;
             }
         }
         CheckTreasureData();
@@ -164,7 +170,7 @@ public class BoardManager
                 DeleteMino?.Invoke(i, row,false,false);
             }
         }
-        await CreateObstaclesFromMultipleCenters(row, blockX, GameManager.boardWidth);
+        await CreateObstaclesFromMultipleCenters(row, blockX, GameManager.Instance.boardWidth);
     }
 
  
@@ -172,7 +178,7 @@ public class BoardManager
     {
         List<(int left,int right)> dir = new();
         List<int> num = new ();
-        for (int i = 0; i < GameManager.boardWidth; i++)
+        for (int i = 0; i < GameManager.Instance.boardWidth; i++)
         {
             num.Add(i);
         }
@@ -201,7 +207,7 @@ public class BoardManager
                 }
 
                 valueTuple.right++;
-                if (valueTuple.right < GameManager.boardWidth && num.Contains(valueTuple.right))
+                if (valueTuple.right < GameManager.Instance.boardWidth && num.Contains(valueTuple.right))
                 {
                     num.Remove(valueTuple.right);
                     if (Random.Range(0, 5) != 0)
@@ -224,13 +230,13 @@ public class BoardManager
     }
     public void CheckMaxPutPos()
     {
-        int startX = GameManager.boardWidth / 2 - 1;
-        int startY = GameManager.boardHeight - 2;
+        int startX = GameManager.Instance.boardWidth / 2 - 1;
+        int startY = GameManager.Instance.boardHeight - 2;
         Func<bool> pinch = () =>
         {
-            for (int y = startY - 2; y < GameManager.boardHeight; y++)
+            for (int y = startY - 2; y < GameManager.Instance.boardHeight; y++)
             {
-                for (int x = 0; x < GameManager.boardWidth; x++)
+                for (int x = 0; x < GameManager.Instance.boardWidth; x++)
                 {
                     if (board[y, x] != 0)
                     {
@@ -245,11 +251,11 @@ public class BoardManager
 
         if(pinch())
         {
-            GameManager.BackGroundEmmision_Start?.Invoke();
+            GameManager.Instance.BackGroundEmmision_Start?.Invoke();
         }
         else
         {
-            GameManager.BackGroundEmmision_Stop?.Invoke();
+            GameManager.Instance.BackGroundEmmision_Stop?.Invoke();
         }
         
 
@@ -260,12 +266,12 @@ public class BoardManager
 
                 if (board[y, x] != 0)
                 {
-                    GameManager.maxPutposFlag = true;
+                    GameManager.Instance.maxPutposFlag = true;
                     return;
                 }
             }
         }
-        GameManager.maxPutposFlag = false;
+        GameManager.Instance.maxPutposFlag = false;
         
     }
     
@@ -313,7 +319,7 @@ public class BoardManager
 
     public bool CheckBlankLine(int row)
     {
-        for (int x = 0; x < GameManager.boardWidth; x++)
+        for (int x = 0; x < GameManager.Instance.boardWidth; x++)
         {
             if (board[row, x] != 0)
             {
@@ -374,9 +380,9 @@ public class BoardManager
         {
             for (int x = -1; x < 2; x++)
             {
-                if (x + posX > 0 && x + posX < GameManager.boardWidth)
+                if (x + posX > 0 && x + posX < GameManager.Instance.boardWidth)
                 {
-                    if (y + posY > 0 && y + posY < GameManager.boardHeight)
+                    if (y + posY > 0 && y + posY < GameManager.Instance.boardHeight)
                     {
                         skillCheck = CheckBlockType.Invoke(MinoType.SkillCancel, x, y);
                         if (skillCheck) break;
@@ -389,12 +395,12 @@ public class BoardManager
         {
             for (int x = -1; x < 2; x++)
             {
-                if (x + posX > 0 && x + posX < GameManager.boardWidth)
+                if (x + posX > 0 && x + posX < GameManager.Instance.boardWidth)
                 {
-                    if (y + posY > 0 && y + posY < GameManager.boardHeight)
+                    if (y + posY > 0 && y + posY < GameManager.Instance.boardHeight)
                     {
                         bombCol.Add(new Vector2Int(x+posX,y+posY));
-                        GameManager.DeleteMino++;
+                        GameManager.Instance.DeleteMino++;
                         board[y+ posY, x+ posX] = 0;
                         DeleteMino?.Invoke(x+ posX, y + posY,false,skillCheck);
                     }
@@ -407,23 +413,23 @@ public class BoardManager
     {
         bool skillCheck = false;
         stripeFlag = true;
-        for (int y = 0; y < GameManager.boardHeight - 1; y++)
+        for (int y = 0; y < GameManager.Instance.boardHeight - 1; y++)
         {
             skillCheck = CheckBlockType.Invoke(MinoType.SkillCancel,posX, y);
             if (skillCheck) break;
         }
-        for (int y = 0; y < GameManager.boardHeight - 1; y++)
+        for (int y = 0; y < GameManager.Instance.boardHeight - 1; y++)
         {
             board[y, posX] = 0;
             DeleteMino?.Invoke(posX, y,false,skillCheck);
         }
 
-        for (int x = 0; x < GameManager.boardWidth; x++)
+        for (int x = 0; x < GameManager.Instance.boardWidth; x++)
         {
             skillCheck = CheckBlockType.Invoke(MinoType.SkillCancel,x, posY);
             if (skillCheck) break;
         }
-        for (int x = 0; x < GameManager.boardWidth; x++)
+        for (int x = 0; x < GameManager.Instance.boardWidth; x++)
         {
             if (board[posY, x] != 0)
             {
@@ -443,7 +449,7 @@ public class BoardManager
         
         foreach (var val in bombCol)
         {
-            for (int y = val.y; y < GameManager.boardHeight; y++)
+            for (int y = val.y; y < GameManager.Instance.boardHeight; y++)
             {
                 if (board[y, val.x] != 0)
                 {
@@ -546,7 +552,7 @@ public class BoardManager
         }
         deleteLineRow.Clear();
 
-        GameManager.DownFlag = false;
+        GameManager.Instance.DownFlag = false;
         CheckMaxPutPos();
     }
     
@@ -587,7 +593,7 @@ public class BoardManager
 
     public async UniTask Alignment()
     {
-        int[,] newBoard = new int[GameManager.boardHeight, GameManager.boardWidth];
+        int[,] newBoard = new int[GameManager.Instance.boardHeight, GameManager.Instance.boardWidth];
 
         int yCount = 1;
         int xCount = 0;
@@ -606,7 +612,7 @@ public class BoardManager
                         await AlignmentMino.Invoke(new Vector2Int(x,y),new Vector2Int(xCount, yCount));
                     }
                     xCount++;
-                    if (xCount >= GameManager.boardWidth - 1)
+                    if (xCount >= GameManager.Instance.boardWidth - 1)
                     {
                         yCount++;
                         xCount = 0;
@@ -638,7 +644,7 @@ public class BoardManager
                     maxPosY = maxPosY < MathF.Abs(p.y - target.y) ? (int)MathF.Abs(p.y - target.y) : maxPosY;
                 }
 
-                if (maxPosX + 1 + xCount >= GameManager.boardWidth - 1)
+                if (maxPosX + 1 + xCount >= GameManager.Instance.boardWidth - 1)
                 {
                     yCount++;
                     xCount = 0;
@@ -655,7 +661,7 @@ public class BoardManager
                 MoveTreasurePos.Invoke(pos, targetPos,movePos);
 
                 xCount += maxPosX + 1; // 0を考慮して一個先を見る
-                if (xCount > GameManager.boardWidth - 1)
+                if (xCount > GameManager.Instance.boardWidth - 1)
                 {
                     yCount++;
                     xCount = 0;
@@ -669,7 +675,7 @@ public class BoardManager
             else
             {
                 xCount++;
-                if (xCount >= GameManager.boardWidth - 1)
+                if (xCount >= GameManager.Instance.boardWidth - 1)
                 {
                     yCount++;
                     xCount = 0;

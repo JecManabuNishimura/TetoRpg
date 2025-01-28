@@ -11,19 +11,19 @@ public class EnemyHpView : MonoBehaviour
 
     private void Start()
     {
-        if(GameManager.enemy != null)
+        if(GameManager.Instance.enemy != null)
         {
-            maxHp.text = GameManager.enemy.status.maxHp.ToString();
+            maxHp.text = GameManager.Instance.enemy.status.maxHp.ToString();
         }
     }
 
     private void Update()
     {
-        if (GameManager.enemy != null && GameManager.EnemyHpVisibleFlag)
+        if (GameManager.Instance.enemy != null && GameManager.Instance.EnemyHpVisibleFlag)
         {
             hpTextObj.SetActive(true);
-            nowHp.text = GameManager.enemy.status.hp.ToString();
-            maxHp.text = GameManager.enemy.status.maxHp.ToString();
+            nowHp.text = GameManager.Instance.enemy.status.hp.ToString();
+            maxHp.text = GameManager.Instance.enemy.status.maxHp.ToString();
         }
         else
         {
