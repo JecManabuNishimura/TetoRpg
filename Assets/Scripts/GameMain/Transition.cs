@@ -4,17 +4,13 @@ using UnityEngine.Timeline;
 
 public class Transition : MonoBehaviour
 {
-    public TimelineAsset startTran;
-    public TimelineAsset endTran;
-    
-    public void StartTran()
+    public void StartEnd()
     {
-        GetComponent<PlayableDirector>().playableAsset = startTran;
-        GetComponent<PlayableDirector>().Play();
+        GetComponent<PlayableDirector>().Pause();
     }
-    public void EndTran()
+
+    public void Restart()
     {
-        GetComponent<PlayableDirector>().playableAsset = endTran;
         GetComponent<PlayableDirector>().Play();
     }
 }

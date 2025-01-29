@@ -120,7 +120,6 @@ public class testBlock : MonoBehaviour
     {
         UiCanvas.SetActive(false);
         DontDestroyOnLoad(GameManager.Instance.trantision = Instantiate(TranObject));
-        GameManager.Instance.trantision.transform.parent = camera.transform;
     }
     
     private void Update()

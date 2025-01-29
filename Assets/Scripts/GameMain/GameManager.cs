@@ -186,10 +186,9 @@ public class GameManager
     public async UniTask StageClear()
     {
         StageClearAnim?.Invoke();
-        trantision.GetComponent<Transition>().StartTran();
         while (true)
         {
-            if (trantision.GetComponent<PlayableDirector>().state == PlayState.Paused)
+            if (trantision.GetComponentInChildren<PlayableDirector>().state == PlayState.Paused)
             {
                 AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("StageSelect");
                 
@@ -197,7 +196,10 @@ public class GameManager
                 {
                     await UniTask.Yield();
                 }
-                
+                foreach (var obj in dontdestoryObj)
+                {
+                    GameObject.Destroy(obj);
+                }
                 UnLoad();
                 await UniTask.WaitForSeconds(1.5f);
 
@@ -210,16 +212,12 @@ public class GameManager
 
     public async UniTask EndTransition ()
     {
-        trantision.GetComponent<Transition>().EndTran();
-        trantision.transform.parent.rotation = Quaternion.Euler(40, 0, 0);
-        while (trantision.GetComponent<PlayableDirector>().state == PlayState.Playing)
+        trantision.GetComponentInChildren<Transition>().Restart();
+        while (trantision.GetComponentInChildren<PlayableDirector>().state == PlayState.Playing)
         {
             await UniTask.Yield();
         }
-        foreach (var obj in dontdestoryObj)
-        {
-            GameObject.Destroy(obj);
-        }
+
         dontdestoryObj.Clear();
         GameObject.Destroy(trantision);
     }
