@@ -179,6 +179,7 @@ public class GameManager
     {
         nowStage = stage;
         stageLoader.SetStageStatus();
+        SoundMaster.Entity.PlaySoundBGM(stageLoader.SoundData());
         cameraFlag = true;
         cameraMove.MoveCamera();
     }

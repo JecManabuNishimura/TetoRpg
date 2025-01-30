@@ -29,6 +29,7 @@ public class InputHandler
             if(!fastFlag && timer > maxTimer)
             {
                 MoveLeft?.Invoke();
+                SoundMaster.Entity.PlaySoundSE(PlaceOfSound.MinoMove);
                 timer=0;
                 fastFlag = true;
                 secondTimer = 0;
@@ -37,6 +38,7 @@ public class InputHandler
             {
                 if (timer > maxTimer)
                 {
+                    SoundMaster.Entity.PlaySoundSE(PlaceOfSound.MinoMove);
                     timer = 0;
                     MoveLeft?.Invoke();
                 }
@@ -45,6 +47,7 @@ public class InputHandler
         else if (Input.GetKeyUp(KeyCode.A))
         {
             secondTimer = 0;
+            
             fastFlag = false;
         }
 
@@ -53,6 +56,7 @@ public class InputHandler
             secondTimer += Time.deltaTime;
             if(!fastFlag && timer > maxTimer)
             {
+                SoundMaster.Entity.PlaySoundSE(PlaceOfSound.MinoMove);
                 MoveRight?.Invoke();
                 timer=0;
                 fastFlag = true;
@@ -63,6 +67,7 @@ public class InputHandler
                 if (timer > maxTimer)
                 {
                     timer = 0;
+                    SoundMaster.Entity.PlaySoundSE(PlaceOfSound.MinoMove);
                     MoveRight?.Invoke();
                 }
             }
@@ -103,6 +108,7 @@ public class InputHandler
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            SoundMaster.Entity.PlaySoundSE(PlaceOfSound.Rot);
             RotateMino?.Invoke();
         }
 

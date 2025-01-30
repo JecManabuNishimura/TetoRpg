@@ -14,6 +14,9 @@ public class StageLoader : MonoBehaviour
         var data = status.First(_ => _.stage == GameManager.Instance.nowStage);
         return data.treasureDropMaster;
     }
+
+    public PlaceOfSound SoundData() => status.First(_ => _.stage == GameManager.Instance.nowStage).playBGMSound;
+        
     private void Awake()
     {
         GameManager.Instance.stageLoader = this;
@@ -36,6 +39,7 @@ public class StageStatus
     public TreasureDropMaster treasureDropMaster;
     public StageData parameter;
     public int nextUpGauge;
+    public PlaceOfSound playBGMSound;
 }
 [Serializable]
 public enum Stage
